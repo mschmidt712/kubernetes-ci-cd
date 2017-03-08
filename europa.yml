@@ -45,5 +45,5 @@ spec:
           mountPath: /europa
       volumes:
       - name: europa-persistent-storage
-        hostPath:
-          path: "/data/europa-path/"
+        persistentVolumeClaim:
+          claimName: europa-claim
