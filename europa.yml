@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: europa
+  labels:
+    app: europa
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: europa
+    tier: europa
+  clusterIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: europa
+  labels:
+    app: europa
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: europa
+        tier: europa
+    spec:
+      containers:
+      - image: distelli/europa:latest
+        name: europa
+        env:
+        - name: EUROPA_DB_ENDPOINT
+          value: mysql://mysql:3306/europa
+        - name: EUROPA_DB_USER
+          value: root
+        - name: EUROPA_DB_PASS
+          value: europa
+        ports:
+        - containerPort: 80
+          name: europa
+        volumeMounts:
+        - name: europa-persistent-storage
+          mountPath: /europa
+      volumes:
+      - name: europa-persistent-storage
+        persistentVolumeClaim:
+          claimName: europa-claim
