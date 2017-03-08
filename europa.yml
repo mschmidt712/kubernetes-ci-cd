@@ -32,18 +32,18 @@ spec:
         name: europa
         env:
         - name: EUROPA_DB_ENDPOINT
-          value: 'mysql://mysql:3306/europa'
+          value: mysql://mysql:3306/europa
         - name: EUROPA_DB_USER
-          value: europa
+          value: root
         - name: EUROPA_DB_PASS
           value: europa
         ports:
         - containerPort: 80
           name: europa
-        volumeMounts:
-        - name: europa-persistent-storage
-          mountPath: /europa
-      volumes:
-      - name: europa-persistent-storage
-        persistentVolumeClaim:
-          claimName: europa-claim
+    #     volumeMounts:
+    #     - name: europa-persistent-storage
+    #       mountPath: /europa
+    #   volumes:
+    #   - name: europa-persistent-storage
+    #     persistentVolumeClaim:
+    #       claimName: europa-claim
