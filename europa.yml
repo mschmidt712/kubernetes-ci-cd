@@ -40,10 +40,10 @@ spec:
         ports:
         - containerPort: 80
           name: europa
-    #     volumeMounts:
-    #     - name: europa-persistent-storage
-    #       mountPath: /europa
-    #   volumes:
-    #   - name: europa-persistent-storage
-    #     persistentVolumeClaim:
-    #       claimName: europa-claim
+        volumeMounts:
+        - name: europa-persistent-storage
+          mountPath: /europa
+      volumes:
+      - name: europa-persistent-storage
+        persistentVolumeClaim:
+          claimName: europa-claim

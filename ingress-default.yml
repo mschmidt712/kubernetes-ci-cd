@@ -10,7 +10,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: europa.192.168.99.100.xip.io
+  - host: europa.192.168.42.222.xip.io
     http:
       paths:
       - path: /
