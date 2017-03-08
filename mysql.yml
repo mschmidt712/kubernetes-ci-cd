@@ -33,15 +33,21 @@ spec:
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: europa
+        - name: MYSQL_PASSWORD
+          value: europa
+        - name: MYSQL_USER
+          value: europa
         - name: MYSQL_DATABASE
           value: europa
+        - name: MYSQL_ROOT_HOST
+          value: mysql
         ports:
         - containerPort: 3306
           name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: myclaim
+    #     volumeMounts:
+    #     - name: mysql-persistent-storage
+    #       mountPath: /var/lib/mysql
+    #   volumes:
+    #   - name: mysql-persistent-storage
+    #     persistentVolumeClaim:
+    #       claimName: myclaim

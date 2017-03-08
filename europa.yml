@@ -32,9 +32,9 @@ spec:
         name: europa
         env:
         - name: EUROPA_DB_ENDPOINT
-          value: mysql://mysql:3306/europa
+          value: 'mysql://mysql:3306/europa'
         - name: EUROPA_DB_USER
-          value: root
+          value: europa
         - name: EUROPA_DB_PASS
           value: europa
         ports:
