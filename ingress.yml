@@ -1,4 +1,3 @@
-
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -11,7 +10,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: dashboard.192.168.42.134.xip.io
+  - host: dashboard.#MINIKUBE_IP#.xip.io
     http:
       paths:
       - path: /
@@ -19,7 +18,7 @@ spec:
           serviceName: kubernetes-dashboard
           servicePort: 80
 
-  - host: grafana.192.168.42.134.xip.io
+  - host: grafana.#MINIKUBE_IP#.xip.io
     http:
       paths:
       - path: /
@@ -38,7 +37,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: europa.192.168.42.134.xip.io
+  - host: europa.#MINIKUBE_IP#.xip.io
     http:
       paths:
       - path: /
@@ -46,7 +45,7 @@ spec:
           serviceName: europa
           servicePort: 80
 
-  - host: jenkins.192.168.42.134.xip.io
+  - host: jenkins.#MINIKUBE_IP#.xip.io
     http:
       paths:
       - path: /
@@ -54,7 +53,7 @@ spec:
           serviceName: jenkins
           servicePort: 80
 
-  - host: nginx.192.168.42.134.xip.io
+  - host: nginx.#MINIKUBE_IP#.xip.io
     http:
       paths:
       - path: /
@@ -62,7 +61,7 @@ spec:
           serviceName: nginx
           servicePort: 80
 
-  - host: gogs.192.168.42.134.xip.io
+  - host: gogs.#MINIKUBE_IP#.xip.io
     http:
       paths:
       - path: /
