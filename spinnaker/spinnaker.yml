@@ -77,9 +77,8 @@ spec:
           name: front50
         volumeMounts:
         - name: spinnaker-config
-            mountPath: /opt/front50/config
+          mountPath: /opt/front50/config
       volumes:
       - name: spinnaker-config
         configMap:
           name: spinnaker-config
-
