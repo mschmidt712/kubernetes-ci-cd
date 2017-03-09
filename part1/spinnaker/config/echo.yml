@@ -11,8 +11,9 @@ spinnaker:
   baseUrl: http://localhost:9000
   cassandra:
     enabled: false
-    inMemory:
-        enabled: true
+
+  inMemory:
+    enabled: true
 
 
 

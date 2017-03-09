@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: spinnaker
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  ports:
+    - port: 9160
+      targetPort: 9160
+  selector:
+    app: cassandra
+    tier: cassandra
+  type: NodePort
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: spinnaker
+  name: cassandra
+  labels:
+    app: cassandra
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cassandra
+        tier: cassandra
+    spec:
+      containers:
+      - image: chadmoon/cassandra-spinnaker
+        name: cassandra
+        ports:
+        - containerPort: 9160
+          name: cassandra
+        env:
+        - name: CASSANDRA_START_RPC
+            value: "true"
