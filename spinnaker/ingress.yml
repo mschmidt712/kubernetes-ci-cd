@@ -8,7 +8,7 @@ metadata:
 spec:
   backend:
     serviceName: default-http-backend
-    servicePort: 8080
+    servicePort: 80
   rules:
   - host: front50.192.168.42.74.xip.io
     http:
@@ -18,19 +18,6 @@ spec:
           serviceName: front50
           servicePort: 8080
 
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: ingress-services
-  namespace: spinnaker
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  backend:
-    serviceName: default-http-backend
-    servicePort: 7002
-  rules:
   - host: clouddriver.192.168.42.74.xip.io
     http:
       paths:
@@ -38,3 +25,11 @@ spec:
         backend:
           serviceName: clouddriver
           servicePort: 7002
+
+  - host: orca.192.168.42.74.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: clouddriver
+          servicePort: 8083
