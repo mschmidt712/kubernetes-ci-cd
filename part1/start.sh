@@ -8,18 +8,22 @@
 
 # deploy europa.192.168.42.134.xip.io:80/nginx:latest
 
-sudo virsh net-start default
-sudo virsh net-start docker-machines
+#sudo virsh net-start default
+#sudo virsh net-start docker-machines
 
 minikube delete
 
-rm -rf ~/.kube
+rm -rf ~/.minikube
 
-minikube start --vm-driver kvm --memory 10000 --cpus 4 --disk-size 50g
+minikube start --vm-driver kvm --memory 8000 --cpus 4 --disk-size 50g
 
 
-#minikube addons enable heapster
-#minikube addons enable ingress
+minikube addons enable heapster; minikube addons enable ingress; kubectl --namespace spinnaker rollout status pods
+
+kubectl get pods --all-namespaces
+
+kubectl cluster-info
+
 #minikube start --vm-driver kvm --memory 10000 --cpus 4 --disk-size 50g
 
 #curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
