@@ -52,7 +52,7 @@ services:
     enabled: false
   igor:
     enabled: true
-    baseUrl: http://igor:8084
+    baseUrl: http://igor:8088
   mahe:
     enabled: false
 

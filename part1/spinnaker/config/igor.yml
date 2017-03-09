@@ -6,7 +6,7 @@ jenkins:
   enabled: true
   masters:
     - name: jenkins
-      address: http://jenkins:8080
+      address: http://jenkins.default:80
       username: jenkins
       password: jenkins
 
