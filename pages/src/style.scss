@@ -1,0 +1,55 @@
+// Library imports
+@import '//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css';
+
+// Utilities
+@import 'styles/utils/utils';
+
+// Atoms
+@import 'styles/atoms/atoms';
+
+// Molecules
+@import 'styles/molecules/molecules';
+
+// Organisms
+@import 'styles/organisms/organisms';
+
+// Templates
+@import 'styles/templates/templates';
+
+ // Extend common html styles
+%html {
+  box-sizing: content-box;
+  font-size: $base-font-size;
+
+  * {
+    &,
+    &:before,
+    &:after {
+      box-sizing: inherit;
+    }
+  }
+}
+
+// Extend common body styles
+%body {
+  font-family: $open-sans;
+  margin: 0;
+  color: $darkgrey;
+ }
+
+// Styles for html element in theme
+html {
+  @extend %html;
+}
+
+// Styles for body element in theme
+body {
+  background: $off-white;
+  @extend %body;
+}
+
+// Combine html styles and body styles for commonClass wrapper
+// .sg-common {
+//   @extend %html;
+//   @extend %body;
+// }

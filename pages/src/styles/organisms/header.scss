@@ -1,0 +1,34 @@
+@import '../utils/variables';
+
+.primary-header {
+  width: 100%;
+
+  .logo {
+    margin:15px 0 15px $page-indent;
+    width: 250px;
+  }
+
+  .primary-nav {
+    background-color: $darkgrey;
+    height: 45px;
+
+    .list-unstyled {
+      margin: 0 0 0 $page-indent;
+      padding: 0;
+
+      li {
+        float: left;
+        margin-right:20px;
+        list-style: none;
+        line-height: 45px;
+
+
+        a {
+          color: #fff;
+          text-decoration: none;
+        }
+
+      }
+    }
+  }
+}

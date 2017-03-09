@@ -1,0 +1,14 @@
+{
+  "extends": ["semistandard", "plugin:react/recommended"],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "mocha": true
+  },
+  "plugins": ["react"],
+  "rules": {
+    "no-plusplus": [2, {"allowForLoopAfterthoughts": true }],
+    "jsx-quotes": ["error", "prefer-double"]
+  }
+}
