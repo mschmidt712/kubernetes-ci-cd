@@ -12,6 +12,7 @@ spec:
     app: hello-kenzan
     tier: hello-kenzan
   type: NodePort
+
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -34,3 +35,23 @@ spec:
         ports:
         - containerPort: 80
           name: hello-kenzan
+          
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-kenzan
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 80
+  rules:
+  - host: hello-kenzan.192.168.42.61.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: hello-kenzan
+          servicePort: 80
