@@ -37,16 +37,11 @@ spec:
         ports:
         - containerPort: 9000
           name: deck
-        env:
-        - name: API_HOST
-          value: "/gate"
-        - name: FEEDBACK_URL
-          value: "/"
-        - name: authEnabled
-          value: "false"
-        - name: netflixMode
-          value: "false"
-        - name: chaosEnabled
-          value: "false"
-        - name: fiatEnabled
-          value: "false"
+        volumeMounts:
+        - name: spinnaker-config
+          mountPath: /opt/deck/html
+          subPath: settings.js
+      volumes:
+      - name: spinnaker-config
+        configMap:
+          name: spinnaker-config
