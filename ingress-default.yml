@@ -24,3 +24,11 @@ spec:
         backend:
           serviceName: jenkins
           servicePort: 80
+
+  - host: nginx.192.168.42.134.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nginx
+          servicePort: 80

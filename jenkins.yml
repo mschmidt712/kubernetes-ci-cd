@@ -42,13 +42,20 @@ spec:
       containers:
       - image: chadmoon/jenkins-docker-kubectl:latest
         name: jenkins
+        securityContext:
+          privileged: true
         ports:
         - containerPort: 8080
           name: jenkins
         volumeMounts:
         - name: jenkins-persistent-storage
-          mountPath: /var/jenkins_home
+          mountPath: /root/.jenkins
+        - name: docker
+          mountPath: /var/run/docker.sock
       volumes:
+      - name: docker
+        hostPath:
+          path: /var/run/docker.sock
       - name: jenkins-persistent-storage
         persistentVolumeClaim:
           claimName: jenkins-claim
