@@ -53,6 +53,14 @@ spec:
           serviceName: jenkins
           servicePort: 80
 
+  - host: gogs.MINIKUBE_IP.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: gogs
+          servicePort: 80
+
   # - host: nginx.MINIKUBE_IP.xip.io
   #   http:
   #     paths:

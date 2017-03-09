@@ -4,6 +4,7 @@
 ./rollout.sh orca
 ./rollout.sh gate
 ./rollout.sh deck
+./rollout.sh igor
 
 IP=`minikube ip`
 

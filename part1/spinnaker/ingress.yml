@@ -61,3 +61,11 @@ spec:
         backend:
           serviceName: igor
           servicePort: 8088
+
+  - host: echo.MINIKUBE_IP.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: echo
+          servicePort: 8089
