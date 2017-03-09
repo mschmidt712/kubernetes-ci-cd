@@ -1,0 +1,7 @@
+node {
+    stage "Build"
+        sh "pwd"
+    // stage "Push"
+
+    // stage "Deploy"
+}
