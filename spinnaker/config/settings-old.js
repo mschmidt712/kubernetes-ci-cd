@@ -1,24 +1,24 @@
 webpackJsonp([2,3],{
 
-/***/ 3304:
+/***/ 3022:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var feedbackUrl = process.env.FEEDBACK_URL;
-var gateHost = process.env.API_HOST || '/gate';
-var bakeryDetailUrl = process.env.BAKERY_DETAIL_URL || gateHost + '/bakery/logs/{{context.region}}/{{context.status.resourceId}}';
-var authEndpoint = process.env.AUTH_ENDPOINT || gateHost + '/auth/user';
+var feedbackUrl = '/feedback';
+var gateHost = '/gate';
+var bakeryDetailUrl = gateHost + '/bakery/logs/{{context.region}}/{{context.status.resourceId}}';
+var authEndpoint = gateHost + '/auth/user';
 var authEnabled = false;
 var netflixMode = false;
-var chaosEnabled = netflixMode || process.env.CHAOS_ENABLED === 'true' ? true : false;
+var chaosEnabled = false;
 var fiatEnabled = false;
 var entityTagsEnabled = false;
-var debugEnabled = process.env.DEBUG_ENABLED === 'false' ? false : true;
+var debugEnabled = true;
 
 window.spinnakerSettings = {
-  checkForUpdates: true,
+  checkForUpdates: false,
   debugEnabled: debugEnabled,
   defaultProviders: ['aws', 'gce', 'azure', 'cf', 'kubernetes', 'titus', 'openstack'],
   feedbackUrl: feedbackUrl,
@@ -74,7 +74,7 @@ window.spinnakerSettings = {
       defaults: {
         account: 'my-kubernetes-account',
         namespace: 'default',
-        proxy: 'localhost:8001'
+        proxy: 'localhost:8080'
       }
     },
     appengine: {
@@ -125,8 +125,8 @@ window.spinnakerSettings = {
     snapshots: false
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(224)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(180)))
 
 /***/ })
 
-},[3304]);
+},[3022]);

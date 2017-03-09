@@ -1,5 +1,6 @@
 server:
   port: 8084
+  address: 0.0.0.0  
 
 services:
   deck:
