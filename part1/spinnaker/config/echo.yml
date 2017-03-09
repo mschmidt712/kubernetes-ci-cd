@@ -2,17 +2,19 @@ server:
   port: 8089
   address: 0.0.0.0
 
-cassandra:
-  enabled: true
-  embedded: true
-  host: ${services.cassandra.host:localhost}
+# cassandra:
+#   enabled: true
+#   embedded: true
+# #   host: ${services.cassandra.host:localhost}
 
 spinnaker:
   baseUrl: http://localhost:9000
   cassandra:
-     enabled: true
-  inMemory:
-     enabled: true
+    enabled: false
+    inMemory:
+        enabled: true
+
+
 
 front50:
   baseUrl: http://front50:8080
@@ -47,14 +49,9 @@ twilio:
   from: ${services.echo.notifications.sms.from}
 
 scheduler:
-  enabled: false
-  threadPoolSize: 20
-  triggeringEnabled: true
-  pipelineConfigsPoller:
+  compensationJob:
     enabled: true
-    pollingIntervalMs: 30000
-  cron:
-    timezone: west
+    windowMs: 1800000 # optional
 
 spectator:
   applicationName: ${spring.application.name}
