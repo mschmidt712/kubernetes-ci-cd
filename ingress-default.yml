@@ -2,7 +2,6 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: ingress-services
-  namespace: default
   annotations:
     ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -10,7 +9,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: "europa.192.168.42.222.xip.io"
+  - host: europa.192.168.42.134.xip.io
     http:
       paths:
       - path: /
