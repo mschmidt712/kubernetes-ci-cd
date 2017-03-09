@@ -1,9 +1,10 @@
 node {
 
     checkout scm
-    env.DOCKER_API_VERSION="1.23"
-    sh "git rev-parse --short HEAD > commit-id"
 
+    env.DOCKER_API_VERSION="1.23"
+    
+    sh "git rev-parse --short HEAD > commit-id"
 
     tag = readFile('commit-id').replace("\n", "").replace("\r", "")
     appName = "hello-kenzan"
@@ -12,7 +13,7 @@ node {
 
     stage "Build"
     
-        sh "cd hello-kenzan; docker build -t ${imageName} ."
+        //sh "cd hello-kenzan; docker build -t ${imageName} ."
 
     
     
