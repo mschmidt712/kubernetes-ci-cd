@@ -4,32 +4,29 @@ server:
 redis:
   enabled: true
   connection: redis://redis:6379
+  host: redis
+  port: 6379
   scheduler: default
   parallelism: -1
+  secure: false
+
 
 cassandra:
   enabled: false
-  embedded: false
-  host: cassandra
-  keyspace: 'front50'
-  cluster: 'Test Cluster'
-  name: default
 
 spinnaker:
 
   redis:
     enabled: true
+    secure: false
     connection: redis://redis:6379
+    host: redis
+    port: 6379
     scheduler: default
     parallelism: -1
 
   cassandra:
     enabled: false
-    embedded: false
-    cluster: 'Test Cluster'
-    host: cassandra
-    keyspace: 'front50'
-    name: default
 
 
 swagger:
