@@ -1,0 +1,34 @@
+redis:
+  enabled: true
+  connection: redis://redis:6379
+  scheduler: default
+  parallelism: -1
+server:
+  port: 8084
+  address: 0.0.0.0
+services:
+  clouddriver:
+    baseUrl: http://clouddriver:7002
+  deck:
+    baseUrl: http://deck.192.168.42.74.xip.io
+  front50:
+    baseUrl: http://front50:8080
+  orca:
+    baseUrl: http://orca:8083
+  igor:
+    enabled: false
+    baseUrl: http://igor:8088
+  rosco:true
+    enabled: false
+    baseUrl: http://rosco:8087
+  echo:
+    enabled: false
+    baseUrl: http://echo:8089
+
+  fiat:
+    enabled: false
+    autoConfig: false
+  flapjack:
+    enabled: false
+  mahe:
+    enabled: false

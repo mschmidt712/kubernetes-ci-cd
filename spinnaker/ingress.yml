@@ -33,3 +33,11 @@ spec:
         backend:
           serviceName: orca
           servicePort: 8083
+
+  - host: gate.192.168.42.74.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: gate
+          servicePort: 8084
