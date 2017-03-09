@@ -16,3 +16,11 @@ spec:
         backend:
           serviceName: europa
           servicePort: 80
+
+  - host: jenkins.192.168.42.134.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jenkins
+          servicePort: 80
