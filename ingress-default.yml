@@ -32,3 +32,11 @@ spec:
         backend:
           serviceName: nginx
           servicePort: 80
+
+  - host: gogs.192.168.42.134.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: gogs
+          servicePort: 80
