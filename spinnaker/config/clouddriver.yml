@@ -23,13 +23,13 @@ credentials:
   primaryAccountTypes: default
 default:
   account:
-    env: my-kubernetes-account
+    env: default
 
 kubernetes:
   enabled: true
   accounts:
-    - name: my-kubernetes-account
-    #   kubeconfigFile:    # optional location of the kube config file
+    - name: default
+    #  kubeconfigFile: /root/kube.config
     #   namespaces:        # optional list of namespaces to manage
     #   user:              # optional user to authenticate as that must exist in the provided kube config file
     #   cluster:           # optional cluster to connect to that must exist in the provided kube config file

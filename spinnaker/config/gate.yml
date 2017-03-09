@@ -2,6 +2,13 @@ server:
   port: 8084
   address: 0.0.0.0  
 
+spinnaker:
+  redis:
+  enabled: true
+  connection: redis://redis:6379
+  scheduler: default
+  parallelism: -1
+
 services:
   deck:
     baseUrl: http://spinnaker.192.168.42.74.xip.io

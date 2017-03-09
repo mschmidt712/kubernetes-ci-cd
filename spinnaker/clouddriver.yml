@@ -34,14 +34,26 @@ spec:
       containers:
       - image: quay.io/spinnaker/clouddriver:v1.490.0
         name: clouddriver
+
         ports:
         - containerPort: 7002
           name: clouddriver
         volumeMounts:
         - name: spinnaker-config
           mountPath: /opt/clouddriver/config
-        # - name: kube-config
-        #   mountPath: /root/.kube
+        - name: spinnaker-config
+          mountPath: /root/.kube/config
+          subPath: kube.config
+        command: ["bash"]
+        args: ["-c", "cd /usr/local/bin; curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl; chmod +x kubectl; /opt/clouddriver/bin/clouddriver"]
+
+      - image: lachlanevenson/k8s-kubectl:latest
+        name: kubectl
+        ports:
+        - containerPort: 8001
+          name: kubectl
+        args: ["proxy"]
+        
       volumes:
       - name: spinnaker-config
         configMap:

@@ -18,7 +18,7 @@ var entityTagsEnabled = false;
 var debugEnabled = process.env.DEBUG_ENABLED === 'false' ? false : true;
 
 window.spinnakerSettings = {
-  checkForUpdates: true,
+  checkForUpdates: false,
   debugEnabled: debugEnabled,
   defaultProviders: ['aws', 'gce', 'azure', 'cf', 'kubernetes', 'titus', 'openstack'],
   feedbackUrl: feedbackUrl,
@@ -72,7 +72,7 @@ window.spinnakerSettings = {
     },
     kubernetes: {
       defaults: {
-        account: 'my-kubernetes-account',
+        account: 'default',
         namespace: 'default',
         proxy: 'localhost:8001'
       }

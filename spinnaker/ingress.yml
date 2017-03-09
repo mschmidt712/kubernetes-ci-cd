@@ -10,7 +10,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: front50.192.168.42.74.xip.io
+  - host: front50.MINIKUBE_IP.xip.io
     http:
       paths:
       - path: /
@@ -18,7 +18,7 @@ spec:
           serviceName: front50
           servicePort: 8080
 
-  - host: clouddriver.192.168.42.74.xip.io
+  - host: clouddriver.MINIKUBE_IP.xip.io
     http:
       paths:
       - path: /
@@ -26,7 +26,7 @@ spec:
           serviceName: clouddriver
           servicePort: 7002
 
-  - host: orca.192.168.42.74.xip.io
+  - host: orca.MINIKUBE_IP.xip.io
     http:
       paths:
       - path: /
@@ -34,7 +34,7 @@ spec:
           serviceName: orca
           servicePort: 8083
 
-  - host: gate.192.168.42.74.xip.io
+  - host: gate.MINIKUBE_IP.xip.io
     http:
       paths:
       - path: /
@@ -42,7 +42,7 @@ spec:
           serviceName: gate
           servicePort: 8084
 
-  - host: spinnaker.192.168.42.74.xip.io
+  - host: spinnaker.MINIKUBE_IP.xip.io
     http:
       paths:
       - path: /
