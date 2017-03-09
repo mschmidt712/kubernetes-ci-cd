@@ -1,7 +1,24 @@
 node {
+
+    checkout scm
+    env.DOCKER_API_VERSION="1.23"
+    sh "git rev-parse --short HEAD > commit-id"
+
+
+    tag = readFile('commit-id').replace("\n", "").replace("\r", "")
+    appName = "hello-kenzan"
+    registryHost = "localhost:31783/"
+    imageName = "${registryHost}${appName}:${tag}"
+
     stage "Build"
+    
+        sh "cd hello-kenzan; docker build -t ${imageName} ."
+
+    
+    
+    stage "Push"
+
         sh "pwd"
-    // stage "Push"
 
     // stage "Deploy"
 }
