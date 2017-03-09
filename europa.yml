@@ -21,7 +21,7 @@ spec:
   selector:
     app: europa
     tier: europa
-  clusterIP: None
+  type: NodePort
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment

@@ -10,7 +10,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: dashboard.192.168.99.100.xip.io
+  - host: dashboard.192.168.42.134.xip.io
     http:
       paths:
       - path: /
@@ -18,15 +18,7 @@ spec:
           serviceName: kubernetes-dashboard
           servicePort: 80
 
-#   - host: europa.192.168.99.100.xip.io
-#     http:
-#       paths:
-#       - path: /
-#         backend:
-#           serviceName: europa
-#           servicePort: 80
-
-  - host: grafana.192.168.99.100.xip.io
+  - host: grafana.192.168.42.134.xip.io
     http:
       paths:
       - path: /
