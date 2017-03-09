@@ -13,13 +13,14 @@ node {
 
     stage "Build"
     
-        //sh "cd hello-kenzan; docker build -t ${imageName} ."
+        sh "cd part1/hello-kenzan; docker build -t ${imageName} ."
 
     
     
     stage "Push"
 
         sh "pwd"
+        sh "docker push ${imageName}"
 
     // stage "Deploy"
 }
