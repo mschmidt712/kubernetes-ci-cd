@@ -23,12 +23,12 @@ credentials:
   primaryAccountTypes: default
 default:
   account:
-    env: k8s
+    env: my-kubernetes-account
 
 kubernetes:
   enabled: true
   accounts:
-    - name: k8s
+    - name: my-kubernetes-account
     #   kubeconfigFile:    # optional location of the kube config file
     #   namespaces:        # optional list of namespaces to manage
     #   user:              # optional user to authenticate as that must exist in the provided kube config file

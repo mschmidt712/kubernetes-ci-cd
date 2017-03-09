@@ -3,7 +3,7 @@ server:
 
 services:
   deck:
-    baseUrl: http://spinnaker.192.168.42.74.xip.io/
+    baseUrl: http://spinnaker.192.168.42.74.xip.io
     auth:
       enabled: false
   orca:

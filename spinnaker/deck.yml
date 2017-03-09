@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: spinnaker
+  name: deck
+  labels:
+    app: deck
+spec:
+  ports:
+    - port: 80
+      targetPort: 9000
+  selector:
+    app: deck
+    tier: deck
+  type: NodePort
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: spinnaker
+  name: deck
+  labels:
+    app: deck
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: deck
+        tier: deck
+    spec:
+      containers:
+      - image: quay.io/spinnaker/deck:latest
+        name: deck
+        ports:
+        - containerPort: 9000
+          name: deck
+        env:
+        - name: API_HOST
+          value: "/gate"
+        - name: FEEDBACK_URL
+          value: "/"
+        - name: authEnabled
+          value: "false"
+        - name: netflixMode
+          value: "false"
+        - name: chaosEnabled
+          value: "false"
+        - name: fiatEnabled
+          value: "false"

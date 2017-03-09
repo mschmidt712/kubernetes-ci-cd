@@ -41,3 +41,15 @@ spec:
         backend:
           serviceName: gate
           servicePort: 8084
+
+  - host: spinnaker.192.168.42.74.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: deck
+          servicePort: 80
+      - path: /gate
+        backend:
+          serviceName: gate
+          servicePort: 8084
