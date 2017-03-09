@@ -53,3 +53,11 @@ spec:
         backend:
           serviceName: gate
           servicePort: 8084
+
+  - host: igor.MINIKUBE_IP.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: igor
+          servicePort: 8088

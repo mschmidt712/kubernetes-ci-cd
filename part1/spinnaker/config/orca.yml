@@ -27,7 +27,7 @@ front50:
   baseUrl: http://front50:8080
 
 igor:
-  enabled: false
+  enabled: true
   baseUrl: http://igor:8088
 kato:
   baseUrl: http://clouddriver:7002

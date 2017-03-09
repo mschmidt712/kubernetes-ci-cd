@@ -51,7 +51,8 @@ services:
   flapjack:
     enabled: false
   igor:
-    enabled: false
+    enabled: true
+    baseUrl: http://igor:8084
   mahe:
     enabled: false
 
