@@ -47,6 +47,7 @@ dockerRegistry:
       email:        # optional email for authenticating with the registry
       repositories:
         - spinnaker/deck
+        - spinnaker/gate
     #    - moondev/nginx
     #   cacheThreads: # optional (default is 1) number of threads to cache registry contents across
     #   clientTimeoutMillis: # optional (default is 1 minute) time before the registry connection times out
