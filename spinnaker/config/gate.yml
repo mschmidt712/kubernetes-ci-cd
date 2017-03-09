@@ -18,7 +18,7 @@ services:
   igor:
     enabled: false
     baseUrl: http://igor:8088
-  rosco:true
+  rosco:
     enabled: false
     baseUrl: http://rosco:8087
   echo:
