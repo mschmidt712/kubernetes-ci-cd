@@ -1,0 +1,1 @@
+kubectl create --namespace spinnaker configmap spinnaker-config --from-file=front50.yml
