@@ -32,16 +32,20 @@ spec:
         tier: deck
     spec:
       containers:
-      - image: quay.io/spinnaker/deck:latest
+      - image: quay.io/spinnaker/deck:v2.1028.0
         name: deck
         ports:
         - containerPort: 9000
           name: deck
         volumeMounts:
         - name: spinnaker-config
-          mountPath: /opt/deck/html
+          mountPath: /settings.js
           subPath: settings.js
+        - name: spinnaker-config
+          mountPath: /opt/deck/docker/run-apache2.sh
+          subPath: run-apache2.sh
       volumes:
       - name: spinnaker-config
         configMap:
           name: spinnaker-config
+          defaultMode: 0777
