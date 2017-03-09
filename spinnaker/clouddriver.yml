@@ -40,7 +40,12 @@ spec:
         volumeMounts:
         - name: spinnaker-config
           mountPath: /opt/clouddriver/config
+        # - name: kube-config
+        #   mountPath: /root/.kube
       volumes:
       - name: spinnaker-config
         configMap:
           name: spinnaker-config
+      # - name: kube-config
+      #   configMap:
+      #     name: spinnaker-config

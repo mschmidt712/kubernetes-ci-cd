@@ -36,5 +36,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: front50
+          serviceName: clouddriver
           servicePort: 7002
