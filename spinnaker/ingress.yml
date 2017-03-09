@@ -31,5 +31,5 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: clouddriver
+          serviceName: orca
           servicePort: 8083

@@ -36,7 +36,10 @@ mort:
 oort:
   baseUrl: http://clouddriver:7002
 redis:
-  connection: redis://redis-alias:6379
+  enabled: true
+  connection: redis://redis:6379
+  scheduler: default
+  parallelism: -1
 server:
   port: 8083
   address: 0.0.0.0
