@@ -10,10 +10,31 @@ spec:
     serviceName: default-http-backend
     servicePort: 8080
   rules:
-  - host: front50.192.168.42.134.xip.io
+  - host: front50.192.168.42.74.xip.io
     http:
       paths:
       - path: /
         backend:
           serviceName: front50
           servicePort: 8080
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-services
+  namespace: spinnaker
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  backend:
+    serviceName: default-http-backend
+    servicePort: 7002
+  rules:
+  - host: clouddriver.192.168.42.74.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: front50
+          servicePort: 7002

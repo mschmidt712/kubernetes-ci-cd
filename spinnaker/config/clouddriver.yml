@@ -29,19 +29,14 @@ kubernetes:
   enabled: true
   accounts:
     - name: k8s
-      #kubeconfigFile: /root/.kube/config
-      # namespaces:        # optional list of namespaces to manage
-      # user:              # optional user to authenticate as that must exist in the provided kube config file
-      # cluster:           # optional cluster to connect to that must exist in the provided kube config file
       dockerRegistries:
-        - accountName: docker
-      #     # namespaces:    # optional list of namespaces this docker registry can deploy to
+        - accountName: []
 
 docker:
-  enabled: true
+  enabled: false
 
 dockerRegistry:
-  enabled: true
+  enabled: false
   accounts:
     - name: docker
       address: http://192.168.42.134:30861
