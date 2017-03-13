@@ -7,4 +7,4 @@ kubectl --namespace spinnaker rollout status deployment/$1
 
 IP=`minikube ip`
 
-sed 's#MINIKUBE_IP#'$IP'#' ingress.yml | kubectl apply -f -
+#sed 's#MINIKUBE_IP#'$IP'#' ingress.yml | kubectl apply -f -

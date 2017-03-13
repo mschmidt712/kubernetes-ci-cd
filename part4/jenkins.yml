@@ -1,14 +1,14 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: jenkins-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Gi
----
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: jenkins-claim
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 2Gi
+# ---
 apiVersion: v1
 kind: Service
 metadata:
@@ -48,14 +48,14 @@ spec:
         - containerPort: 8080
           name: jenkins
         volumeMounts:
-        - name: jenkins-persistent-storage
-          mountPath: /root/.jenkins
+        # - name: jenkins-persistent-storage
+        #   mountPath: /root/.jenkins
         - name: docker
           mountPath: /var/run/docker.sock
       volumes:
       - name: docker
         hostPath:
           path: /var/run/docker.sock
-      - name: jenkins-persistent-storage
-        persistentVolumeClaim:
-          claimName: jenkins-claim
+      # - name: jenkins-persistent-storage
+      #   persistentVolumeClaim:
+      #     claimName: jenkins-claim

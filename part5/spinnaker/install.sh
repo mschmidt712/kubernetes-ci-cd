@@ -6,6 +6,6 @@
 ./rollout.sh deck
 ./rollout.sh igor
 
-IP=`minikube ip`
+#IP=`minikube ip`
 
-sed 's#MINIKUBE_IP#'$IP'#' ingress.yml | kubectl apply -f -
+#sed 's#MINIKUBE_IP#'$IP'#' ingress.yml | kubectl apply -f -

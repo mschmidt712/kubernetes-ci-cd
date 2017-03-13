@@ -1,14 +1,14 @@
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: europa-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
----
+# kind: PersistentVolumeClaim
+# apiVersion: v1
+# metadata:
+#   name: europa-claim
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 10Gi
+# ---
 apiVersion: v1
 kind: Service
 metadata:
@@ -51,10 +51,10 @@ spec:
         ports:
         - containerPort: 80
           name: europa
-        volumeMounts:
-        - name: europa-persistent-storage
-          mountPath: /europa
-      volumes:
-      - name: europa-persistent-storage
-        persistentVolumeClaim:
-          claimName: europa-claim
+        # volumeMounts:
+        # - name: europa-persistent-storage
+        #   mountPath: /europa
+      # volumes:
+      # - name: europa-persistent-storage
+      #   persistentVolumeClaim:
+      #     claimName: europa-claim

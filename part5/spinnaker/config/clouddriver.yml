@@ -19,28 +19,30 @@ cf:
   accounts:
   enabled: false
 credentials:
-  challengeDestructiveActionsEnvironments: default
-  primaryAccountTypes: default
+  challengeDestructiveActionsEnvironments: k8s
+  primaryAccountTypes: k8s
 default:
   account:
-    env: default
+    env: k8s
 
 kubernetes:
   enabled: true
   accounts:
-    - name: default
+    - name: k8s
     #  kubeconfigFile: /root/kube.config
-    #   namespaces:        # optional list of namespaces to manage
+      namespaces:
+        - default
+        - spinnaker
     #   user:              # optional user to authenticate as that must exist in the provided kube config file
     #   cluster:           # optional cluster to connect to that must exist in the provided kube config file
       dockerRegistries:
-        - accountName: docker
+        - accountName: quay
         #   namespaces:    # optional list of namespaces this docker registry can deploy to
 
 dockerRegistry:
   enabled: true
   accounts:
-    - name: docker
+    - name: quay
       address: https://quay.io
       username:     # optional username for authenticating with the registry
       password:     # optional password for authenticating with the registry
@@ -48,6 +50,11 @@ dockerRegistry:
       repositories:
         - spinnaker/deck
         - spinnaker/gate
+        - spinnaker/orca
+        - spinnaker/echo
+        - spinnaker/igor
+        - spinnaker/front50
+        - spinnaker/clouddriver
     #    - moondev/nginx
     #   cacheThreads: # optional (default is 1) number of threads to cache registry contents across
     #   clientTimeoutMillis: # optional (default is 1 minute) time before the registry connection times out
