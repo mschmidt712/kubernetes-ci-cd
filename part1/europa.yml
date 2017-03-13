@@ -18,6 +18,7 @@ metadata:
 spec:
   ports:
     - port: 80
+      NodePort: 30912
   selector:
     app: europa
     tier: europa
