@@ -30,7 +30,7 @@ spec:
         tier: hello-kenzan
     spec:
       containers:
-      - image: __IMAGE__
+      - image: localhost:30912/hellokenzan:latest
         name: hello-kenzan
         ports:
         - containerPort: 80
@@ -48,7 +48,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: hello-kenzan.192.168.42.61.xip.io
+  - host: hello-kenzan.MINIKUBEIP.xip.io
     http:
       paths:
       - path: /
