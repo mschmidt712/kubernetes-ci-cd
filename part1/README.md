@@ -43,7 +43,10 @@ get registry pod with `kubectl get pods`
 `kubectl port-forward REGISTRYPOD 5000:80`
 
 setup registry at `http://localhost:5000`
-set /europa for storage. Generate token
+
+set /europa for storage. 
+
+Generate token on settigs page
 
 login to registry
 
@@ -56,6 +59,10 @@ buld custom image locally first
 `docker build -t localhost:30912/hellokenzan:latest .`
 
 `docker push localhost:30912/hellokenzan:latest`
+
+ensure image is pushed by viewing ui at http://localhost:5000. 
+
+In settings change private to public
 
 put minikube ip `minkube ip` in deployment.yaml
 
