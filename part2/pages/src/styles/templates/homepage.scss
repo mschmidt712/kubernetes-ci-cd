@@ -1,0 +1,43 @@
+@import '../utils/variables';
+
+.home-page {
+  padding-left: $page-indent;
+
+  .k8color {
+   color: $k8color;
+  }
+
+  h1 {
+    text-align: center;
+    margin-top: 2vh;
+    font-size: 3vw;
+  }
+
+  h2 {
+    font-size: 1.5vw;
+    font-weight: bold;
+  }
+}
+
+.puzzle-container {
+  width: $cell-size * $nbr-of-horizontal-cells; //12 cells wide
+  float:left;
+}
+.hint-container {
+  width: 20vw;
+  float:left;
+
+  margin-left: 4vw;
+
+  ul li {
+    white-space: nowrap;
+    list-style-type: none;
+  }
+  .down {
+  }
+
+  .across {
+
+  }
+
+}

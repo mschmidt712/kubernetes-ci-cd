@@ -1,0 +1,70 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto';
+@import './variables';
+
+// Typography
+//
+// General Site Typography Settings
+//
+// Styleguide 1.2
+
+// Headings
+//
+// `h` tags
+//
+// .h1 - Apply `h1` size
+// .h2 - Apply `h2` size
+// .h3 - Apply `h3` size
+// .h4 - Apply `h4` size
+// .h5 - Apply `h5` size
+// .h6 - Apply `h6` size
+//
+// markup:
+// <h1 class="{$modifiers}">Heading 1</h1>
+// <h2 class="{$modifiers}">Heading 2</h2>
+// <h3 class="{$modifiers}">Heading 3</h3>
+// <h4 class="{$modifiers}">Heading 4</h4>
+// <h5 class="{$modifiers}">Heading 5</h5>
+// <h6 class="{$modifiers}">Heading 6</h6>
+//
+// Styleguide 1.2.1
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 300;
+    line-height: 1.5;
+    margin-top: 0;
+}
+
+// Header loop vars
+$max-header-font-size: 2rem;
+$header-count: 6;
+
+// Loop through h tags to assign relational font size and bottom margin
+@for $i from 1 through $header-count {
+    $header-font-size: $max-header-font-size - ( ($i - 1) / $header-count);
+    h#{$i},
+    .h#{$i} {
+        font-size: $header-font-size;
+        margin-bottom: $header-font-size * .667;
+    }
+}
+
+// Paragraphs
+//
+// markup:
+// <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec tempor ante. Phasellus eget
+// rhoncus ante, at feugiat quam. Donec non lorem nulla. Nunc vitae ultrices est. Suspendisse accumsan
+// dolor enim, nec faucibus dolor convallis eget.</p>
+// <p>Nulla faucibus nisl eros, at molestie justo feugiat id. Quisque blandit arcu in molestie porttitor.
+// Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vivamus
+// sodales malesuada arcu. Cras id magna purus. Vivamus sed fringilla mauris.</p>
+//
+// Styleguide 1.2.2
+p {
+  line-height: 1.8;
+  margin: 0 0 0.75rem;
+}
