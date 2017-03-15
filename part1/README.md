@@ -61,7 +61,7 @@ open docker settings from the toolbar
 
 add the registry endpoint to your insecure registry list. It will be `MINIKUBEIP:30912`
 
-![alt text](img/registrys.png)
+![alt text](img/registry.png)
 
 restart docker after making the change
 
