@@ -48,17 +48,50 @@ set /europa for storage.
 
 Generate token on settigs page
 
+### The following steps are for osx/windows
+
+Find minikube IP
+
+`minikube ip`
+
+open docker settings from the toolbar 
+
+![alt text](img/prefs.png)
+
+
+add the registry endpoint to your insecure registry list. It will be `MINIKUBEIP:30912`
+
+![alt text](img/registrys.png)
+
+restart docker after making the change
+
 login to registry
 
-`docker login -u TOKEN -p TOKENHERE localhost:5000`
+`docker login -u TOKEN -p TOKENHERE http://MINIKUBEIP:30912`
 
-buld custom image locally first
+### the following steps are for linux
+
+edit `/etc/default/docker` and add `--indecure-registries=http://MINIKUBEIP:30912` to DOCKER_OPTS
+
+restart docker
+
+### the next steps apply to all operating systems
+
+login on minikube as well so it can pull private images
+
+```
+minikube ssh
+docker login -u TOKEN -p TOKENHERE localhost:30912`
+exit
+```
+
+build custom image locally first
 
 `cd part1/hello-kenzan;`
 
-`docker build -t localhost:30912/hellokenzan:latest .`
+`docker build -t MINIKUBEIP:30912/hellokenzan:latest .`
 
-`docker push localhost:30912/hellokenzan:latest`
+`docker push MINIKUBEIP:30912/hellokenzan:latest`
 
 ensure image is pushed by viewing ui at http://localhost:5000. 
 
