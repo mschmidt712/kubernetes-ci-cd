@@ -1,0 +1,45 @@
+@import '../utils/variables';
+
+.slider {
+  .controls {
+    .slider-control {
+      width:60%;
+      height: 5vw;
+      float: left;
+      margin-top: -2vw;
+    }
+    .scale {
+      float: right;
+      width: 20%;
+      margin-top:-0.5vw;
+
+    }
+  }
+
+  .scale-grid {
+    position: relative;
+    height: 25.4vw;
+    display: table-cell;
+    vertical-align: bottom;
+    width: 30vw;
+
+    .instance {
+      display: inline-block;
+      background-color: $k8color;
+      margin: $onesspace;
+      width: 32%;
+      color: #fff;
+      text-align: center;
+      font-size: 1rem;
+      height: 1.3rem;
+    }
+  }
+  .scale-hints {
+    clear: both;
+    font-size: 0.8rem;
+
+    P {
+      line-height: 1rem;
+    }
+  }
+}

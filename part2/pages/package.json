@@ -52,14 +52,15 @@
     "react-rte": "^0.11.0",
     "react-select": "1.0.0-rc.2",
     "react-table": "^4.3.0",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "3.6.0",
     "redux-devtools-extension": "1.0.0",
     "redux-immutable-state-invariant": "1.2.4",
     "redux-thunk": "2.1.0",
     "showdown": "^1.6.0",
     "thunk": "0.0.1",
-    "trae": "^1.1.1",
-    "toastr": "^2.1.2"
+    "toastr": "^2.1.2",
+    "trae": "^1.1.1"
   },
   "devDependencies": {
     "async": "^2.1.4",

@@ -2,14 +2,14 @@
 
 .cell {
   position: relative;
-  border: 1px solid $darkgrey;
+  border: $onesspace solid $darkgrey;
   width: $cell-size;
   height: $cell-size;
   background-color: $white;
   text-align: center;
   float:left;
-  margin-left:-1px;
-  margin-top:-1px;
+  margin-left:-$onesspace;
+  margin-top:-$onesspace;
 
   input {
     position: relative;
@@ -22,7 +22,7 @@
 }
 
 .cell.false {
-  border: 1px solid $darkgrey;
+  border: $onesspace solid $darkgrey;
   background-color: $darkgrey;
 
   input {

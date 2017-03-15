@@ -3,32 +3,27 @@
 .primary-header {
   width: 100%;
 
+  .k8color {
+    color: $k8color;
+  }
+
+  .title {
+    text-align: center;
+    margin: 0;
+    font-size: 3vw;
+
+  }
+
   .logo {
-    margin:15px 0 15px $page-indent;
-    width: 250px;
+    margin:0vw 0 0.5vw $page-indent;
+    width: 10vw;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   .primary-nav {
     background-color: $darkgrey;
-    height: 45px;
-
-    .list-unstyled {
-      margin: 0 0 0 $page-indent;
-      padding: 0;
-
-      li {
-        float: left;
-        margin-right:20px;
-        list-style: none;
-        line-height: 45px;
-
-
-        a {
-          color: #fff;
-          text-decoration: none;
-        }
-
-      }
-    }
+    height: 1vw;
   }
 }

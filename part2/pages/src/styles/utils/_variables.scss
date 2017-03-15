@@ -2,12 +2,15 @@
 $white: #fff;
 $off-white: #eee;
 $k8color: #326de6;
-$base-font-size: 1rem;
+$base-font-size: 1vw;
 $darkgrey: #303e48;
 
-$cell-size: 2rem;
+$cell-size: 2.22vw;
 $nbr-of-horizontal-cells: 13;
-$page-indent: 100px;
+$page-indent: 2vw;
+$onesspace:0.1vw;
+
+$container-padding: 1vw;
 
 // Font
 $open-sans: 'Roboto', sans-serif;

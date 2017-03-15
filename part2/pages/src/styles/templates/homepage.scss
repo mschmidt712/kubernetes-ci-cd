@@ -1,43 +1,91 @@
 @import '../utils/variables';
 
+.green {
+  background-color: #00ff00;
+  border: $onesspace solid #333;
+}
+
+button {
+  background-color: #ccc;
+  border: $onesspace solid #333;
+}
+
 .home-page {
+  padding-top: $container-padding;
   padding-left: $page-indent;
-
-  .k8color {
-   color: $k8color;
-  }
-
-  h1 {
-    text-align: center;
-    margin-top: 2vh;
-    font-size: 3vw;
-  }
-
-  h2 {
-    font-size: 1.5vw;
-    font-weight: bold;
-  }
+  clear: both;
 }
 
-.puzzle-container {
+.data-flow {
+  width:8vw;
+  float: left;
+  padding: 1vw;
+  height: 100vh;
+
+  img {
+    width: 8vw;
+    margin-top:2vw;
+  }
+}
+.puzzle {
   width: $cell-size * $nbr-of-horizontal-cells; //12 cells wide
-  float:left;
+  float: left;
+
+  .puzzle-container {
+    overflow: hidden;
+    border-left: $onesspace solid $darkgrey;
+  }
+
+  .hint-container {
+    padding-top: $container-padding;
+    width: 20vw;
+
+    ul li {
+      white-space: nowrap;
+      list-style-type: none;
+      font-size: 0.8rem;
+
+    }
+    .down {
+      h2 {
+        font-size: 1.5vw;
+        font-weight: bold;
+        margin:0;
+      }
+    }
+
+    .across {
+      h2 {
+        font-size: 1.5vw;
+        margin:0;
+        font-weight: bold;
+      }
+    }
+
+  }
+
 }
-.hint-container {
-  width: 20vw;
-  float:left;
 
-  margin-left: 4vw;
+.instances {
+  width:30vw;
+  float: left;
+}
+.persistance {
+  text-align: right;
+  width:10vw;
+  float: right;
+  padding-right: $page-indent;
+}
 
-  ul li {
-    white-space: nowrap;
-    list-style-type: none;
+.controls {
+  padding-top: $container-padding;
+
+  button:nth-child(3) {
+    float: right;
   }
-  .down {
+
+  button:nth-child(2) {
+    float: right;
+    margin-left:1vw;
   }
-
-  .across {
-
-  }
-
 }

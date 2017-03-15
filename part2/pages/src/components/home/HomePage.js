@@ -5,12 +5,29 @@ import homePageActions from '../../actions/homepageActions'
 import _ from 'lodash';
 import puzzleArray from '../../../puzzle.json';
 import Cell from '../shared/Cell';
+import InstanceGrid from '../instance-grid/InstanceGrid';
 
 class HomePage extends React.Component {
   constructor (props) {
     super(props);
     this.init();
+
+    this.state = {
+      slider: 3,
+      sliderFinalValue: 3
+    };
+
+    this.handleSlider = this.handleSlider.bind(this);
+    this.onScale = this.onScale.bind(this);
   }
+
+  handleSlider (event, value) {
+    this.setState({slider: value});
+  };
+
+  onScale () {
+    this.setState({sliderFinalValue: this.state.slider});
+  };
 
   init() {
     this.initializeGrid();
@@ -70,11 +87,15 @@ class HomePage extends React.Component {
   }
 
   render () {
+
+    let instanceProps = {min: 3, max: 48, step: 3, defaultValue: 3, value: 3, onChange: this.handleSlider, onScale: this.onScale};
+    let instanceData = {instanceFinalCount: this.state.sliderFinalValue, instanceCurrentCount: this.state.slider};
+
     const cells = this.puzzleGrid.map((column, index) => {
       return column.map((cell, i) => {
-        console.log(cell);
         return (
           <Cell
+            key={index, i}
             orientation={cell.wordOrientation}
             letter={cell.cellLetter}
             isEmpty={_.isInteger(cell.positionInWord)}></Cell>
@@ -84,36 +105,61 @@ class HomePage extends React.Component {
 
     const downHints = _.sortBy(this.downHintsArray, 'wordNbr').map((word, index) => {
       return (
-        <li>{word.wordNbr} {word.hint}</li>
+        <li key={index}>{word.wordNbr} {word.hint}</li>
       );
     });
 
     const acrossHints = _.sortBy(this.acrossHintsArray, 'wordNbr').map((word, index) => {
       return (
-        <li>{word.wordNbr} {word.hint}</li>
+        <li key={index}>{word.wordNbr} {word.hint}</li>
       );
     });
 
+
     return (
       <div className="home-page">
-        <h1><span className="k8color">K</span>r<span className="k8color">8</span>ssword Puzzle</h1>
-        <div className="puzzle-container">
-          {cells}
-        </div>
-        <div className="hint-container">
-          <div className="down">
-            <h2>Down</h2>
-            <ul>
-              {downHints}
-            </ul>
+        <div className="puzzle">
+          <div className="puzzle-container">
+            {cells}
           </div>
-          <div className="across">
-            <h2>Across</h2>
-            <ul>
-              {acrossHints}
-            </ul>
+          <div className="controls">
+            <button>Reload</button>
+            <button className="green">Submit</button>
+            <button>Clear</button>
+          </div>
+          <div className="hint-container">
+            <div className="down">
+              <h2>Down</h2>
+              <ul>
+                {downHints}
+              </ul>
+            </div>
+            <div className="across">
+              <h2>Across</h2>
+              <ul>
+                {acrossHints}
+              </ul>
+            </div>
           </div>
         </div>
+        <div className="data-flow">
+          <img src={`../../assets/arrow.png`} />
+        </div>
+        <div className="instances">
+          <InstanceGrid
+            properties={instanceProps}
+            instanceData={instanceData}>
+          </InstanceGrid>
+        </div>
+        <div className="data-flow">
+          <img src={`../../assets/arrow.png`} />
+          <img src={`../../assets/arrow.png`} />
+        </div>
+        <div className="persistance">
+            <div><img src="http://placehold.it/100x150"/></div>
+            <div><img src="http://placehold.it/100x150"/></div>
+        </div>
+
       </div>
     );
   }
