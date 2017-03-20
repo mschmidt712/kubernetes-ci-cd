@@ -65,6 +65,10 @@ button {
 .data-flow.k8instances > div {
   margin-top:7vw;
 }
+
+.data-flow.db > div {
+  margin-left: 7vw;
+}
 .puzzle {
   width: $cell-size * $nbr-of-horizontal-cells; //12 cells wide
   float: left;
