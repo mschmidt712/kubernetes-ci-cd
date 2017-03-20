@@ -1,13 +1,15 @@
 @import '../utils/variables';
 
 .green {
-  background-color: #00ff00;
-  border: $onesspace solid #333;
+  background-color: $primary-button-color;
+  border: $onesspace solid $primary-border-color;
+  color: #fff;
+  font-weight: 200;
 }
 
 button {
   background-color: #ccc;
-  border: $onesspace solid #333;
+  border: $onesspace solid $primary-border-color;
 }
 
 .home-page {
@@ -21,10 +23,47 @@ button {
   float: left;
   padding: 1vw;
 
+  div {
+    margin-top:2vw;
+    position: relative;
+    width: 6vw;
+    height: 9vw;
+  }
+
   img {
     width: 6vw;
-    margin-top:2vw;
+    opacity: 0.5;
+    position: absolute;
   }
+  img.bottom {
+    opacity: 0;
+    -webkit-animation-name: fade;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 5s;
+    animation-name: fade;
+    animation-iteration-count: infinite;
+    animation-duration: 5s;
+  }
+
+  @-webkit-keyframes fade {
+    0% {opacity: 0;}
+    20% {opacity: 1;}
+    33% {opacity: 1;}
+    53% {opacity: 1;}
+    100% {opacity: 0;}
+  }
+  @keyframes fade {
+    0% {opacity: 0;}
+    20% {opacity: 1;}
+    33% {opacity: 1;}
+    53% {opacity: 1;}
+    100% {opacity: 0;}
+  }
+
+}
+
+.data-flow.k8instances > div {
+  margin-top:7vw;
 }
 .puzzle {
   width: $cell-size * $nbr-of-horizontal-cells; //12 cells wide
@@ -74,6 +113,12 @@ button {
   width:10vw;
   float: right;
   padding-right: $page-indent;
+
+  .mongo > img, .etcd > img {
+    width: 8vw;
+    margin-top: 3vw;
+  }
+
 }
 
 .controls {

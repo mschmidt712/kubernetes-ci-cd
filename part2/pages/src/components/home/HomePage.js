@@ -98,7 +98,9 @@ class HomePage extends React.Component {
             key={index, i}
             orientation={cell.wordOrientation}
             letter={cell.cellLetter}
-            isEmpty={_.isInteger(cell.positionInWord)}></Cell>
+            isEmpty={_.isInteger(cell.positionInWord)}
+            positionInWord={cell.positionInWord}
+            wordNbr={cell.wordNbr}></Cell>
         );
       });
     });
@@ -142,8 +144,11 @@ class HomePage extends React.Component {
             </div>
           </div>
         </div>
-        <div className="data-flow">
-          <img src={`../../assets/arrow.png`} />
+        <div className="data-flow k8instances">
+          <div>
+            <img className="top" src={`../../assets/arrow.png`} />
+            <img className="bottom" src={`../../assets/arrow-blue.png`} />
+          </div>
         </div>
         <div className="instances">
           <InstanceGrid
@@ -151,13 +156,19 @@ class HomePage extends React.Component {
             instanceData={instanceData}>
           </InstanceGrid>
         </div>
-        <div className="data-flow">
-          <img src={`../../assets/arrow.png`} />
-          <img src={`../../assets/arrow.png`} />
+        <div className="data-flow db">
+          <div>
+            <img className="top" src={`../../assets/arrow.png`} />
+            <img className="bottom" src={`../../assets/arrow-blue.png`} />
+          </div>
+          <div>
+            <img className="top" src={`../../assets/arrow.png`} />
+            <img className="bottom" src={`../../assets/arrow-blue.png`} />
+          </div>
         </div>
         <div className="persistance">
-            <div><img src="http://placehold.it/100x150"/></div>
-            <div><img src="http://placehold.it/100x150"/></div>
+            <div className="mongo"><img src={`../../assets/mongo.png`}/></div>
+            <div className="etcd"><img src={`../../assets/etcd.png`}/></div>
         </div>
 
       </div>

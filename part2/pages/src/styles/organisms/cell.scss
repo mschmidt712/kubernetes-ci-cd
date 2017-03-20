@@ -18,6 +18,16 @@
     text-align: center;
     border:0;
     outline: 0;
+    font-size: 1.4vw;
+  }
+
+  .wordNbr {
+    z-index: 100;
+    position: absolute;
+    top:0.1vw;
+    left:0.1vw;
+    font-size: 0.8vw;
+    line-height: 0.8vw;
   }
 }
 

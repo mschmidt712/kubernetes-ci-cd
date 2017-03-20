@@ -5,6 +5,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 const muiTheme = getMuiTheme({
   slider: {
+    selectionColor: '#326de6'
   },
 });
 

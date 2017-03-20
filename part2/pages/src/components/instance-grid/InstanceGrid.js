@@ -24,7 +24,7 @@ function InstanceGrid (props) {
         <button className="scale green" onClick={props.properties.onScale}>Scale {props.instanceData.instanceCurrentCount}</button>
       </div>
       <div className="scale-hints">
-        <p>Choose the number of instances you want to scalein your cluster and click "Scale".
+        <p>Choose the number of instances you want to scale in your cluster and click "Scale".
           This will call our service and scale up the number of replicas to the desired size. </p>
       </div>
     </div>
@@ -41,7 +41,7 @@ InstanceGrid.propTypes = {
     onChange: PropTypes.func,
     getSliderValue: PropTypes.func,
     onScale: PropTypes.func
-    }),
+  }),
   instanceData: PropTypes.shape({
     instanceCurrentCount: PropTypes.number,
     instanceFinalCount: PropTypes.number
