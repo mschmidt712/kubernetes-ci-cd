@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: set
+  labels:
+    app: set
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: set
+    tier: set
+  type: NodePort
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: set
+  labels:
+    app: set
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: set
+        tier: set
+
+    spec:
+      containers:
+      - name: lifecycle-demo-container
+        image: chadmoon/set:latest
+
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/up.sh"]
+          preStop:
+            exec:
+              command: ["/down.sh"]

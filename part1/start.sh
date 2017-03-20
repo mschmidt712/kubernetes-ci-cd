@@ -10,7 +10,7 @@
 
 #sudo virsh net-start default
 #sudo virsh net-start docker-machines
-
+  
 minikube delete
 
 rm -rf ~/.minikube

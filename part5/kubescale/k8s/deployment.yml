@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-etcd
+  labels:
+    app: node-etcd
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: node-etcd
+    tier: node-etcd
+  type: NodePort
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: node-etcd
+  labels:
+    app: node-etcd
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: node-etcd
+        tier: node-etcd
+    spec:
+      containers:
+      - image: chadmoon/node-etcd:latest
+        name: node-etcd
+        ports:
+        - containerPort: 3000
+          name: node-etcd
