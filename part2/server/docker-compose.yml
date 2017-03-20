@@ -1,0 +1,11 @@
+mongo:
+  image: mongo
+  ports:
+    - "27017:27017"
+  command: "--smallfiles --logpath=/dev/null"
+web:
+  build: .
+  ports:
+    - "3000:3000"
+  links:
+    - mongo

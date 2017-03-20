@@ -1,0 +1,49 @@
+{
+  "name": "Crossword",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "words": [
+      {
+        "word": {
+          "type": "string",
+          "description": "The correct answer to the puzzle location",
+          "trim": true,
+          "required": true
+        },
+        "wordNbr": {
+          "type": "number",
+          "description": "The ID of the word the word",
+          "required": true
+        },
+        "startx": {
+          "type": "number",
+          "description": "The x coordinates of the starting word",
+          "required": true
+        },
+        "starty": {
+          "type": "number",
+          "description": "the y coordinate of the starting word",
+          "required": true
+        },
+        "wordOrientation": {
+          "type": "string",
+          "description": "The crossword puzzle direction of word",
+          "required": true
+        },
+        "hint": {
+          "type": "string",
+          "description": "A hint to solve the word",
+          "required": true
+        }
+      }
+    ]
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
