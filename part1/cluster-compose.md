@@ -59,3 +59,5 @@ In settings change private to public
 `kubectl apply -f k8s/deployment.yaml`
 
 view at `http://hello-kenzan.127.0.0.1.xip.io`
+
+stop cluster with `./cluster-compose.sh down`
