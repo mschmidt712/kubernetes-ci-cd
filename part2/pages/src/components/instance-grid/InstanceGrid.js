@@ -7,12 +7,12 @@ function InstanceGrid (props) {
     instances.push(<div key={i} className="instance">{i}</div>);
   }
   return (
-    <div className="slider">
-      <div className="scale-grid">
+    <div>
+      <div className="instance-grid">
         {instances}
       </div>
-      <div className="controls">
-        <div className="slider-control">
+      <div className="button-row">
+        <div className="slider">
           <Slider
             min={props.properties.min}
             max={props.properties.max}
@@ -21,7 +21,7 @@ function InstanceGrid (props) {
             onChange={props.properties.onChange}
             />
         </div>
-        <button className="scale green" onClick={props.properties.onScale}>Scale {props.instanceData.instanceCurrentCount}</button>
+        <button className="primary" onClick={props.properties.onScale}>Scale {props.instanceData.instanceCurrentCount}</button>
       </div>
       <div className="scale-hints">
         <p>Choose the number of instances you want to scale in your cluster and click "Scale".
@@ -29,7 +29,7 @@ function InstanceGrid (props) {
       </div>
     </div>
   );
-};
+}
 
 InstanceGrid.propTypes = {
   properties: PropTypes.shape({

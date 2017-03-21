@@ -1,0 +1,23 @@
+@import '../utils/variables';
+
+.puzzle {
+    box-sizing: content-box;
+    border: 2px solid $brand-blue;
+    overflow: hidden;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.puzzle-hints {
+    .hint-container {
+        padding-top: $container-padding;
+
+        .hint-category {
+            padding: 0.5rem 0;
+        }
+
+        ul > li {
+            list-style-type: none;
+        }
+    }
+}

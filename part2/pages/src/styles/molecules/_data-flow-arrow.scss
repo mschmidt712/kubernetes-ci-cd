@@ -1,0 +1,24 @@
+@import '../utils/variables';
+
+.data-flow {
+  img {
+    transform: translateX(40%);
+    opacity: 0.5;
+    width: 6rem;
+    position: absolute;
+    top: 10rem;
+  }
+
+  img.bottom {
+    opacity: 0;
+    animation-name: fade;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: cubic-bezier(0.75, 0, 0.6, 1);
+    animation-duration: 4s;
+  }
+
+  @keyframes fade {
+    100% {opacity: 1;}
+  }
+}

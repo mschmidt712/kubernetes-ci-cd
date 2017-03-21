@@ -6,7 +6,7 @@ const Cell = ({isEmpty, positionInWord, wordNbr, letter}) => {
 
   return (
     <div className={'cell ' + isEmpty}>
-      <div className="wordNbr">{showWordNumber ? wordNbr : ''}</div>
+      <div className="superscript-number">{showWordNumber ? wordNbr : ''}</div>
       <input type="text" maxLength="1" size="1" defaultValue={letter}/>
     </div>
   );

@@ -1,0 +1,26 @@
+@import '../utils/variables';
+
+.cell {
+  position: relative;
+  width: $cell-size;
+  height: $cell-size;
+  background-color: $true-white;
+  text-align: center;
+
+  input {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    border:0;
+    outline: 0;
+  }
+
+  &.false {
+    background-color: $brand-blue;
+
+    input {
+      background-color: $brand-blue;
+    }
+  }
+}
+
