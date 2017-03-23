@@ -1,0 +1,29 @@
+@import '../utils/variables';
+
+.puzzle {
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-flow: row wrap;
+    width: 24rem;
+}
+
+.puzzle-hints {
+    width: 100%; //fix for flexbox text not wrapping in IE
+
+    h6 {
+        margin: 0;
+        border-bottom: 1px solid $brand-gray
+    }
+
+    .hint-container {
+        width: 100%;
+        .hint-category {
+            padding: 0.5rem 0;
+        }
+
+        ul > li {
+            list-style-type: none;
+        }
+    }
+}

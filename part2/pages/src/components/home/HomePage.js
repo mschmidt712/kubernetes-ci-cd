@@ -1,78 +1,97 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import homePageActions from '../../actions/homepageActions'
-import _ from 'lodash';
+import homePageActions from '../../actions/homepageActions';
+import PuzzleComponent from './PuzzleComponent';
+import InstanceComponent from './InstancesComponent';
+import DataFlowArrow from './DataFlowArrow';
 import puzzleArray from '../../../puzzle.json';
-import Cell from '../shared/Cell';
-import InstanceGrid from '../instance-grid/InstanceGrid';
 
 class HomePage extends React.Component {
   constructor (props) {
     super(props);
-    this.init();
 
     this.state = {
-      slider: 3,
-      sliderFinalValue: 3
+      puzzleGrid: [],
+      downHintsArray: [],
+      acrossHintsArray: [],
+      instanceData: {
+        instanceFinalCount: 3,
+        instanceCurrentCount: 3
+      }
     };
 
+    this.initializeGrid = this.initializeGrid.bind(this);
+    this.initializePuzzleArray = this.initializePuzzleArray.bind(this);
+    this.addLetterToPuzzleArray = this.addLetterToPuzzleArray.bind(this);
     this.handleSlider = this.handleSlider.bind(this);
     this.onScale = this.onScale.bind(this);
   }
 
-  handleSlider (event, value) {
-    this.setState({slider: value});
-  };
-
-  onScale () {
-    this.setState({sliderFinalValue: this.state.slider});
-  };
-
-  init() {
-    this.initializeGrid();
+  componentWillMount () {
     // iterate through json and load array. Also populate Across and Down arrays
     this.initializePuzzleArray();
-  };
-
-  initializeGrid () {
-    const numRows = 11;
-    const numCols = 12;
-    // initialize grid with empty objects
-    this.puzzleGrid = []; // Initialize array
-    this.downHintsArray = [];
-    this.acrossHintsArray = [];
-
-    for (let i = 0 ; i < numRows; i++) {
-      this.puzzleGrid[i] = []; // Initialize inner array
-      for (let j = 0; j < numCols; j++) { // i++ needs to be j++
-        this.puzzleGrid[i][j] = {};
-      }
-    }
   }
 
-  initializePuzzleArray () {
-    puzzleArray.forEach((wordObj, index) => {
-      const lettersArray = wordObj.word.split('');
-      this.addToHintsArray(wordObj);
-      lettersArray.forEach((letter, index) => {
-        this.addLetterToPuzzleArray(wordObj, letter, index);
-      });
+  handleSlider (event, value) {
+    const instanceData = Object.assign({}, this.state.instanceData, {
+      instanceCurrentCount: value,
+      instanceFinalCount: this.state.instanceData.instanceFinalCount
+    });
+
+    this.setState({
+      instanceData
     });
   }
 
-  addToHintsArray (word) {
-    switch (word.wordOrientation) {
-      case 'down':
-        this.downHintsArray.push(word);
-        break;
-      case 'across':
-        this.acrossHintsArray.push(word);
-        break;
-    }
+  onScale () {
+    const instanceData = Object.assign({}, this.state.instanceData, {
+      instanceCurrentCount: this.state.instanceData.instanceCurrentCount,
+      instanceFinalCount: this.state.instanceData.instanceCurrentCount
+    });
+
+    this.setState({
+      instanceData
+    });
   }
 
-  addLetterToPuzzleArray (wordObj, letter, index) {
+  initializeGrid () {
+    const puzzleGrid = [];
+    const maxRows = 12;
+    const maxColumns = 11;
+
+    for (var i = 0; i < maxColumns; i++) {
+      puzzleGrid.push(new Array(maxRows).fill(''));
+    }
+
+    console.log(puzzleGrid);
+    return puzzleGrid;
+  }
+
+  initializePuzzleArray () {
+    const downHintsArray = puzzleArray.filter((word) => {
+      return (word.wordOrientation === 'down');
+    });
+    const acrossHintsArray = puzzleArray.filter((word) => {
+      return (word.wordOrientation === 'across');
+    });
+
+    let puzzleGrid = [...this.initializeGrid()];
+    puzzleArray.forEach((wordObj, index) => {
+      const lettersArray = wordObj.word.split('');
+      lettersArray.forEach((letter, index) => {
+        puzzleGrid = this.addLetterToPuzzleArray(puzzleGrid, wordObj, letter, index);
+      });
+    });
+
+    this.setState({
+      downHintsArray,
+      acrossHintsArray,
+      puzzleGrid
+    });
+  }
+
+  addLetterToPuzzleArray (puzzleGrid, wordObj, letter, index) {
     const letterObj = {
       word: wordObj.word,
       wordNbr: wordObj.wordNbr,
@@ -83,94 +102,41 @@ class HomePage extends React.Component {
       y: wordObj.wordOrientation === 'across' ? wordObj.starty : wordObj.starty + index
     };
 
-    this.puzzleGrid[letterObj.y][letterObj.x] = letterObj;
+    puzzleGrid[letterObj.y][letterObj.x] = letterObj;
+
+    return puzzleGrid;
   }
 
   render () {
-
-    let instanceProps = {min: 3, max: 48, step: 3, defaultValue: 3, value: 3, onChange: this.handleSlider, onScale: this.onScale};
-    let instanceData = {instanceFinalCount: this.state.sliderFinalValue, instanceCurrentCount: this.state.slider};
-
-    const cells = this.puzzleGrid.map((column, index) => {
-      return column.map((cell, i) => {
-        return (
-          <Cell
-            key={index, i}
-            orientation={cell.wordOrientation}
-            letter={cell.cellLetter}
-            isEmpty={_.isInteger(cell.positionInWord)}
-            positionInWord={cell.positionInWord}
-            wordNbr={cell.wordNbr}></Cell>
-        );
-      });
-    });
-
-    const downHints = _.sortBy(this.downHintsArray, 'wordNbr').map((word, index) => {
-      return (
-        <li key={index}>{word.wordNbr} {word.hint}</li>
-      );
-    });
-
-    const acrossHints = _.sortBy(this.acrossHintsArray, 'wordNbr').map((word, index) => {
-      return (
-        <li key={index}>{word.wordNbr} {word.hint}</li>
-      );
-    });
-
-
     return (
       <div className="home-page">
-        <div className="puzzle">
-          <div className="puzzle-container">
-            {cells}
-          </div>
-          <div className="controls">
-            <button>Reload</button>
-            <button className="green">Submit</button>
-            <button>Clear</button>
-          </div>
-          <div className="hint-container">
-            <div className="down">
-              <h2>Down</h2>
-              <ul>
-                {downHints}
-              </ul>
-            </div>
-            <div className="across">
-              <h2>Across</h2>
-              <ul>
-                {acrossHints}
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="data-flow k8instances">
-          <div>
-            <img className="top" src={`../../assets/arrow.png`} />
-            <img className="bottom" src={`../../assets/arrow-blue.png`} />
-          </div>
+        <PuzzleComponent
+          puzzleGrid={this.state.puzzleGrid}
+          downHintsArray={this.state.downHintsArray}
+          acrossHintsArray={this.state.acrossHintsArray}
+        />
+        <div className="data-flow">
+          <DataFlowArrow className="k8instances" />
         </div>
         <div className="instances">
-          <InstanceGrid
-            properties={instanceProps}
-            instanceData={instanceData}>
-          </InstanceGrid>
+          <InstanceComponent
+            handleSlider={this.handleSlider}
+            onScale={this.onScale}
+            instanceData={this.state.instanceData}
+          />
         </div>
-        <div className="data-flow db">
-          <div>
-            <img className="top" src={`../../assets/arrow.png`} />
-            <img className="bottom" src={`../../assets/arrow-blue.png`} />
+        <div className="data-flow image-column">
+          <DataFlowArrow className="mongo" />
+          <DataFlowArrow className="etcd" />
+        </div>
+        <div className="dbs image-column">
+          <div className="mongo">
+            <img src={`../../assets/mongo.png`}/>
           </div>
-          <div>
-            <img className="top" src={`../../assets/arrow.png`} />
-            <img className="bottom" src={`../../assets/arrow-blue.png`} />
+          <div className="etcd">
+            <img src={`../../assets/etcd.png`}/>
           </div>
         </div>
-        <div className="persistance">
-            <div className="mongo"><img src={`../../assets/mongo.png`}/></div>
-            <div className="etcd"><img src={`../../assets/etcd.png`}/></div>
-        </div>
-
       </div>
     );
   }
