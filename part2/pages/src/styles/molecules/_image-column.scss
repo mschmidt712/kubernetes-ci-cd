@@ -1,0 +1,11 @@
+.image-column {
+    div:first-child {
+        position: absolute;
+        top: 15%;
+    }
+
+    div:last-child {
+        position: absolute;
+        top: 45%;
+    }
+}

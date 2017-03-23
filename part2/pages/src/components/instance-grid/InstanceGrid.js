@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Slider from 'material-ui/Slider';
+import Slider from '../shared/Slider';
 
 function InstanceGrid (props) {
   let instances = [];
@@ -7,21 +7,13 @@ function InstanceGrid (props) {
     instances.push(<div key={i} className="instance">{i}</div>);
   }
   return (
-    <div className="slider">
-      <div className="scale-grid">
+    <div>
+      <div className="instance-grid">
         {instances}
       </div>
-      <div className="controls">
-        <div className="slider-control">
-          <Slider
-            min={props.properties.min}
-            max={props.properties.max}
-            step={props.properties.step}
-            defaultValue={props.properties.defaultValue}
-            onChange={props.properties.onChange}
-            />
-        </div>
-        <button className="scale green" onClick={props.properties.onScale}>Scale {props.instanceData.instanceCurrentCount}</button>
+      <div className="button-row instance-buttons">
+        <Slider properties={props.properties} />
+        <button className="primary" onClick={props.properties.onScale}>Scale {props.instanceData.instanceCurrentCount}</button>
       </div>
       <div className="scale-hints">
         <p>Choose the number of instances you want to scale in your cluster and click "Scale".
@@ -29,7 +21,7 @@ function InstanceGrid (props) {
       </div>
     </div>
   );
-};
+}
 
 InstanceGrid.propTypes = {
   properties: PropTypes.shape({
