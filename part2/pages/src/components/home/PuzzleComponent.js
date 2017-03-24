@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Cell from '../shared/Cell';
+import Slider from '../shared/Slider';
 import _ from 'lodash';
 
 function PuzzleComponent (props) {
@@ -34,12 +35,21 @@ function PuzzleComponent (props) {
     );
   });
 
+  const sliderProperties = {
+    min: 1,
+    max: 10,
+    step: 1,
+    defaultValue: 1,
+    onChange: () => {}
+  };
+
   return (
     <div className="crossword-container">
       <div className="puzzle-container">
         <div className="puzzle">
           {cells}
         </div>
+        <Slider properties={sliderProperties} title={'Concurrent Requests: '}/>
         <div className="button-row">
           <button className="secondary">Reload</button>
           <button className="secondary">Clear</button>
@@ -49,13 +59,13 @@ function PuzzleComponent (props) {
       <div className="puzzle-hints">
         <div className="hint-container">
           <div className="hint-category down">
-            <h4 className="bold">Down</h4>
+            <h6 className="bold">Down</h6>
             <ul>
                 {downHints}
             </ul>
           </div>
           <div className="hint-category across">
-            <h4 className="bold">Across</h4>
+            <h6 className="bold">Across</h6>
             <ul>
                 {acrossHints}
             </ul>

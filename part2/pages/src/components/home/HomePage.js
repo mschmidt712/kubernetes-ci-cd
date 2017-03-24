@@ -33,6 +33,7 @@ class HomePage extends React.Component {
   }
 
   componentWillReceiveProps (newProps) {
+    console.log(newProps);
     if (this.props.puzzleArray !== newProps.puzzleArray) {
       this.initializePuzzleArray(newProps.puzzleArray);
     }
@@ -62,9 +63,11 @@ class HomePage extends React.Component {
 
   initializeGrid () {
     const puzzleGrid = [];
+    const maxRows = 12;
+    const maxColumns = 11;
 
-    for (var i = 0; i < 11; i++) {
-      puzzleGrid.push(new Array(11).fill(''));
+    for (var i = 0; i < maxColumns; i++) {
+      puzzleGrid.push(new Array(maxRows).fill(''));
     }
 
     return puzzleGrid;
@@ -79,7 +82,6 @@ class HomePage extends React.Component {
     });
 
     let puzzleGrid = [...this.initializeGrid()];
-
     puzzleArray.forEach((wordObj, index) => {
       const lettersArray = wordObj.word.split('');
       lettersArray.forEach((letter, index) => {

@@ -4,5 +4,22 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  max-height: 35em;
+  align-items: flex-end;
+  align-content: flex-end;
+  height: 24rem;
+  margin-bottom: 1rem;
+}
+
+.instance-buttons {
+  .slider-container {
+    width: 75%;
+
+    .slider {
+      width: 90%;
+    }
+  }
+
+  button {
+    width: 25%;
+  }
 }

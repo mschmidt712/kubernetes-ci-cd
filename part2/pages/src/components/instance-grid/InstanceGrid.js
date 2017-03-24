@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Slider from 'material-ui/Slider';
+import Slider from '../shared/Slider';
 
 function InstanceGrid (props) {
   let instances = [];
@@ -11,16 +11,8 @@ function InstanceGrid (props) {
       <div className="instance-grid">
         {instances}
       </div>
-      <div className="button-row">
-        <div className="slider">
-          <Slider
-            min={props.properties.min}
-            max={props.properties.max}
-            step={props.properties.step}
-            defaultValue={props.properties.defaultValue}
-            onChange={props.properties.onChange}
-            />
-        </div>
+      <div className="button-row instance-buttons">
+        <Slider properties={props.properties} />
         <button className="primary" onClick={props.properties.onScale}>Scale {props.instanceData.instanceCurrentCount}</button>
       </div>
       <div className="scale-hints">

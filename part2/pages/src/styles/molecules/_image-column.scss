@@ -1,8 +1,15 @@
 .image-column {
+    &.data-flow {
+        transform: translateX(40%);
+    }
+
+    div:first-child {
+        position: absolute;
+        top: 15%;
+    }
 
     div:last-child {
         position: absolute;
-        top: 15em;
+        top: 45%;
     }
-
 }
