@@ -58,7 +58,8 @@
     "get": {
       "accepts": [],
       "returns": {
-        "type": "object"
+        "type": "object",
+        "root": true
       },
       "description": "This returns the crossword puzzle",
       "http": [
@@ -75,7 +76,8 @@
           "type": "array",
           "http": {
             "source": "body"
-          }
+          },
+          "default": "[{\"wordNbr\": 6,\"wordOrientation\": \"across\",\"enteredValue\": \"deploy****\"},{\"wordNbr\": 7,\"wordOrientation\": \"across\",\"enteredValue\": \"yaml\"}]"
         }
       ],
       "returns": [],
