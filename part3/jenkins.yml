@@ -75,3 +75,18 @@ spec:
       - name: jenkins-persistent-storage
         persistentVolumeClaim:
           claimName: jenkins-claim
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: jenkins-ingress
+spec:
+ rules:
+   - host: jenkins.MINIKUBEIP.xip.io
+     http:
+       paths:
+         - path: /
+           backend:
+             serviceName: jenkins
+             servicePort: 8080

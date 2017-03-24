@@ -4,6 +4,8 @@
 cd part3
 ```
 
+### Edit jenkins.yml with minikube ip
+
 ### Install jenkins
 
 ```
@@ -21,10 +23,9 @@ kubectl get pods
 kubectl exec JENKINSPOD cat /root/.jenkins/secrets/initialAdminPassword
 ```
 
-### Port-forward into jenkins and complete setup with defaults
+### Setup Jenkins with defaults
 ```
-kubectl port-forward JENKINSPOD 8888:8080
-open http://localhost:8888
+open http://jenkins.MINIKUBEIP.xip.io
 ```
 
 ### Create a new Jenkins Pipeline Job
