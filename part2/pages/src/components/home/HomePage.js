@@ -1,7 +1,4 @@
-import React, { PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import homePageActions from '../../actions/homepageActions';
+import React from 'react';
 import PuzzleComponent from './PuzzleComponent';
 import InstanceComponent from './InstancesComponent';
 import DataFlowArrow from './DataFlowArrow';
@@ -46,11 +43,7 @@ class HomePage extends React.Component {
   render () {
     return (
       <div className="home-page">
-        <PuzzleComponent
-          puzzleGrid={this.state.puzzleGrid}
-          downHintsArray={this.state.downHintsArray}
-          acrossHintsArray={this.state.acrossHintsArray}
-        />
+        <PuzzleComponent />
         <div className="data-flow">
           <DataFlowArrow className="k8instances" />
         </div>
@@ -78,22 +71,6 @@ class HomePage extends React.Component {
   }
 }
 
-HomePage.propTypes = {
-  params: PropTypes.objectOf(PropTypes.string),
-  actions: PropTypes.objectOf(PropTypes.func),
-  state: PropTypes.object
-};
+HomePage.propTypes = {};
 
-function mapStateToProps (state) {
-  return {
-    state: state
-  };
-}
-
-function mapDispatchToProps (dispatch) {
-  return {
-    actions: bindActionCreators(homePageActions, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default HomePage;

@@ -21,7 +21,7 @@ class Cell extends React.Component {
   render () {
     const cellClass = classNames({
       cell: true,
-      isEmpty: !this.props.isEmpty
+      isEmpty: this.props.isEmpty
     });
     const inputClass = classNames({
       incorrect: this.state.value && this.state.value.toLowerCase() !== this.props.letter.toLowerCase()
@@ -30,7 +30,7 @@ class Cell extends React.Component {
     return (
       <div className={cellClass}>
         <div className="superscript-number">{this.props.positionInWord === 0 ? this.props.wordNbr : ''}</div>
-        <input type="text" maxLength="1" size="1" onChange={this.onInputChange} className={inputClass} value={this.state.value} disabled={!this.props.isEmpty}/>
+        <input type="text" maxLength="1" size="1" onChange={this.onInputChange} className={inputClass} value={this.state.value} disabled={this.props.isEmpty}/>
       </div>
     );
   }
@@ -38,9 +38,9 @@ class Cell extends React.Component {
 
 Cell.propTypes = {
   isEmpty: PropTypes.bool.isRequired,
-  positionInWord: PropTypes.number.isRequired,
+  positionInWord: PropTypes.number,
   wordNbr: PropTypes.number,
-  letter: PropTypes.string.isRequired
+  letter: PropTypes.string
 };
 
 export default Cell;

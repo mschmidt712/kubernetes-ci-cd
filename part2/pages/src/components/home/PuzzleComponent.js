@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from '../../actions/puzzleActions';
 import Cell from '../shared/Cell';
 import Slider from '../shared/Slider';
 import _ from 'lodash';
-import puzzleArray from '../../../puzzle.json';
 
 class PuzzleComponent extends React.Component {
   constructor (props) {
@@ -14,15 +16,17 @@ class PuzzleComponent extends React.Component {
       acrossHints: []
     };
 
-    this.initializeGrid = this.initializeGrid.bind(this);
     this.initializePuzzleArray = this.initializePuzzleArray.bind(this);
-    this.addLetterToPuzzleArray = this.addLetterToPuzzleArray.bind(this);
-    this.buildCells = this.buildCells.bind(this);
   }
 
   componentWillMount () {
-    // iterate through json and load array. Also populate Across and Down arrays
-    this.initializePuzzleArray();
+    this.props.actions.getPuzzleData();
+  }
+
+  componentWillReceiveProps (newProps) {
+    if (this.props.puzzleArray !== newProps.puzzleArray) {
+      this.initializePuzzleArray(newProps.puzzleArray);
+    }
   }
 
   initializeGrid () {
@@ -37,7 +41,7 @@ class PuzzleComponent extends React.Component {
     return puzzleGrid;
   }
 
-  initializePuzzleArray () {
+  initializePuzzleArray (puzzleArray) {
     const downHintsArray = puzzleArray.filter((word) => {
       return (word.wordOrientation === 'down');
     });
@@ -57,6 +61,7 @@ class PuzzleComponent extends React.Component {
     });
 
     const cells = this.buildCells(puzzleGrid);
+    console.log(cells);
 
     this.setState({
       downHints,
@@ -82,23 +87,19 @@ class PuzzleComponent extends React.Component {
   }
 
   buildCells (puzzleGrid) {
-    const cells = puzzleGrid.map((column, index) => {
+    return puzzleGrid.map((column, index) => {
       return column.map((cell, i) => {
         return (
           <Cell
             key={index + i}
             orientation={cell.wordOrientation}
             letter={cell.cellLetter}
-            isEmpty={_.isInteger(cell.positionInWord)}
+            isEmpty={!_.isInteger(cell.positionInWord)}
             positionInWord={cell.positionInWord}
             wordNbr={cell.wordNbr}
           />
         );
       });
-    });
-
-    this.setState({
-      cells
     });
   }
 
@@ -155,6 +156,22 @@ class PuzzleComponent extends React.Component {
   }
 }
 
-PuzzleComponent.propTypes = {};
+PuzzleComponent.propTypes = {
+  actions: PropTypes.objectOf(PropTypes.func),
+  state: PropTypes.object,
+  puzzleArray: PropTypes.array
+};
 
-export default PuzzleComponent;
+function mapStateToProps (state) {
+  return {
+    puzzleArray: state.puzzle.puzzleData || []
+  };
+}
+
+function mapDispatchToProps (dispatch) {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PuzzleComponent);
