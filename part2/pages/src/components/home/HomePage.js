@@ -5,32 +5,20 @@ import homePageActions from '../../actions/homepageActions';
 import PuzzleComponent from './PuzzleComponent';
 import InstanceComponent from './InstancesComponent';
 import DataFlowArrow from './DataFlowArrow';
-import puzzleArray from '../../../puzzle.json';
 
 class HomePage extends React.Component {
   constructor (props) {
     super(props);
 
     this.state = {
-      puzzleGrid: [],
-      downHintsArray: [],
-      acrossHintsArray: [],
       instanceData: {
         instanceFinalCount: 3,
         instanceCurrentCount: 3
       }
     };
 
-    this.initializeGrid = this.initializeGrid.bind(this);
-    this.initializePuzzleArray = this.initializePuzzleArray.bind(this);
-    this.addLetterToPuzzleArray = this.addLetterToPuzzleArray.bind(this);
     this.handleSlider = this.handleSlider.bind(this);
     this.onScale = this.onScale.bind(this);
-  }
-
-  componentWillMount () {
-    // iterate through json and load array. Also populate Across and Down arrays
-    this.initializePuzzleArray();
   }
 
   handleSlider (event, value) {
@@ -53,58 +41,6 @@ class HomePage extends React.Component {
     this.setState({
       instanceData
     });
-  }
-
-  initializeGrid () {
-    const puzzleGrid = [];
-    const maxRows = 12;
-    const maxColumns = 11;
-
-    for (var i = 0; i < maxColumns; i++) {
-      puzzleGrid.push(new Array(maxRows).fill(''));
-    }
-
-    console.log(puzzleGrid);
-    return puzzleGrid;
-  }
-
-  initializePuzzleArray () {
-    const downHintsArray = puzzleArray.filter((word) => {
-      return (word.wordOrientation === 'down');
-    });
-    const acrossHintsArray = puzzleArray.filter((word) => {
-      return (word.wordOrientation === 'across');
-    });
-
-    let puzzleGrid = [...this.initializeGrid()];
-    puzzleArray.forEach((wordObj, index) => {
-      const lettersArray = wordObj.word.split('');
-      lettersArray.forEach((letter, index) => {
-        puzzleGrid = this.addLetterToPuzzleArray(puzzleGrid, wordObj, letter, index);
-      });
-    });
-
-    this.setState({
-      downHintsArray,
-      acrossHintsArray,
-      puzzleGrid
-    });
-  }
-
-  addLetterToPuzzleArray (puzzleGrid, wordObj, letter, index) {
-    const letterObj = {
-      word: wordObj.word,
-      wordNbr: wordObj.wordNbr,
-      positionInWord: index,
-      cellLetter: letter,
-      wordOrientation: wordObj.wordOrientation,
-      x: wordObj.wordOrientation === 'across' ? wordObj.startx + index : wordObj.startx,
-      y: wordObj.wordOrientation === 'across' ? wordObj.starty : wordObj.starty + index
-    };
-
-    puzzleGrid[letterObj.y][letterObj.x] = letterObj;
-
-    return puzzleGrid;
   }
 
   render () {
