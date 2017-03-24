@@ -1,6 +1,6 @@
 ## Using cluster-compose instead of minikube
 
-The only requirements are docker and kubectl
+The primary requirements are docker and kubectl. You'll also want to install wget and md5sha1sum if you don't have them (you can `brew install` both). 
 
 ### Increase Docker memory settings to 4gb
 
@@ -18,16 +18,16 @@ sudo ./cluster-compose.sh up
 ### Start tutorial
 
 ```
-git clone https://github.com/kenzanlabs/kubernetes-ci-cd.git; cd kubernetes-ci-cd
+git clone https://github.com/kenzanlabs/kubernetes-ci-cd.git; cd kubernetes-ci-cd/part1
 ```
 
 ### setup registry
 
-`kubectl apply -f volumes.yml`
+`sudo kubectl apply -f volumes.yml`
 
-`kubectl apply -f mysql.yml`
+`sudo kubectl apply -f mysql.yml`
 
-`kubectl apply -f europa.yml`
+`sudo kubectl apply -f europa.yml`
 
 wait for pods with `kubectl get pods`
 
@@ -45,7 +45,7 @@ docker login -u TOKEN -p TOKENHERE 127.0.0.1:30912
 
 build custom image locally first
 
-`cd part1/hello-kenzan;`
+`cd hello-kenzan;`
 
 `docker build -t 127.0.0.1:30912/hellokenzan:latest .`
 

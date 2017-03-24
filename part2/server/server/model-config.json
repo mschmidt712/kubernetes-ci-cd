@@ -14,7 +14,8 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "db",
+    "public": false
   },
   "AccessToken": {
     "dataSource": "db",
@@ -35,11 +36,17 @@
     "dataSource": "db",
     "public": false
   },
-  "Message": {
-    "dataSource": null
-  },
   "Crossword": {
     "dataSource": "db",
-    "public": true
+    "options": {
+      "remoting": {
+        "sharedMethods": {
+          "*": false,
+          "get": true,
+          "put": true,
+          "clear": true
+        }
+      }
+    }
   }
 }
