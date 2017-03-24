@@ -2,9 +2,10 @@
 
 .primary-header {
   width: 100%;
+  background-color: $true-white;
 
   .k8color {
-    color: $k8color;
+    color: $kubernetes-blue;
   }
 
   .title {
@@ -15,15 +16,15 @@
   }
 
   .logo {
-    margin:0vw 0 0.5vw $page-indent;
-    width: 10vw;
+    margin:0 0 0.5rem $page-indent;
+    width: 10rem;
     position: absolute;
     top: 0;
     left: 0;
   }
 
-  .primary-nav {
-    background-color: $darkgrey;
-    height: 1vw;
+  .header-border {
+    background-color: $brand-blue;
+    height: 1rem;
   }
 }
