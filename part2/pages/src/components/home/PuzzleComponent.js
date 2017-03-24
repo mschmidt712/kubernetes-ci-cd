@@ -155,7 +155,6 @@ class PuzzleComponent extends React.Component {
   }
 }
 
-PuzzleComponent.propTypes = {
-};
+PuzzleComponent.propTypes = {};
 
 export default PuzzleComponent;
