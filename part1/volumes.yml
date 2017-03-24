@@ -41,17 +41,17 @@ spec:
   hostPath:
     path: "/data/jenkins/"
 
----
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: gogs
-  labels:
-    type: local
-spec:
-  capacity:
-    storage: 2Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: "/data/gogs/"    
+# ---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: gogs
+#   labels:
+#     type: local
+# spec:
+#   capacity:
+#     storage: 2Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/data/gogs/"    

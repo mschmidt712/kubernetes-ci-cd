@@ -30,7 +30,7 @@ spec:
         tier: hello-kenzan
     spec:
       containers:
-      - image: localhost:30912/hellokenzan:latest
+      - image: 127.0.0.1:30912/hellokenzan:latest
         name: hello-kenzan
         ports:
         - containerPort: 80
@@ -40,18 +40,13 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: hello-kenzan
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
+ name: hello-kenzan-ingress
 spec:
-  backend:
-    serviceName: default-http-backend
-    servicePort: 80
-  rules:
-  - host: hello-kenzan.MINIKUBEIP.xip.io
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: hello-kenzan
-          servicePort: 80
+ rules:
+   - host: hello-kenzan.127.0.0.1.xip.io
+     http:
+       paths:
+         - path: /
+           backend:
+             serviceName: hello-kenzan
+             servicePort: 80

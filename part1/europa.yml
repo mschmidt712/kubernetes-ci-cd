@@ -59,3 +59,18 @@ spec:
       # - name: europa-persistent-storage
       #   persistentVolumeClaim:
       #     claimName: europa-claim
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: europa-ingress
+spec:
+ rules:
+   - host: europa.127.0.0.1.xip.io
+     http:
+       paths:
+         - path: /
+           backend:
+             serviceName: europa
+             servicePort: 80
