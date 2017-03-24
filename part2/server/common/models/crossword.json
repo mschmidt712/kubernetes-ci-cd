@@ -1,49 +1,107 @@
 {
   "name": "Crossword",
   "base": "PersistedModel",
-  "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "words": [
-      {
-        "word": {
-          "type": "string",
-          "description": "The correct answer to the puzzle location",
-          "trim": true,
-          "required": true
-        },
-        "wordNbr": {
-          "type": "number",
-          "description": "The ID of the word the word",
-          "required": true
-        },
-        "startx": {
-          "type": "number",
-          "description": "The x coordinates of the starting word",
-          "required": true
-        },
-        "starty": {
-          "type": "number",
-          "description": "the y coordinate of the starting word",
-          "required": true
-        },
-        "wordOrientation": {
-          "type": "string",
-          "description": "The crossword puzzle direction of word",
-          "required": true
-        },
-        "hint": {
-          "type": "string",
-          "description": "A hint to solve the word",
-          "required": true
+    "fromCache": {
+      "type": "boolean"
+    },
+    "words": {
+      "type": [
+        {
+          "word": {
+            "type": "string",
+            "description": "The correct answer to the puzzle location",
+            "trim": true,
+            "required": true
+          },
+          "wordNbr": {
+            "type": "number",
+            "description": "The ID of the word the word",
+            "required": true
+          },
+          "startX": {
+            "type": "number",
+            "description": "The x coordinates of the starting word",
+            "required": true
+          },
+          "startY": {
+            "type": "number",
+            "description": "the y coordinate of the starting word",
+            "required": true
+          },
+          "wordOrientation": {
+            "type": "string",
+            "description": "The crossword puzzle direction of word",
+            "required": true
+          },
+          "hint": {
+            "type": "string",
+            "description": "A hint to solve the word",
+            "required": true
+          },
+          "enteredValue": {
+            "type": "string",
+            "description": "The value that the user entered in the puzzle",
+            "required": false
+          }
         }
-      }
-    ]
+      ]
+    }
   },
   "validations": [],
   "relations": {},
   "acls": [],
-  "methods": {}
+  "methods": {
+    "get": {
+      "accepts": [],
+      "returns": {
+        "type": "object",
+        "root": true
+      },
+      "description": "This returns the crossword puzzle",
+      "http": [
+        {
+          "path": "/",
+          "verb": "get"
+        }
+      ]
+    },
+    "put": {
+      "accepts": [
+        {
+          "arg": "words",
+          "type": "array",
+          "http": {
+            "source": "body"
+          },
+          "default": "[{\"wordNbr\": 6,\"wordOrientation\": \"across\",\"enteredValue\": \"deploy****\"},{\"wordNbr\": 7,\"wordOrientation\": \"across\",\"enteredValue\": \"yaml\"}]"
+        }
+      ],
+      "returns": [],
+      "description": "This updates the backend data store with new values updated by the user",
+      "http": [
+        {
+          "path": "/",
+          "verb": "put"
+        }
+      ]
+    },
+    "clear": {
+      "accepts": [],
+      "returns": [],
+      "description": "This clears the any values entered by the user from the backend. It will remove any values of 'enteredValue' from the database.",
+      "http": [
+        {
+          "path": "/clear",
+          "verb": "put"
+        }
+      ]
+    }
+  },
+  "http": {
+    "path": "/crossword"
+  }
 }
