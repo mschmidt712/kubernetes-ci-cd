@@ -29,7 +29,7 @@ open http://localhost:8888
 
 ### Create a new Jenkins Pipeline Job
 
-### Choose "Jenkinsfile from SCM" and put `https://github.com/kenzanlabs/kubernetes-ci-cd.git` for the target repository (or your fork). For `Jenkinsfile path` put `part3/Jenkinsfile`
+Choose "Jenkinsfile from SCM" and put `https://github.com/kenzanlabs/kubernetes-ci-cd.git` for the target repository (or your fork). For `Jenkinsfile path` put `part3/Jenkinsfile`
 
 ### Run Job
 
