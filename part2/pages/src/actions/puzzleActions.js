@@ -11,3 +11,18 @@ export function getPuzzleData () {
       });
   };
 }
+
+export function submitPuzzleData (data) {
+  return dispatch => {
+    return fetch('../../puzzle.json', {
+      method: 'POST',
+      body: data
+    })
+      .then((resp) => {
+        return resp.json();
+      })
+      .then((json) => {
+        dispatch({type: actions.puzzle.GET_PUZZLE_DATA, data: json});
+      });
+  };
+}

@@ -13,10 +13,15 @@ class PuzzleComponent extends React.Component {
     this.state = {
       cells: [],
       downHints: [],
-      acrossHints: []
+      acrossHints: [],
+      puzzleGrid: []
     };
 
     this.initializePuzzleArray = this.initializePuzzleArray.bind(this);
+    this.convertPuzzleGridToPuzzleArray = this.convertPuzzleGridToPuzzleArray.bind(this);
+    this.onCellInput = this.onCellInput.bind(this);
+    this.clearPuzzle = this.clearPuzzle.bind(this);
+    this.submitPuzzle = this.submitPuzzle.bind(this);
   }
 
   componentWillMount () {
@@ -61,11 +66,11 @@ class PuzzleComponent extends React.Component {
     });
 
     const cells = this.buildCells(puzzleGrid);
-    console.log(cells);
 
     this.setState({
       downHints,
       acrossHints,
+      puzzleGrid,
       cells
     });
   }
@@ -76,6 +81,7 @@ class PuzzleComponent extends React.Component {
       wordNbr: wordObj.wordNbr,
       positionInWord: index,
       cellLetter: letter,
+      currentValue: '',
       wordOrientation: wordObj.wordOrientation,
       x: wordObj.wordOrientation === 'across' ? wordObj.startx + index : wordObj.startx,
       y: wordObj.wordOrientation === 'across' ? wordObj.starty : wordObj.starty + index
@@ -92,14 +98,42 @@ class PuzzleComponent extends React.Component {
         return (
           <Cell
             key={index + i}
+            id={'cell'.concat('-', index, '-', i)}
             orientation={cell.wordOrientation}
             letter={cell.cellLetter}
+            value={cell.currentValue}
             isEmpty={!_.isInteger(cell.positionInWord)}
             positionInWord={cell.positionInWord}
             wordNbr={cell.wordNbr}
+            onCellInput={this.onCellInput}
           />
         );
       });
+    });
+  }
+
+  onCellInput (e) {
+    const cellData = e.target.name.split('-');
+    const row = cellData[1];
+    const col = cellData[2];
+
+    const puzzleGrid = this.state.puzzleGrid.map((colData, rowIndex) => {
+      return colData.map((cell, colIndex) => {
+        if (rowIndex == row && colIndex == col) {
+          return Object.assign({}, cell, {
+            currentValue: e.target.value
+          });
+        } else {
+          return cell;
+        }
+      });
+    });
+
+    const cells = this.buildCells(puzzleGrid);
+
+    this.setState({
+      puzzleGrid,
+      cells
     });
   }
 
@@ -111,6 +145,52 @@ class PuzzleComponent extends React.Component {
         </li>
       );
     });
+  }
+
+  convertPuzzleGridToPuzzleArray () {
+    const submission = this.props.puzzleArray.map((word) => {
+      const startx = word.startx;
+      const starty = word.starty;
+      const length = word.word.length;
+      const direction = word.wordOrientation;
+
+      const enteredLetters = this.state.puzzleGrid.map((colData, row) => {
+        return colData.map((cell, col) => {
+          if (startx === col && starty === row) {
+            return cell.currentValue;
+          }
+
+          for (let i = 1; i < length; i++) {
+            if (direction === 'down' && startx === col && starty + i === row) {
+              return cell.currentValue;
+            } else if (direction === 'across' && startx + i === col && starty === row) {
+              return cell.currentValue;
+            }
+          }
+        });
+      });
+
+      const enteredValue = enteredLetters.reduce((arr, val) => {
+        return arr.concat(val);
+      }).join('');
+
+      return Object.assign({}, word, {
+        enteredValue
+      });
+    });
+
+    return submission;
+  }
+
+  clearPuzzle () {
+    this.initializePuzzleArray(this.props.puzzleArray);
+  }
+
+  submitPuzzle (e) {
+    e.preventDefault();
+    const submission = this.convertPuzzleGridToPuzzleArray();
+
+    //TODO Redux Action to handle puzzle submission.
   }
 
   render () {
@@ -125,15 +205,17 @@ class PuzzleComponent extends React.Component {
     return (
       <div className="crossword-container">
         <div className="puzzle-container">
-          <div className="puzzle">
-            {this.state.cells}
-          </div>
-          <Slider properties={sliderProperties} title={'Concurrent Requests: '}/>
-          <div className="button-row">
-            <button className="secondary">Reload</button>
-            <button className="secondary">Clear</button>
-            <button className="primary">Submit</button>
-          </div>
+          <form onSubmit={this.submitPuzzle}>
+            <div className="puzzle">
+              {this.state.cells}
+            </div>
+            <Slider properties={sliderProperties} title={'Concurrent Requests: '}/>
+            <div className="button-row">
+              <button className="secondary">Reload</button>
+              <button className="secondary" onClick={this.clearPuzzle}>Clear</button>
+              <input className="button primary" type="submit" />
+            </div>
+          </form>
         </div>
         <div className="puzzle-hints">
           <div className="hint-container">
