@@ -59,13 +59,13 @@ function PuzzleComponent (props) {
       <div className="puzzle-hints">
         <div className="hint-container">
           <div className="hint-category down">
-            <h4 className="bold">Down</h4>
+            <h6 className="bold">Down</h6>
             <ul>
                 {downHints}
             </ul>
           </div>
           <div className="hint-category across">
-            <h4 className="bold">Across</h4>
+            <h6 className="bold">Across</h6>
             <ul>
                 {acrossHints}
             </ul>
