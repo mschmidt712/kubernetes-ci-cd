@@ -43,7 +43,7 @@ metadata:
  name: hello-kenzan-ingress
 spec:
  rules:
-   - host: hello-kenzan.127.0.0.1.xip.io
+   - host: hello-kenzan.MINIKUBEIP.xip.io
      http:
        paths:
          - path: /
