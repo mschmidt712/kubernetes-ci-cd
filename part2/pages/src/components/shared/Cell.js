@@ -22,7 +22,6 @@ function Cell (props) {
         className={inputClass}
         value={props.value}
         disabled={props.isEmpty}
-        required={!props.isEmpty}
       />
     </div>
   );

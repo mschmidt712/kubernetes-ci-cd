@@ -157,14 +157,14 @@ class PuzzleComponent extends React.Component {
       const enteredLetters = this.state.puzzleGrid.map((colData, row) => {
         return colData.map((cell, col) => {
           if (startx === col && starty === row) {
-            return cell.currentValue;
+            return cell.currentValue || '*';
           }
 
           for (let i = 1; i < length; i++) {
             if (direction === 'down' && startx === col && starty + i === row) {
-              return cell.currentValue;
+              return cell.currentValue || '*';
             } else if (direction === 'across' && startx + i === col && starty === row) {
-              return cell.currentValue;
+              return cell.currentValue || '*';
             }
           }
         });
@@ -190,7 +190,7 @@ class PuzzleComponent extends React.Component {
     e.preventDefault();
     const submission = this.convertPuzzleGridToPuzzleArray();
 
-    //TODO Redux Action to handle puzzle submission.
+    console.log(submission);
   }
 
   render () {
