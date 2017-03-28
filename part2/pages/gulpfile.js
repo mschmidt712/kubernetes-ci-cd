@@ -84,7 +84,7 @@ gulp.task('serve:dev', ['build:dev', 'watch:html', 'watch:sass', 'watch:js'], ()
       middleware: [historyApiFallback()]
     },
     logLevel: 'info',
-    port: 3000
+    port: 3002
   });
 
   // // Start up api server

@@ -20,6 +20,7 @@ class PuzzleComponent extends React.Component {
     this.initializePuzzleArray = this.initializePuzzleArray.bind(this);
     this.convertPuzzleGridToPuzzleArray = this.convertPuzzleGridToPuzzleArray.bind(this);
     this.onCellInput = this.onCellInput.bind(this);
+    this.reloadPuzzle = this.reloadPuzzle.bind(this);
     this.clearPuzzle = this.clearPuzzle.bind(this);
     this.submitPuzzle = this.submitPuzzle.bind(this);
   }
@@ -60,8 +61,9 @@ class PuzzleComponent extends React.Component {
     let puzzleGrid = [...this.initializeGrid()];
     puzzleArray.forEach((wordObj, index) => {
       const lettersArray = wordObj.word.split('');
+      const enteredValueArray = wordObj.enteredValue.split('');
       lettersArray.forEach((letter, index) => {
-        puzzleGrid = this.addLetterToPuzzleArray(puzzleGrid, wordObj, letter, index);
+        puzzleGrid = this.addLetterToPuzzleArray(puzzleGrid, wordObj, letter, enteredValueArray[index], index);
       });
     });
 
@@ -75,13 +77,13 @@ class PuzzleComponent extends React.Component {
     });
   }
 
-  addLetterToPuzzleArray (puzzleGrid, wordObj, letter, index) {
+  addLetterToPuzzleArray (puzzleGrid, wordObj, letter, enteredValue, index) {
     const letterObj = {
       word: wordObj.word,
       wordNbr: wordObj.wordNbr,
       positionInWord: index,
       cellLetter: letter,
-      currentValue: '',
+      currentValue: enteredValue,
       wordOrientation: wordObj.wordOrientation,
       x: wordObj.wordOrientation === 'across' ? wordObj.startx + index : wordObj.startx,
       y: wordObj.wordOrientation === 'across' ? wordObj.starty : wordObj.starty + index
@@ -182,15 +184,26 @@ class PuzzleComponent extends React.Component {
     return submission;
   }
 
+  reloadPuzzle () {
+    this.props.actions.getPuzzleData();
+  }
+
   clearPuzzle () {
-    this.initializePuzzleArray(this.props.puzzleArray);
+    let submission = [...this.props.puzzleArray];
+    submission = submission.map(obj => {
+      const letters = obj.enteredValue.length;
+      obj.enteredValue = new Array(letters).fill('*').join('');
+      return obj;
+    });
+
+    this.props.actions.submitPuzzleData(this.props.puzzleId, submission);
   }
 
   submitPuzzle (e) {
     e.preventDefault();
     const submission = this.convertPuzzleGridToPuzzleArray();
 
-    console.log(submission);
+    this.props.actions.submitPuzzleData(this.props.puzzleId, submission);
   }
 
   render () {
@@ -211,8 +224,8 @@ class PuzzleComponent extends React.Component {
             </div>
             <Slider properties={sliderProperties} title={'Concurrent Requests: '}/>
             <div className="button-row">
-              <button className="secondary">Reload</button>
-              <button className="secondary" onClick={this.clearPuzzle}>Clear</button>
+              <button className="secondary" type="button" onClick={this.reloadPuzzle}>Reload</button>
+              <button className="secondary" type="button" onClick={this.clearPuzzle}>Clear</button>
               <input className="button primary" type="submit" />
             </div>
           </form>
@@ -241,12 +254,15 @@ class PuzzleComponent extends React.Component {
 PuzzleComponent.propTypes = {
   actions: PropTypes.objectOf(PropTypes.func),
   state: PropTypes.object,
-  puzzleArray: PropTypes.array
+  puzzleArray: PropTypes.array,
+  puzzleId: PropTypes.string
 };
 
 function mapStateToProps (state) {
+  console.log(state);
   return {
-    puzzleArray: state.puzzle.puzzleData || []
+    puzzleId: state.puzzle.id,
+    puzzleArray: state.puzzle.puzzleData
   };
 }
 

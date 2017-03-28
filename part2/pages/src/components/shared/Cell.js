@@ -10,6 +10,8 @@ function Cell (props) {
     incorrect: props.value && props.value.toLowerCase() !== props.letter.toLowerCase()
   });
 
+  const currentVal = props.value === '*' ? '' : props.value;
+
   return (
     <div className={cellClass}>
       <div className="superscript-number">{props.positionInWord === 0 ? props.wordNbr : ''}</div>
@@ -20,7 +22,7 @@ function Cell (props) {
         size="1"
         onChange={props.onCellInput}
         className={inputClass}
-        value={props.value}
+        value={currentVal}
         disabled={props.isEmpty}
       />
     </div>
