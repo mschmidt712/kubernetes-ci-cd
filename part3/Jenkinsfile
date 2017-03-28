@@ -18,6 +18,8 @@ node {
     
     stage "Push"
 
+        sh "docker login -u TOKEN -p 05np5t4vm4d6n0lpjjs0jjpv61 127.0.0.1:30912"
+
         sh "docker push ${imageName}"
 
     stage "Deploy"
