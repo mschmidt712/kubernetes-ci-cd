@@ -7,7 +7,7 @@ node {
     sh "git rev-parse --short HEAD > commit-id"
 
     tag = readFile('commit-id').replace("\n", "").replace("\r", "")
-    appName = "hello-kenzan"
+    appName = "hellokenzan"
     registryHost = "127.0.0.1:30912/"
     imageName = "${registryHost}${appName}:${tag}"
     env.BUILDIMG=imageName
@@ -24,5 +24,5 @@ node {
 
     stage "Deploy"
 
-        sh "sed 's#__IMAGE__#'$BUILDIMG'#' part1/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
+        sh "sed 's#127.0.0.1:30912/hellokenzan:latest#'$BUILDIMG'#' part1/hello-kenzan/k8s/deployment.yaml | kubectl apply -f -"
 }
