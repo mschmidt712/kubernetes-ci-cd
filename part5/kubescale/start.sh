@@ -100,18 +100,18 @@ docker rm socat-minikube
 
 #proxy container for ingress
 
-# docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
+docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
 
-# kubectl apply -f k8s/ing.yml
+kubectl apply -f k8s/ing.yml
 
 sleep 5
 
-# open http://kubescale.127.0.0.1.xip.io || true
-# xdg-open http://kubescale.127.0.0.1.xip.io || true
+open http://kubescale.127.0.0.1.xip.io || true
+xdg-open http://kubescale.127.0.0.1.xip.io || true
 
-PODID=`kubectl get pods --selector=app=kubescale --output=jsonpath={.items..metadata.name}`
+# PODID=`kubectl get pods --selector=app=kubescale --output=jsonpath={.items..metadata.name}`
 
-echo "starting forward for $PODID"
-echo "open http://localhost:3434 to view kubescale"
+# echo "starting forward for $PODID"
+# echo "open http://localhost:3434 to view kubescale"
 
-kubectl port-forward $PODID 3434:3000
+# kubectl port-forward $PODID 3434:3000
