@@ -10,7 +10,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: dashboard.MINIKUBE_IP.xip.io
+  - host: minikube dashboard
     http:
       paths:
       - path: /
