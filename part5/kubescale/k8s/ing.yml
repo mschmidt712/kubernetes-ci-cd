@@ -43,4 +43,4 @@ spec:
       - path: /
         backend:
           serviceName: kubescale
-          servicePort: 80
+          servicePort: 3000

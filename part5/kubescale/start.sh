@@ -88,19 +88,30 @@ docker rm socat-registry
 echo "deploying kubescale and set"
 
 kubectl apply -f k8s/set.yml
+kubectl rollout status -f k8s/set.yml
 kubectl apply -f k8s/kubescale.yml
-
-
+kubectl rollout status -f k8s/kubescale.yml
 
 #temp container for forwarding to registry
+
 
 docker stop socat-minikube
 docker rm socat-minikube
 
-docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
+#proxy container for ingress
 
-kubectl apply -f k8s/ing.yml
+# docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
+
+# kubectl apply -f k8s/ing.yml
 
 sleep 5
 
-open http://kubescale.127.0.0.1.xip.io
+# open http://kubescale.127.0.0.1.xip.io || true
+# xdg-open http://kubescale.127.0.0.1.xip.io || true
+
+PODID=`kubectl get pods --selector=app=kubescale --output=jsonpath={.items..metadata.name}`
+
+echo "starting forward for $PODID"
+echo "open http://localhost:3434 to view kubescale"
+
+kubectl port-forward $PODID 3434:3000
