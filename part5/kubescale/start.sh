@@ -5,22 +5,31 @@ echo "starting cluster"
 
 minikube start --memory 5000 --cpus 4 --kubernetes-version v1.6.0-rc.1
 
-echo "enabling addons"
+# echo "enabling addons"
 
-minikube addons enable heapster
+# minikube addons enable heapster
 
-minikube addons enable ingress
+# minikube addons enable ingress
 
 echo "installing etcd operator"
 kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
 kubectl rollout status -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
 
+
+until kubectl get thirdpartyresource cluster.etcd.coreos.com
+do
+    echo "waiting for operator"
+    sleep 2
+done
+
+kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster.yaml
+
 echo "installing registry"
 kubectl apply -f k8s/registry.yml
 kubectl rollout status deployment/registry
 
-echo "installing etcd cluster"
 
+echo "installing etcd cluster service"
 kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster-nodeport-service.json
 
 echo "waiting for etcd cluster to turnup"
@@ -42,13 +51,13 @@ kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.c
 kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
 kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
 
-echo "building kubescale image"
+# echo "building kubescale image"
 
-docker build -t 127.0.0.1:30400/kubescale:latest .
+# docker build -t 127.0.0.1:30400/kubescale:latest .
 
-echo "building set image"
+# echo "building set image"
 
-docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
+# docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
 
 
 
