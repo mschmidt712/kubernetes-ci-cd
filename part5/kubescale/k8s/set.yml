@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
       - name: lifecycle-demo-container
-        image: chadmoon/set:latest
+        image: 127.0.0.1:30400/set:latest
 
         lifecycle:
           postStart:
