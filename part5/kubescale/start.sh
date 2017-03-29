@@ -53,14 +53,13 @@
 # kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
 # kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
 
-# echo "building kubescale image"
+echo "building kubescale image"
 
-# docker build -t 127.0.0.1:30400/kubescale:latest .
+docker build -t 127.0.0.1:30400/kubescale:latest .
 
-# echo "building set image"
+echo "building set image"
 
-# docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
-
+docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
 
 
 echo "forwarding registry port"
@@ -68,13 +67,13 @@ echo "forwarding registry port"
 #minikubeip=`minikube ip`
 
 #temp container for forwarding to registry
-docker run -d --name socat-registry -p 4000:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:192.168.99.108:30400"
+docker run -d --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:192.168.99.108:30400"
 
 sleep 5
 
 echo "pushing kubescale image"
-docker tag nginx:latest 127.0.0.1:4000/rad:latest
-docker push 127.0.0.1:4000/rad:latest
+docker push 127.0.0.1:30400/kubescale:latest
+docker push 127.0.0.1:30400/set:latest
 
 echo "pushing set image"
 
@@ -86,14 +85,18 @@ echo "killing port-forward"
 docker stop socat-registry
 docker rm socat-registry
 
-# echo "deploying kubescale and set"
+echo "deploying kubescale and set"
 
-# kubectl apply -f k8s/set.yml
-# kubectl apply -f k8s/kubescale.yml
+kubectl apply -f k8s/set.yml
+kubectl apply -f k8s/kubescale.yml
 
 
 
-# #temp container for forwarding to registry
-# docker run -d --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$minikubeip:80"
+#temp container for forwarding to registry
+docker run -d --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:192.168.99.108:80"
 
-# kubectl apply -f k8s/ing.yml
+kubectl apply -f k8s/ing.yml
+
+sleep 5
+
+open http://dashboard.127.0.0.1.xip.io
