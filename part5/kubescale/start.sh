@@ -93,10 +93,14 @@ kubectl apply -f k8s/kubescale.yml
 
 
 #temp container for forwarding to registry
+
+docker stop socat-minikube
+docker rm socat-minikube
+
 docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
 
 kubectl apply -f k8s/ing.yml
 
 sleep 5
 
-open http://dashboard.127.0.0.1.xip.io
+open http://kubescale.127.0.0.1.xip.io
