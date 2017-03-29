@@ -1,57 +1,59 @@
 #!/usr/bin/env bash
-# minikube delete
+minikube delete
 
-# echo "starting cluster"
+sleep 2
 
-# minikube start --memory 5000 --cpus 4 --kubernetes-version v1.6.0-rc.1
+echo "starting cluster"
 
-# # echo "enabling addons"
+minikube start --memory 5000 --cpus 4 --kubernetes-version v1.6.0-rc.1
 
-# # minikube addons enable heapster
+# echo "enabling addons"
 
-# minikube addons enable ingress
+# minikube addons enable heapster
 
-# echo "installing etcd operator"
-# kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
-# kubectl rollout status -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
+minikube addons enable ingress
+
+echo "installing etcd operator"
+kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
+kubectl rollout status -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
 
 
-# until kubectl get thirdpartyresource cluster.etcd.coreos.com
-# do
-#     echo "waiting for operator"
-#     sleep 2
-# done
+until kubectl get thirdpartyresource cluster.etcd.coreos.com
+do
+    echo "waiting for operator"
+    sleep 2
+done
 
-# echo "installing registry"
-# kubectl apply -f k8s/registry.yml
-# kubectl rollout status deployment/registry
+echo "installing registry"
+kubectl apply -f k8s/registry.yml
+kubectl rollout status deployment/registry
 
-# echo "pausing for 10 seconds for operator to settle"
-# sleep 10
+echo "pausing for 10 seconds for operator to settle"
+sleep 10
 
-# kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster.yaml
+kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster.yaml
 
-# echo "installing etcd cluster service"
-# kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster-nodeport-service.json
+echo "installing etcd cluster service"
+kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster-nodeport-service.json
 
-# echo "waiting for etcd cluster to turnup"
+echo "waiting for etcd cluster to turnup"
 
-# until kubectl get pod example-etcd-cluster-0002
-# do
-#     echo "waiting for etcd cluster to turnup"
-#     sleep 2
-# done
+until kubectl get pod example-etcd-cluster-0002
+do
+    echo "waiting for etcd cluster to turnup"
+    sleep 2
+done
 
-# sleep 5
+sleep 5
 
-# echo "creating pod-list etcd directory"
-# kubectl exec -it example-etcd-cluster-0000 apk update
-# kubectl exec -it example-etcd-cluster-0000 apk add ca-certificates
-# kubectl exec -it example-etcd-cluster-0000 apk update-ca-certificates
-# kubectl exec -it example-etcd-cluster-0000 apk add bash wget
-# kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.com/moondev/86ebfc39998049d3f0c10848f4c72c57/raw/62cb237a115d4884cec4c5d94751cf5586f44b4b/mkdir.sh
-# kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
-# kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
+echo "creating pod-list etcd directory"
+kubectl exec -it example-etcd-cluster-0000 apk update
+kubectl exec -it example-etcd-cluster-0000 apk add ca-certificates
+kubectl exec -it example-etcd-cluster-0000 apk update-ca-certificates
+kubectl exec -it example-etcd-cluster-0000 apk add bash wget
+kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.com/moondev/86ebfc39998049d3f0c10848f4c72c57/raw/62cb237a115d4884cec4c5d94751cf5586f44b4b/mkdir.sh
+kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
+kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
 
 echo "building kubescale image"
 
@@ -59,7 +61,7 @@ docker build -t 127.0.0.1:30400/kubescale:latest .
 
 # echo "building set image"
 
-# docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
+docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
 
 
 echo "forwarding registry port"
@@ -73,11 +75,11 @@ sleep 5
 
 echo "pushing kubescale image"
 docker push 127.0.0.1:30400/kubescale:latest
-#docker push 127.0.0.1:30400/set:latest
+docker push 127.0.0.1:30400/set:latest
 
 echo "pushing set image"
 
-# docker push 127.0.0.1:30400/set:latest
+docker push 127.0.0.1:30400/set:latest
 
 sleep 2
 echo "killing port-forward"
@@ -97,31 +99,19 @@ kubectl rollout status deployment/set
 #temp container for forwarding to registry
 
 
-#docker stop socat-minikube
-#docker rm socat-minikube
+docker stop socat-minikube
+docker rm socat-minikube
 
-#proxy container for ingress
+proxy container for ingress
 
-#docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
+docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
 
-#kubectl apply -f k8s/ing.yml
+kubectl apply -f k8s/ing.yml
 
-# kubectl apply -f k8s/jenkins.yml
-# kubectl rollout status deployments/jenkins
+kubectl apply -f k8s/jenkins.yml
+kubectl rollout status deployments/jenkins
 
-# sleep 10
+sleep 10
 
-# #open http://kubescale.127.0.0.1.xip.io || true
-# #xdg-open http://kubescale.127.0.0.1.xip.io || true
-
-# PODID=`kubectl get pods --selector=app=kubescale --output=jsonpath={.items..metadata.name}`
-
-# echo "starting forward for $PODID"
-# echo "open http://localhost:3434 to view kubescale"
-
-# kubectl port-forward $PODID 3434:3000
-
-sleep 2
-
-open http://$MINIKUBEIP:31980
-
+open http://$MINIKUBEIP:31980 || true
+xdg-open http://$MINIKUBEIP:31980 || true
