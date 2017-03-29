@@ -1,46 +1,46 @@
 #!/usr/bin/env bash
-minikube delete
+# minikube delete
 
-echo "starting cluster"
+# echo "starting cluster"
 
-minikube start --memory 5000 --cpus 4 --kubernetes-version v1.6.0-rc.1
+# minikube start --memory 5000 --cpus 4 --kubernetes-version v1.6.0-rc.1
 
-# echo "enabling addons"
+# # echo "enabling addons"
 
-# minikube addons enable heapster
+# # minikube addons enable heapster
 
-minikube addons enable ingress
+# minikube addons enable ingress
 
-echo "installing etcd operator"
-kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
-kubectl rollout status -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
+# echo "installing etcd operator"
+# kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
+# kubectl rollout status -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
 
 
-until kubectl get thirdpartyresource cluster.etcd.coreos.com
-do
-    echo "waiting for operator"
-    sleep 2
-done
+# until kubectl get thirdpartyresource cluster.etcd.coreos.com
+# do
+#     echo "waiting for operator"
+#     sleep 2
+# done
 
-echo "installing registry"
-kubectl apply -f k8s/registry.yml
-kubectl rollout status deployment/registry
+# echo "installing registry"
+# kubectl apply -f k8s/registry.yml
+# kubectl rollout status deployment/registry
 
-echo "pausing for 10 seconds for operator to settle"
-sleep 10
+# echo "pausing for 10 seconds for operator to settle"
+# sleep 10
 
-kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster.yaml
+# kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster.yaml
 
-echo "installing etcd cluster service"
-kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster-nodeport-service.json
+# echo "installing etcd cluster service"
+# kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster-nodeport-service.json
 
-echo "waiting for etcd cluster to turnup"
+# echo "waiting for etcd cluster to turnup"
 
-until kubectl get pod example-etcd-cluster-0002
-do
-    echo "waiting for etcd cluster to turnup"
-    sleep 2
-done
+# until kubectl get pod example-etcd-cluster-0002
+# do
+#     echo "waiting for etcd cluster to turnup"
+#     sleep 2
+# done
 
 sleep 5
 
@@ -106,10 +106,13 @@ kubectl rollout status deployment/set
 
 #kubectl apply -f k8s/ing.yml
 
-sleep 10
+# kubectl apply -f k8s/jenkins.yml
+# kubectl rollout status deployments/jenkins
 
-#open http://kubescale.127.0.0.1.xip.io || true
-#xdg-open http://kubescale.127.0.0.1.xip.io || true
+# sleep 10
+
+# #open http://kubescale.127.0.0.1.xip.io || true
+# #xdg-open http://kubescale.127.0.0.1.xip.io || true
 
 PODID=`kubectl get pods --selector=app=kubescale --output=jsonpath={.items..metadata.name}`
 
