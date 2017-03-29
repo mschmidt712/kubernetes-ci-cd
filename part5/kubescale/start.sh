@@ -87,7 +87,7 @@ docker rm socat-registry
 
 echo "deploying kubescale and set"
 
-kubectl apply -f deployments/kubescale.yml
+kubectl apply -f k8s/kubescale.yml
 kubectl rollout status deployment/kubescale 
 
 kubectl apply -f k8s/set.yml
