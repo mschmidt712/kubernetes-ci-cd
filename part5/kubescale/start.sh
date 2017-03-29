@@ -53,39 +53,37 @@ kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.c
 kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
 kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
 
-# echo "building kubescale image"
+echo "building kubescale image"
 
-# docker build -t 127.0.0.1:30400/kubescale:latest .
+docker build -t 127.0.0.1:30400/kubescale:latest .
 
-# echo "building set image"
+echo "building set image"
 
-# docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
-
-
-
-# echo "forwarding registry port"
-
-# registrypod=`kubectl get pods --selector=app=registry --output=jsonpath={.items..metadata.name}`
-
-
-# kubectl port-forward $registrypod 30400:5000 &
-# sleep 5
-# pfid=$!
-# echo "pushing kubecale image"
-# docker push 127.0.0.1:30400/kubescale:latest
+docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
 
 
 
-# echo "pushing set iage"
+echo "forwarding registry port"
 
-# docker push 127.0.0.1:30400/set:latest
+minikubeip=`minikube ip`
 
-# sleep 2
-# echo "killing port-forward"
+#temp container for forwarding to registry
+docker run -d --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:$minikubeip:30400"
 
-# kill $pfid
+echo "pushing kubescale image"
+docker push 127.0.0.1:30400/kubescale:latest
 
-# echo "deploying kubescale and set"
+echo "pushing set image"
 
-# kubectl apply -f k8s/set.yml
-# kubectl apply -f k8s/kubescale.yml
+docker push 127.0.0.1:30400/set:latest
+
+sleep 2
+echo "killing port-forward"
+
+docker stop socat-registry
+docker rm-socat-registry
+
+echo "deploying kubescale and set"
+
+kubectl apply -f k8s/set.yml
+kubectl apply -f k8s/kubescale.yml
