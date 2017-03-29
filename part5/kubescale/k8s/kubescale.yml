@@ -32,6 +32,7 @@ spec:
     spec:
       containers:
       - image: 127.0.0.1:30400/kubescale:latest
+        imagePullPolicy: Always
         name: kubescale
         ports:
         - containerPort: 3000

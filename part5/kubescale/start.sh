@@ -42,24 +42,24 @@
 #     sleep 2
 # done
 
-sleep 5
+# sleep 5
 
-echo "creating pod-list etcd directory"
-kubectl exec -it example-etcd-cluster-0000 apk update
-kubectl exec -it example-etcd-cluster-0000 apk add ca-certificates
-kubectl exec -it example-etcd-cluster-0000 apk update-ca-certificates
-kubectl exec -it example-etcd-cluster-0000 apk add bash wget
-kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.com/moondev/86ebfc39998049d3f0c10848f4c72c57/raw/62cb237a115d4884cec4c5d94751cf5586f44b4b/mkdir.sh
-kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
-kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
+# echo "creating pod-list etcd directory"
+# kubectl exec -it example-etcd-cluster-0000 apk update
+# kubectl exec -it example-etcd-cluster-0000 apk add ca-certificates
+# kubectl exec -it example-etcd-cluster-0000 apk update-ca-certificates
+# kubectl exec -it example-etcd-cluster-0000 apk add bash wget
+# kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.com/moondev/86ebfc39998049d3f0c10848f4c72c57/raw/62cb237a115d4884cec4c5d94751cf5586f44b4b/mkdir.sh
+# kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
+# kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
 
 echo "building kubescale image"
 
 docker build -t 127.0.0.1:30400/kubescale:latest .
 
-echo "building set image"
+# echo "building set image"
 
-docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
+# docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
 
 
 echo "forwarding registry port"
@@ -73,7 +73,7 @@ sleep 5
 
 echo "pushing kubescale image"
 docker push 127.0.0.1:30400/kubescale:latest
-docker push 127.0.0.1:30400/set:latest
+#docker push 127.0.0.1:30400/set:latest
 
 echo "pushing set image"
 
@@ -114,9 +114,14 @@ kubectl rollout status deployment/set
 # #open http://kubescale.127.0.0.1.xip.io || true
 # #xdg-open http://kubescale.127.0.0.1.xip.io || true
 
-PODID=`kubectl get pods --selector=app=kubescale --output=jsonpath={.items..metadata.name}`
+# PODID=`kubectl get pods --selector=app=kubescale --output=jsonpath={.items..metadata.name}`
 
-echo "starting forward for $PODID"
-echo "open http://localhost:3434 to view kubescale"
+# echo "starting forward for $PODID"
+# echo "open http://localhost:3434 to view kubescale"
 
-kubectl port-forward $PODID 3434:3000
+# kubectl port-forward $PODID 3434:3000
+
+sleep 2
+
+open http://$MINIKUBEIP:31980
+

@@ -40,7 +40,8 @@ app.post('/loadtest/concurrent', function (req, res) {
   svc = "http://set:80/"
 //  exec('loadtest -c ' + req.body.count + ' -n ' + req.body.count + ' http://set', function(error, stdout, stderr) {
     exec('ab -c ' + req.body.count + ' -n ' + req.body.count + ' ' + svc, function(error, stdout, stderr) {
-  res.send("scaled to " + req.body.count);
+  console.log(stdout);
+  res.send(stdout);
 });
 })
 
@@ -48,7 +49,8 @@ app.post('/loadtest/consecutive', function (req, res) {
   svc = "http://set:80/"
 //  exec('loadtest -c ' + req.body.count + ' -n ' + req.body.count + ' http://set', function(error, stdout, stderr) {
     exec('ab -c 1 -n ' + req.body.count + ' ' + svc, function(error, stdout, stderr) {
-  res.send("scaled to " + req.body.count);
+  console.log(stdout);
+  res.send(stdout);
 });
 })
 
