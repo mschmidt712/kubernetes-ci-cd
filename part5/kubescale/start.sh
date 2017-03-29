@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# #!/usr/bin/env bash
 minikube delete
 
 echo "starting cluster"
@@ -23,6 +23,15 @@ echo "installing etcd cluster"
 
 kubectl create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster-nodeport-service.json
 
+echo "waiting for etcd cluster to turnup"
+
+until kubectl get pod example-etcd-cluster-0002
+do
+    echo "waiting for etcd cluster to turnup"
+    sleep 2
+done
+
+sleep 5
 
 echo "creating pod-list etcd directory"
 kubectl exec -it example-etcd-cluster-0000 apk update
@@ -37,31 +46,35 @@ echo "building kubescale image"
 
 docker build -t 127.0.0.1:30400/kubescale:latest .
 
-echo "forwarding registry port"
-
-registrypod=`kubectl get pods --selector=app=registry --output=jsonpath={.items..metadata.name}`
-
-
-kubectl port-forward $registrypod 30400:5000 &
-sleep 5
-pfid=$!
-echo "pushing kubecale image"
-docker push 127.0.0.1:30400/kubescale:latest
-
 echo "building set image"
 
 docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
 
-echo "pushing set iage"
 
-docker push 127.0.0.1:30400/set:latest
 
-sleep 2
-echo "killing port-forward"
+# echo "forwarding registry port"
 
-kill $pfid
+# registrypod=`kubectl get pods --selector=app=registry --output=jsonpath={.items..metadata.name}`
 
-echo "deploying kubescale and set"
 
-kubectl apply -f k8s/set.yml
-kubectl apply -f k8s/kubescale.yml
+# kubectl port-forward $registrypod 30400:5000 &
+# sleep 5
+# pfid=$!
+# echo "pushing kubecale image"
+# docker push 127.0.0.1:30400/kubescale:latest
+
+
+
+# echo "pushing set iage"
+
+# docker push 127.0.0.1:30400/set:latest
+
+# sleep 2
+# echo "killing port-forward"
+
+# kill $pfid
+
+# echo "deploying kubescale and set"
+
+# kubectl apply -f k8s/set.yml
+# kubectl apply -f k8s/kubescale.yml
