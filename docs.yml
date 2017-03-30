@@ -1,0 +1,46 @@
+parts:
+
+  - name: Part 1
+    intro: In this part we will setup a local cluster with minikube, deploy a public image from dockerhub, customize that image, and then finally deploy it inside our local cluster.
+    steps:
+
+      - cap: Start up the cluster with minikibe
+        com: minikube start --memory 4000 --cpus 2 --kubernetes-version v1.6.0
+
+      - cap: Enable addons
+        com: minikube addon enable heapster; minikune enable ingress
+
+      - cap: Deploy the public nginx image from DockerHub
+        com: kubectl run nginx image=nginx:latest
+
+      - cap: Use the kubectl tool find the deployed pod name.
+        com: kubectl get pods
+
+      - cap: Port-forward into the pod to see the application at http://localhost:8888
+        com: kubectl port-forward PODNAME 8888:80
+
+      - cap: We are now going to create an image registry that will live inside our cluster to replace DockerHub
+        com: kubectl apply -f manifests/registryl kubectl rollout status deployment/registry
+
+      - cap: Edit the contents of applications/hello-kenzan/index.html
+
+      - cap: We will now build the image with a special name that is pointing at our cluster registry.
+        com: cd applications/hello-kenzan; docker build -t 127.0.0.1:30400/hello-kenzan:latest
+
+      - cap: Before we can push our image we need to set up a temporary proxy. This is a container that listens on 127.0.0..1:30400 and forwads to our cluster. By default the docker client can only push to non https via localhost.
+        com: docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
+
+      - cap: We can now push our image.
+        com: docker push 127.0.0.1:30400/hello-kenzan:latest
+
+      - cap: Now that our image is on the cluster, we can deploy the manifests
+        com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yml
+
+      - cap: View the app
+      - cap: Open a webbrowser at http://hello-kenzan.127.0.0.1.xip.io to view.
+
+  - name: Part 2
+    intro: In this part we will Setup Jenkins, for the repo and setup an automated Jenkins job build, push and deploy our custom appliction.
+    steps:
+      - cap: Setup Jenkins
+        com: kubectl apply -f manifests/jenkins.yml
