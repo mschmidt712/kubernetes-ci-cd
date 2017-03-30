@@ -6,11 +6,11 @@ function Cell (props) {
     cell: true,
     isEmpty: props.isEmpty
   });
-  const inputClass = classNames({
-    incorrect: props.value && props.value.toLowerCase() !== props.letter.toLowerCase()
-  });
 
   const currentVal = props.value === '*' ? '' : props.value;
+  const inputClass = classNames({
+    incorrect: currentVal && currentVal.toLowerCase() !== props.letter.toLowerCase()
+  });
 
   return (
     <div className={cellClass}>

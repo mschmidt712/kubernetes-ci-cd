@@ -15,8 +15,7 @@ export default function puzzleReducer (state = initialState, action) {
     }
     case types.puzzle.SUBMIT_PUZZLE_DATA: {
       return Object.assign({}, state, {
-        id: action.data.id,
-        puzzleData: action.data.words
+        puzzleData: action.data
       });
     }
     default: {

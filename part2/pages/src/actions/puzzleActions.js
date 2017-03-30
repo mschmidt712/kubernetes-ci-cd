@@ -16,27 +16,22 @@ export function getPuzzleData () {
 
 export function submitPuzzleData (id, data) {
   return dispatch => {
-    const submission = JSON.stringify({
-      words: data
-    });
+    const submission = JSON.stringify(data);
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return fetch(`${baseUrl}/Crosswords/${id}`, {
+    return fetch(`${baseUrl}/crossword`, {
       method: 'PUT',
       headers,
       body: submission
     })
       .then((resp) => {
-        if (resp.status === 200) {
-          return resp.json();
+        if (resp.status === 204) {
+          toastr.success(`Progress saved!`);
+          dispatch({type: actions.puzzle.SUBMIT_PUZZLE_DATA, data});
         } else {
           toastr.error(`We're sorry! Something went wrong on your request.`);
         }
-      })
-      .then((json) => {
-        toastr.success(`Progress saved!`);
-        dispatch({type: actions.puzzle.SUBMIT_PUZZLE_DATA, data: json});
       });
   };
 }
