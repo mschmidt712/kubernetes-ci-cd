@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-minikube delete
+kubectl delete namespace etcd
 
-sleep 2
+sleep 5
+
+kubectl create namespace etcd
 
 echo "starting cluster"
 

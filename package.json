@@ -1,0 +1,26 @@
+{
+  "name": "kubernetes-ci-cd",
+  "version": "1.0.0",
+  "description": "## Get started Requirements * nodejs * kubectl * virtualbox * minikube * At least 4GB of available memory, 8GB for part 5",
+  "main": "start.js",
+  "dependencies": {
+    "cmdify": "^0.0.4",
+    "inquirer": "^3.0.6",
+    "yamljs": "^0.2.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenzanlabs/kubernetes-ci-cd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kenzanlabs/kubernetes-ci-cd/issues"
+  },
+  "homepage": "https://github.com/kenzanlabs/kubernetes-ci-cd#readme"
+}
