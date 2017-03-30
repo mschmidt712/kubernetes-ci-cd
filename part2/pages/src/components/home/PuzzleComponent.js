@@ -185,6 +185,7 @@ class PuzzleComponent extends React.Component {
   }
 
   reloadPuzzle () {
+    this.props.actions.sendingData();
     this.props.actions.getPuzzleData();
   }
 
@@ -196,6 +197,7 @@ class PuzzleComponent extends React.Component {
       return obj;
     });
 
+    this.props.actions.sendingData();
     this.props.actions.submitPuzzleData(this.props.puzzleId, submission);
   }
 
@@ -203,6 +205,7 @@ class PuzzleComponent extends React.Component {
     e.preventDefault();
     const submission = this.convertPuzzleGridToPuzzleArray();
 
+    this.props.actions.sendingData();
     this.props.actions.submitPuzzleData(this.props.puzzleId, submission);
   }
 

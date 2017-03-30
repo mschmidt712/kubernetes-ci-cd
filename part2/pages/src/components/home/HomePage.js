@@ -15,21 +15,21 @@ class HomePage extends React.Component {
   render () {
     const sendingDataClass = classNames({
       'data-flow': true,
-      'sending-data': this.props.sendingData
+      'active': this.props.sendingData
     });
 
     return (
       <div className="home-page">
         <PuzzleComponent />
         <div className={sendingDataClass}>
-          <DataFlowArrow className="k8instances" />
+          <DataFlowArrow className="k8instances" active={this.props.sendingData}/>
         </div>
         <div className="instances">
           <InstanceComponent />
         </div>
         <div className="data-flow image-column">
-          <DataFlowArrow className="mongo" />
-          <DataFlowArrow className="etcd" />
+          <DataFlowArrow className="mongo" active={this.props.fromMongo}/>
+          <DataFlowArrow className="etcd" active={this.props.fromCache}/>
         </div>
         <div className="dbs image-column">
           <div className="mongo">
@@ -48,13 +48,15 @@ HomePage.propTypes = {
   actions: PropTypes.objectOf(PropTypes.func),
   state: PropTypes.object,
   sendingData: PropTypes.bool,
-  fromCache: PropTypes.bool
+  fromCache: PropTypes.bool,
+  fromMongo: PropTypes.bool
 };
 
 function mapStateToProps (state) {
   return {
     sendingData: state.puzzle.sendingData,
-    fromCache: state.puzzle.fromCache
+    fromCache: state.puzzle.fromCache,
+    fromMongo: state.puzzle.fromMongo
   };
 }
 
