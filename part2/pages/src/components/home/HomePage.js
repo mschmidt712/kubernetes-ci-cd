@@ -8,10 +8,6 @@ import InstanceComponent from './InstancesComponent';
 import DataFlowArrow from './DataFlowArrow';
 
 class HomePage extends React.Component {
-  constructor () {
-    super();
-  }
-
   render () {
     const sendingDataClass = classNames({
       'data-flow': true,
@@ -22,14 +18,14 @@ class HomePage extends React.Component {
       <div className="home-page">
         <PuzzleComponent />
         <div className={sendingDataClass}>
-          <DataFlowArrow className="k8instances" active={this.props.sendingData}/>
+          <DataFlowArrow className="k8instances" active={this.props.sendingData} reverse={false}/>
         </div>
         <div className="instances">
           <InstanceComponent />
         </div>
         <div className="data-flow image-column">
-          <DataFlowArrow className="mongo" active={this.props.fromMongo}/>
-          <DataFlowArrow className="etcd" active={this.props.fromCache}/>
+          <DataFlowArrow className="mongo" active={this.props.fromMongo} reverse/>
+          <DataFlowArrow className="etcd" active={this.props.fromCache} reverse/>
         </div>
         <div className="dbs image-column">
           <div className="mongo">
