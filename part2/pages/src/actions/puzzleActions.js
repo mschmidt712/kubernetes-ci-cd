@@ -1,16 +1,15 @@
 import * as actions from './actionTypes';
 import toastr from 'toastr';
-const baseUrl = `http://${location.hostname}:3000/api`;
+const baseUrl = `http://${location.hostname}:3000/puzzle/v1`;
 
 export function getPuzzleData () {
   return dispatch => {
-    return fetch(`${baseUrl}/Crosswords`)
+    return fetch(`${baseUrl}/crossword`)
       .then((resp) => {
         return resp.json();
       })
       .then((json) => {
-        const puzzleData = json[0];
-        dispatch({type: actions.puzzle.GET_PUZZLE_DATA, data: puzzleData});
+        dispatch({type: actions.puzzle.GET_PUZZLE_DATA, data: json});
       });
   };
 }
