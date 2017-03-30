@@ -1,0 +1,122 @@
+var express = require('express')
+var app = express()
+
+var http = require('http').Server(app);
+var request = require('request');
+var async = require('async');
+var io = require('socket.io')(http);
+var path    = require("path");
+var Etcd = require('node-etcd')
+app.use(express.static('public'))
+var exec = require('child_process').exec;
+
+var bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
+
+watcher = etcd.watcher("pod-list", null, {recursive: true})
+
+watcher.on("change", showVal);
+
+function showVal(val) {
+ pods = etcd.getSync("pod-list",{ recursive: true })
+  io.emit('pods', { pods: pods.body.node.nodes });
+
+}
+
+app.post('/scale', function (req, res) {
+  var scale = req.body.count;
+  var url = "http://localhost:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
+  var putBody = {
+    kind:"Scale",
+    apiVersion:"extensions/v1beta1",
+    metadata: { 
+      name:"hello-kenzan",
+      namespace:"default"
+    },
+    spec: {
+      replicas:1
+    },
+    status:{}
+  };
+  putBody.spec.replicas = scale;
+
+  request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
+    if (err) {
+      return console.error('Failed to scale:', err);
+    }
+    console.log('Scale success:', body);
+    res.send('success');
+  });
+});
+
+app.post('/loadtest/concurrent', function (req, res) {
+  var count = req.body.count;
+  var myUrls = [];
+  for (var i = 0; i < req.body.count; i++) {
+    myUrls.push("http://localhost:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale");
+  } 
+  async.map(myUrls, function(url, callback) {
+    request(url, function(error, response, html){
+      console.log(response.statusCode);
+    });
+  }, function(err, results) {
+    console.log(results);
+  });
+  res.send('concurrent done');
+});
+
+
+app.post('/loadtest/consecutive', function (req, res) {
+
+  var count = req.body.count;
+  var url = "http://localhost:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
+  for (var i = 0; i < req.body.count; i++) {
+    request(url, function(error, response, html) {
+      console.log(response.statusCode);
+    });
+  }
+  res.send('consecutive done');
+});
+
+
+
+app.get('/up/:podId', function (req, res) {
+  etcd.set("pod-list/" + req.params.podId, req.params.podId);
+  res.send('done');
+})
+
+app.get('/down/:podId', function (req, res) {
+  etcd.del("pod-list/" + req.params.podId, req.params.podId);
+  res.send('done');
+})
+
+app.get('/hit/:podId', function (req, res) {
+
+  var d = new Date();
+  var n = d.getTime();
+
+  //io.emit('hit', { podId: req.params.podId, time: n });
+  res.send('done')
+})
+
+io.on('connection', function(socket){
+  
+    pods = etcd.getSync("pod-list",{ recursive: true })
+    io.emit('pods', { pods: pods.body.node.nodes });
+});
+
+app.get('/',function(req,res){
+       
+     res.sendFile(path.join(__dirname+'/public/index.html'));
+
+});
+
+
+http.listen(3000, function () {
+  console.log('Listening on port 3000!')
+})
+
