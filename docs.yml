@@ -42,5 +42,18 @@ parts:
   - name: Part 2
     intro: In this part we will Setup Jenkins, for the repo and setup an automated Jenkins job build, push and deploy our custom appliction.
     steps:
-      - cap: Setup Jenkins
-        com: kubectl apply -f manifests/jenkins.yml
+
+      - cap: Install Jenkins
+        com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
+
+      - cap: View Jenkins at http://jenkins.127.0.0.1.xip.io and finish setting it up with the defaults.
+      
+      - cap: Create a new pipeline job through the ui
+
+      - cap: Fork the kenzan repo, put your forked repo url in the the spot below.
+
+      - cap: For Jenkinsfile put "jenkinsfiles/Part 2"
+
+      - cap: Run the job and be sure evrything deploys.
+
+  - namr: Part 4
