@@ -11,7 +11,7 @@ app.get('/', function (req, res) {
   
   exec('export HOSTNAME=`hostname`; curl http://kubescale:3000/hit/$HOSTNAME', function(error, stdout, stderr) {
   sleep.sleep(1);
-  res.send("done");
+  res.send("hit");
 });
 })
 

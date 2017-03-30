@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-minikube delete
+kubectl delete namespace etcd
 
-sleep 2
+sleep 5
+
+kubectl create namespace etcd
 
 echo "starting cluster"
 
@@ -57,11 +59,13 @@ kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
 
 echo "building kubescale image"
 
-docker build -t 127.0.0.1:30400/kubescale:latest .
+TAG=new1
+
+docker build -t 127.0.0.1:30400/kubescale:$TAG .
 
 # echo "building set image"
 
-docker build -t 127.0.0.1:30400/set:latest -f set/Dockerfile set
+cd set; docker build -t 127.0.0.1:30400/set:$TAG -f set/Dockerfile .
 
 
 echo "forwarding registry port"
@@ -106,7 +110,7 @@ proxy container for ingress
 
 docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
 
-kubectl apply -f k8s/ing.yml
+# kubectl apply -f k8s/ing.yml
 
 kubectl apply -f k8s/jenkins.yml
 kubectl rollout status deployments/jenkins
