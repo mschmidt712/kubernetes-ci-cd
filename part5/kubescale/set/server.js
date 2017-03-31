@@ -9,9 +9,9 @@ var exec = require('child_process').exec;
 
 app.get('/', function (req, res) {
   
-  exec('export HOSTNAME=`hostname`; curl http://node-etcd:3000/hit/$HOSTNAME', function(error, stdout, stderr) {
+  exec('export HOSTNAME=`hostname`; curl http://kubescale:3000/hit/$HOSTNAME', function(error, stdout, stderr) {
   sleep.sleep(1);
-  res.send("done");
+  res.send("hit");
 });
 })
 

@@ -259,7 +259,6 @@ PuzzleComponent.propTypes = {
 };
 
 function mapStateToProps (state) {
-  console.log(state);
   return {
     puzzleId: state.puzzle.id,
     puzzleArray: state.puzzle.puzzleData
