@@ -1,26 +1,30 @@
 import * as types from '../actions/actionTypes';
 
+
 const initialState = {
-  status: '',
-  dataReceived: -1
+  connected: false,
+  pods: [],
+  activePod: undefined
 };
 
 export default function websocketReducer (state = initialState, action) {
   switch (action.type) {
-    case types.websocket.CONNECT: {
+    case types.websocket.CONNECT_TO_SOCKET: {
       return Object.assign({}, state, {
-        status: 'connected'
+        connected: true
       });
     }
-    case types.websocket.DISCONNECT: {
+    case types.websocket.DISCONNECT_FROM_SOCKET: {
       return Object.assign({}, state, {
-        status: 'disconnected'
+        connected: false
       });
     }
-    case types.websocket.DATA_RECEIVED: {
-      return Object.assign({}, state, {
-        dataReceived: action.data
-      });
+    case types.websocket.PODS: {
+      console.log('pods emit handler', action.data.pods);
+      return Object.assign({}, state, { pods: [0, 1, 2, 4] });
+    }
+    case types.websocket.ACTIVE_INSTANCE: {
+      return Object.assign({}, state, { activePod: action.data.podId });
     }
     default: {
       return state;

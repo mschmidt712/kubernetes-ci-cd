@@ -1,34 +1,27 @@
-import * as actions from './actionTypes';
-import toastr from 'toastr';
 import io from 'socket.io-client';
-let intervalId;
+import constants from '../constants';
+import * as types from './actionTypes';
 
-export function connectToWebSocket () {
+const socket = io(`http://monitor-scale.${constants.minikubeIp}.xip.io`);
+
+export function connectToSocket () {
   return dispatch => {
-    toastr.success('Connected to WebSocket');
-
-    dispatch({type: actions.websocket.CONNECT});
+    socket.open(() => {
+      dispatch({type: 'CONNECT_TO_SOCKET'});
+    });
+    socket.on('pods', (data) => {
+      dispatch({ type: types.websocket.PODS, data });
+    });
+    socket.on('hit', (data) => {
+      dispatch({ type: types.websocket.ACTIVE_INSTANCE, data });
+    });
   };
 }
 
-export function receiveDataFromWebSocket (instanceCount) {
+export function disconnectFromSocket () {
   return dispatch => {
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-    intervalId = setInterval(() => {
-      const randomNumber = Math.floor(Math.random() * instanceCount);
-      return dispatch({type: actions.websocket.DATA_RECEIVED, data: randomNumber});
-    }
-    , 10000);
-  };
-}
-
-export function disconnectFromWebSocket () {
-  return dispatch => {
-    toastr.success('Disconnected from WebSocket');
-    clearInterval(intervalId);
-
-    return dispatch({type: actions.websocket.DISCONNECT});
+    socket.close(() => {
+      dispatch({type: 'DISCONNECT_FROM_SOCKET'});
+    });
   };
 }

@@ -11,13 +11,20 @@
   height: 1.25rem;
 
   &.active {
-    animation: fadein 500ms ease-in-out;
-    background: #32CD32;
+    background-color: $kubernetes-blue;
+    animation: fadein ease-in;
     animation-direction: alternate;
+    animation-duration: 1s;
   }
 }
 
 @keyframes fadein {
-    from { opacity: 0.5; }
-    to   { opacity: 1; }
+    from {
+      background: #32CD32;
+      opacity: 0.5;
+    }
+    to   {
+      background: #32CD32;
+      opacity: 1;
+    }
 }

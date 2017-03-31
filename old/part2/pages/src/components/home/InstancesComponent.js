@@ -12,7 +12,8 @@ class InstancesComponent extends React.Component {
     this.state = {
       instanceData: {
         instanceFinalCount: 3,
-        instanceCurrentCount: 3
+        instanceCurrentCount: 3,
+        pods: props.pods
       }
     };
 
@@ -21,18 +22,23 @@ class InstancesComponent extends React.Component {
   }
 
   componentWillMount () {
-    this.props.actions.connectToWebSocket(this.state.instanceData.instanceCurrentCount);
-    this.props.actions.receiveDataFromWebSocket(this.state.instanceData.instanceCurrentCount);
+    this.props.actions.connectToSocket(this.state.instanceData.instanceCurrentCount);
   }
 
-  componentWillUpdate (newProps, newState) {
-    if (newState.instanceData !== this.state.instanceData) {
-      this.props.actions.receiveDataFromWebSocket(newState.instanceData.instanceCurrentCount);
+  componentWillReceiveProps (newProps) {
+    if (newProps.pods !== this.props.pods) {
+      const instanceData = Object.assign({}, this.state.instanceData, {
+        pods: newProps.pods
+      });
+
+      this.setState({
+        instanceData
+      });
     }
   }
 
   componentWillUnmount () {
-    this.props.actions.disconnectFromWebSocket();
+    this.props.actions.disconnectFromSocket();
   }
 
   handleSlider (event, value) {
@@ -76,12 +82,14 @@ class InstancesComponent extends React.Component {
 InstancesComponent.propTypes = {
   actions: PropTypes.objectOf(PropTypes.func),
   state: PropTypes.object,
-  activeInstance: PropTypes.number
+  pods: PropTypes.array,
+  activeInstance: PropTypes.string
 };
 
 function mapStateToProps (state) {
   return {
-    activeInstance: state.webSocket.dataReceived
+    pods: state.webSocket.pods,
+    activeInstance: state.webSocket.activePod
   };
 }
 
