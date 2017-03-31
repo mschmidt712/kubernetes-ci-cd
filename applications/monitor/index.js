@@ -99,7 +99,8 @@ app.get('/hit/:podId', function (req, res) {
   var d = new Date();
   var n = d.getTime();
 
-  //io.emit('hit', { podId: req.params.podId, time: n });
+  console.log("Emitting hit");
+  io.emit('hit', { podId: req.params.podId, time: n });
   res.send('done')
 })
 
@@ -115,6 +116,6 @@ app.get('/', function(req,res){
 });
 
 http.listen(3001, function () {
-  console.log('Y Listening on port 3001!')
+  console.log('A Listening on port 3001!')
 });
 
