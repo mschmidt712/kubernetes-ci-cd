@@ -73,7 +73,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 app.post('/loadtest/consecutive', function (req, res) {
 
   var count = req.body.count;
-  var url = "http://kubernetes:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
+  var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
       console.log(error);
@@ -115,6 +115,6 @@ app.get('/', function(req,res){
 });
 
 http.listen(3001, function () {
-  console.log('X Listening on port 3001!')
+  console.log('Y Listening on port 3001!')
 });
 
