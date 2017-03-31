@@ -22,5 +22,5 @@ RUN kubectl proxy --port:2345 &
 
 #Expose port 3001 so the monitor service is reachable
 EXPOSE 3001
-
+EXPOSE 2345
 CMD ["nodemon", "index.js"]

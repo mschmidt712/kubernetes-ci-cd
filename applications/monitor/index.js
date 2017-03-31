@@ -29,7 +29,7 @@ function showVal(val) {
 
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
-  var url = "http://localhost:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
+  var url = "http://192.168.99.100:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
   var putBody = {
     kind:"Scale",
     apiVersion:"extensions/v1beta1",
@@ -57,7 +57,7 @@ app.post('/loadtest/concurrent', function (req, res) {
   var count = req.body.count;
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
-    myUrls.push("http://localhost:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale");
+    myUrls.push("http://192.168.99.100:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale");
   } 
   async.map(myUrls, function(url, callback) {
     request(url, function(error, response, html){
@@ -73,7 +73,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 app.post('/loadtest/consecutive', function (req, res) {
 
   var count = req.body.count;
-  var url = "http://localhost:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
+  var url = "http://192.168.99.100:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
       console.log(response);

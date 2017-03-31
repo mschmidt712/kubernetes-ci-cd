@@ -30,8 +30,9 @@ spec:
         tier: monitor-scale
     spec:
       containers:
-      - image: 127.0.0.1:30912/monitor-scale:latest
+      - image: 127.0.0.1:30912/monitor-scale:f223e16
         name: monitor-scale
+        imagePullPolicy: Always
         ports:
         - containerPort: 3001
           name: monitor-scale
