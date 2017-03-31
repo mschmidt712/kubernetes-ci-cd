@@ -46,7 +46,7 @@ metadata:
 spec:
   backend:
     serviceName: monitor-scale
-    servicePort: 3001
+    servicePort: 80
   rules:
   - host: monitor-scale.192.168.99.100.xip.io
     http:
@@ -54,4 +54,4 @@ spec:
       - path: /
         backend:
           serviceName: monitor-scale
-          servicePort: 3001
+          servicePort: 80

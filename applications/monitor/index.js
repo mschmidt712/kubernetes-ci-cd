@@ -109,8 +109,12 @@ io.on('connection', function(socket){
     io.emit('pods', { pods: pods.body.node.nodes });
 });
 
+app.get('/', function(req,res){
+
+  res.send('basic get successful');
+});
 
 http.listen(3001, function () {
   console.log('Listening on port 3001!')
-})
+});
 
