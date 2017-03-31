@@ -109,14 +109,8 @@ io.on('connection', function(socket){
     io.emit('pods', { pods: pods.body.node.nodes });
 });
 
-app.get('/',function(req,res){
-       
-     res.sendFile(path.join(__dirname+'/public/index.html'));
 
-});
-
-
-http.listen(3000, function () {
-  console.log('Listening on port 3000!')
+http.listen(3001, function () {
+  console.log('Listening on port 3001!')
 })
 
