@@ -106,8 +106,8 @@ app.get('/hit/:podId', function (req, res) {
 
 io.on('connection', function(socket){
   
-    pods = etcd.getSync("pod-list",{ recursive: true })
-    io.emit('pods', { pods: pods.body.node.nodes });
+  //pods = etcd.getSync("pod-list",{ recursive: true })
+  io.emit('pods', { pods: "FIX ME" });
 });
 
 app.get('/', function(req,res){
@@ -116,6 +116,6 @@ app.get('/', function(req,res){
 });
 
 http.listen(3001, function () {
-  console.log('A Listening on port 3001!')
+  console.log('B Listening on port 3001!')
 });
 
