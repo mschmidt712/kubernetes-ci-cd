@@ -54,6 +54,7 @@ app.post('/scale', function (req, res) {
 });
 
 app.post('/loadtest/concurrent', function (req, res) {
+  //TODO Change this to point to the crossword server deployment
   var count = req.body.count;
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
@@ -71,7 +72,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 
 
 app.post('/loadtest/consecutive', function (req, res) {
-
+  //TODO Change this to point to the crossword server deployment
   var count = req.body.count;
   var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
   for (var i = 0; i < req.body.count; i++) {
@@ -108,15 +109,15 @@ io.on('connection', function(socket){
   
   console.log("websocket connection made");
   //pods = etcd.getSync("pod-list",{ recursive: true })
-  io.emit('pods', { pods: "FIX ME" });
+  io.emit('pods', { pods: ["1","2","3","4","5"] });
 });
 
 app.get('/', function(req,res){
 
-  res.send('basic get successful');
+  res.send('basic GET successful');
 });
 
 http.listen(3001, function () {
-  console.log('C Listening on port 3001!')
+  console.log('Listening on port 3001!')
 });
 
