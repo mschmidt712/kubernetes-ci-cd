@@ -76,7 +76,7 @@ app.post('/loadtest/consecutive', function (req, res) {
   var url = "http://kubernetes:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
-      console.log(response);
+      console.log(error);
     });
   }
   res.send('consecutive done');
