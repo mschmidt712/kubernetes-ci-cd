@@ -61,6 +61,10 @@ export function submitPuzzleData (id, data) {
       .then((resp) => {
         if (resp.status === 204) {
           toastr.success(`Progress saved!`);
+          dispatch({type: actions.puzzle.FROM_MONGO, data: true});
+          setTimeout(() => {
+            return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
+          }, arrowDisplayTime);
           dispatch(submitPuzzleDataSuccess(data));
         } else {
           toastr.error(`We're sorry! Something went wrong on your request.`);

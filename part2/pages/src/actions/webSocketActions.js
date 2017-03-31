@@ -1,5 +1,6 @@
 import * as actions from './actionTypes';
 import toastr from 'toastr';
+import io from 'socket.io-client';
 let intervalId;
 
 export function connectToWebSocket () {
@@ -19,7 +20,7 @@ export function receiveDataFromWebSocket (instanceCount) {
       const randomNumber = Math.floor(Math.random() * instanceCount);
       return dispatch({type: actions.websocket.DATA_RECEIVED, data: randomNumber});
     }
-    , 1000);
+    , 10000);
   };
 }
 
