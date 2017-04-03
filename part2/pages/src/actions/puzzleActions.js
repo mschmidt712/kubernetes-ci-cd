@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import toastr from 'toastr';
-const baseUrl = `http://${location.hostname}:3000/puzzle/v1`;
+const baseUrl = `http://services.${location.hostname}/puzzle/v1`;
 
 export function getPuzzleData () {
   return dispatch => {

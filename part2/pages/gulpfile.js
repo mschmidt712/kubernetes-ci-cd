@@ -87,11 +87,6 @@ gulp.task('serve:dev', ['build:dev', 'watch:html', 'watch:sass', 'watch:js'], ()
     port: 3002
   });
 
-  // // Start up api server
-  // fs.createReadStream('./node_modules/skills-db/skills.json')
-  //    // Overwrite the database
-  //   .pipe(fs.createWriteStream('./db.json'))
-  //   .on('finish', require('fake-badge-api'));
 });
 
 // Production Build
@@ -105,6 +100,4 @@ gulp.task('serve:prod', ['build:dev'], () => {
     }
   });
 
-  // Start up api server
-  ///require('fake-badge-api')();
 });
