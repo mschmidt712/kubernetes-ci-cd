@@ -29,6 +29,7 @@ function showVal(val) {
 
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
+  // TODO Scale the crossword server instead of hello-kenzan -- Change URL and metadata
   var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
   var putBody = {
     kind:"Scale",
