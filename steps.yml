@@ -4,32 +4,35 @@ parts:
     intro: In this part we will setup a local cluster with minikube, deploy a public image from dockerhub, customize that image, and then finally deploy it inside our local cluster.
     steps:
 
-      - cap: Start up the cluster with minikibe
-        com: minikube start --memory 4000 --cpus 2 --kubernetes-version v1.6.0
+      # - cap: Start up the cluster with minikibe
+      #   com: minikube start --memory 4000 --cpus 2 --kubernetes-version v1.6.0
 
-      - cap: Enable addons
-        com: minikube addon enable heapster; minikune enable ingress
+      # - cap: Enable addons
+      #   com: minikube addons enable heapster; minikube addons enable ingress
 
       - cap: Deploy the public nginx image from DockerHub
-        com: kubectl run nginx image=nginx:latest
+        com: kubectl run nginx --image nginx --port 80
 
-      - cap: Use the kubectl tool find the deployed pod name.
-        com: kubectl get pods
+      - cap: Create a service for deployment
+        com: kubectl expose deployment nginx --type NodePort --port 80
 
-      - cap: Port-forward into the pod to see the application at http://localhost:8888
-        com: kubectl port-forward PODNAME 8888:80
+      - cap: Launch browser to test service
+        com: minikube service nginx
 
-      - cap: We are now going to create an image registry that will live inside our cluster to replace DockerHub
-        com: kubectl apply -f manifests/registryl kubectl rollout status deployment/registry
+      - cap: Install registry
+        com: kubectl apply -f manifests/registry.yml
+
+      - cap: Wait for registry to deploy
+        com: kubectl rollout status deployments/registry
 
       - cap: Edit the contents of applications/hello-kenzan/index.html
-        com: textedit applications/hello-kenzan/index.html
+        com: nano applications/hello-kenzan/index.html
 
       - cap: We will now build the image with a special name that is pointing at our cluster registry.
-        com: cd applications/hello-kenzan; docker build -t 127.0.0.1:30400/hello-kenzan:latest
+        com: docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan
 
       - cap: Before we can push our image we need to set up a temporary proxy. This is a container that listens on 127.0.0..1:30400 and forwads to our cluster. By default the docker client can only push to non https via localhost.
-        com: docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
+        com: docker run -d -e "MINIKUBEIP=`minikube ip`" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
 
       - cap: We can now push our image.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
@@ -38,7 +41,7 @@ parts:
         com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yml
 
       - cap: View the app
-        com: Open a webbrowser at http://hello-kenzan.127.0.0.1.xip.io to view.
+        com: minikube service hello-kenzan
 
   # - name: Part 2
   #   intro: In this part we will Setup Jenkins, for the repo and setup an automated Jenkins job build, push and deploy our custom appliction.
