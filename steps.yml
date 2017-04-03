@@ -23,6 +23,7 @@ parts:
         com: kubectl apply -f manifests/registryl kubectl rollout status deployment/registry
 
       - cap: Edit the contents of applications/hello-kenzan/index.html
+        com: textedit applications/hello-kenzan/index.html
 
       - cap: We will now build the image with a special name that is pointing at our cluster registry.
         com: cd applications/hello-kenzan; docker build -t 127.0.0.1:30400/hello-kenzan:latest
@@ -33,18 +34,18 @@ parts:
       - cap: We can now push our image.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
 
-      - cap: Now that our image is on the cluster, we can deploy the manifests
+      - cap: Now that our image is on the cluster we can deploy the manifests
         com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yml
 
       - cap: View the app
-      - com: Open a webbrowser at http://hello-kenzan.127.0.0.1.xip.io to view.
+        com: Open a webbrowser at http://hello-kenzan.127.0.0.1.xip.io to view.
 
-  - name: Part 2
-    intro: In this part we will Setup Jenkins, for the repo and setup an automated Jenkins job build, push and deploy our custom appliction.
-    steps:
+  # - name: Part 2
+  #   intro: In this part we will Setup Jenkins, for the repo and setup an automated Jenkins job build, push and deploy our custom appliction.
+  #   steps:
 
-      - cap: Install Jenkins
-        com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
+  #     - cap: Install Jenkins
+  #       com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
 
       # - cap: View Jenkins at http://jenkins.127.0.0.1.xip.io and finish setting it up with the defaults.
       

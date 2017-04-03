@@ -7,15 +7,18 @@ var Rx = require('rx');
 var prompts = new Rx.Subject();
 
 var stepIndex = 1;
-var docList = [];
+var commands = [];
 
 inquirer.prompt(prompts).ui.process.subscribe(
 
   function (answers) {
     answerIndex = answers.name*1
-    answerIndex--;
-	console.log("command is " + answerIndex)
-    console.log(docList[0].steps[answerIndex].com);
+    answerIndex = answerIndex - 1;
+    // //answerIndex--;
+	//console.log("answerIndex " + answerIndex)
+    cmd = commands[answerIndex];
+    console.log("command is " + cmd);
+    //console.log(commands);
 },
   function(err){
     console.log('error')
@@ -46,6 +49,7 @@ YAML.load('steps.yml', function(docs)
             //console.log(step.cap);
 
             //ask(step.cap, step.com)
+            commands.push(step.com)
             prompts.onNext({type: 'confirm',name: stepIndex, message: "\n \n \n" + part + " Step: " + stepNum + "\n" + step.cap + "\n \n" + step.com + "\n \nPress enter to the run the above command for the step.", default: true});
             stepIndex++;
         })
