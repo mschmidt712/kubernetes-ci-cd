@@ -43,6 +43,9 @@ parts:
       - cap: We can now push our image.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
 
+      - cap: Stop the registry proxy
+        com: docker stop socat-registry; docker rm socat-registry
+
       - cap: Now that our image is on the cluster we can deploy the manifests
         com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml
 
