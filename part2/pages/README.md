@@ -1,4 +1,5 @@
 ## Kr8ssword Puzzle Kubernetes CI / CD , Microservices Example
+## NOTE: For full functionality please ensure the part2/server setup has been completed.
 
 # setup
 Go through part1. Ensure that:

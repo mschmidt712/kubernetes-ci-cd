@@ -33,7 +33,7 @@
   var firstRun = true;
 
 socket.on('hit', function(msg){
-
+console.log("hit!" + msg.podId)
 pulse(msg.podId);
 
 });

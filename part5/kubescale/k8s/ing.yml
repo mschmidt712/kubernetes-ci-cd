@@ -10,7 +10,7 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: minikube dashboard
+  - host: dashboard.127.0.0.1.xip.io
     http:
       paths:
       - path: /
@@ -18,7 +18,7 @@ spec:
           serviceName: kubernetes-dashboard
           servicePort: 80
 
-  - host: grafana.MINIKUBE_IP.xip.io
+  - host: grafana.127.0.0.1.xip.io
     http:
       paths:
       - path: /
@@ -37,42 +37,10 @@ spec:
     serviceName: default-http-backend
     servicePort: 80
   rules:
-  - host: europa.MINIKUBE_IP.xip.io
+  - host: kubescale.127.0.0.1.xip.io
     http:
       paths:
       - path: /
         backend:
-          serviceName: europa
-          servicePort: 80
-
-  - host: jenkins.MINIKUBE_IP.xip.io
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: jenkins
-          servicePort: 80
-
-  - host: gogs.MINIKUBE_IP.xip.io
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: gogs
-          servicePort: 80
-
-  # - host: nginx.MINIKUBE_IP.xip.io
-  #   http:
-  #     paths:
-  #     - path: /
-  #       backend:
-  #         serviceName: nginx
-  #         servicePort: 80
-
-  # - host: gogs.MINIKUBE_IP.xip.io
-  #   http:
-  #     paths:
-  #     - path: /
-  #       backend:
-  #         serviceName: gogs
-  #         servicePort: 80
+          serviceName: kubescale
+          servicePort: 3000

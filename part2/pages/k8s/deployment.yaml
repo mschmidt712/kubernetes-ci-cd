@@ -7,7 +7,7 @@ metadata:
 spec:
   ports:
     - port: 80
-      targetPort: 3000
+      targetPort: 3002
   selector:
     app: kr8sswordz
     tier: kr8sswordz
@@ -30,25 +30,23 @@ spec:
         tier: kr8sswordz
     spec:
       containers:
-      - image: 127.0.0.1:30912/kr8sswordz:1.0.0
+      - image: 127.0.0.1:30912/kr8sswordz:1.0.4
         name: kr8sswordz
+        imagePullPolicy: Always
         ports:
-        - containerPort: 3000
+        - containerPort: 3002
           name: kr8sswordz
-
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
  name: kr8sswordz
- annotations:
-  ingress.kubernetes.io/rewrite-target: /
 spec:
   backend:
     serviceName: kr8sswordz
     servicePort: 80
   rules:
-  - host: kr8sswordz.MINIKUBEIP.xip.io
+  - host: kr8sswordz.192.168.99.100.xip.io
     http:
       paths:
       - path: /

@@ -84,27 +84,20 @@ gulp.task('serve:dev', ['build:dev', 'watch:html', 'watch:sass', 'watch:js'], ()
       middleware: [historyApiFallback()]
     },
     logLevel: 'info',
-    port: 3000
+    port: 3002
   });
 
-  // // Start up api server
-  // fs.createReadStream('./node_modules/skills-db/skills.json')
-  //    // Overwrite the database
-  //   .pipe(fs.createWriteStream('./db.json'))
-  //   .on('finish', require('fake-badge-api'));
 });
 
 // Production Build
 gulp.task('serve:prod', ['build:dev'], () => {
   connect.server({
     root: ['./dist/', './'],
-    port: 3000,
+    port: 3002,
     livereload: false,
     middleware: (connect, opt) => {
       return [ historyApiFallback() ];
     }
   });
 
-  // Start up api server
-  ///require('fake-badge-api')();
 });
