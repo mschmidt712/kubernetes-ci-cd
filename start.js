@@ -13,7 +13,13 @@ var config = {
 
 var fs = require('fs');
 
-var markdown = '';
+var markdown = "# Kubernetes ci/cd whitepaper for Linux.com\n\n This readme is dynamically generated when the interactive tutorial is run";
+markdown = markdown + "## Interactive tutorial version\n\n"
+markdown = markdown + "* clone this repo\n"
+markdown = markdown + "* Ensure you are starting with a clean slate: `minikube delete; minikube rm -rf ~/.minikube; rm -rf ~/.kube`\n"
+markdown = markdown + "* run `npm install`\n"
+markdown = markdown + "Begin the tutorial `npm start`"
+
 var prompts = new Rx.Subject();
 
 var stepIndex = 1;
@@ -35,7 +41,16 @@ inquirer.prompt(prompts).ui.process.subscribe(
 },
   function(message){
       console.log('complete')
-      console.log(markdown)
+      
+      fs.writeFile("README.md", markdown, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+
+        console.log("The file was saved!");
+    }); 
+
+
   }
 );
 
