@@ -4,11 +4,11 @@ parts:
     intro: In this part we will setup a local cluster with minikube, deploy a public image from dockerhub, customize that image, and then finally deploy it inside our local cluster.
     steps:
 
-      # - cap: Start up the cluster with minikibe
-      #   com: minikube start --memory 4000 --cpus 2 --kubernetes-version v1.6.0
+      - cap: Start up the cluster with minikibe
+        com: minikube start --memory 4000 --cpus 2 --kubernetes-version v1.6.0
 
-      # - cap: Enable addons
-      #   com: minikube addons enable heapster; minikube addons enable ingress
+      - cap: Enable addons
+        com: minikube addons enable heapster; minikube addons enable ingress
 
       - cap: Deploy the public nginx image from DockerHub
         com: kubectl run nginx --image nginx --port 80

@@ -11,6 +11,9 @@ var config = {
     env: environment
 };
 
+var fs = require('fs');
+
+var markdown = '';
 var prompts = new Rx.Subject();
 
 var stepIndex = 1;
@@ -44,7 +47,7 @@ YAML.load('steps.yml', function(docs)
     var parts = docs.parts;
 
     parts.forEach(function (item) {
-
+        markdown = markdown + "## " + item.name + "\n"
         var part = item.name;
         var stepNum = 0;
         var stepList = item.steps;
