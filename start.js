@@ -14,11 +14,13 @@ var config = {
 var fs = require('fs');
 
 var markdown = "# Kubernetes ci/cd whitepaper for Linux.com\n\n This readme is dynamically generated when the interactive tutorial is run";
-markdown = markdown + "## Interactive tutorial version\n\n"
-markdown = markdown + "* clone this repo\n"
-markdown = markdown + "* Ensure you are starting with a clean slate: `minikube delete; minikube rm -rf ~/.minikube; rm -rf ~/.kube`\n"
-markdown = markdown + "* run `npm install`\n"
-markdown = markdown + "Begin the tutorial `npm start`"
+markdown = markdown + "\n\n## Interactive tutorial version"
+markdown = markdown + "\n* clone this repo\n"
+markdown = markdown + "\n* Ensure you are starting with a clean slate: `minikube delete; minikube rm -rf ~/.minikube; rm -rf ~/.kube`\n"
+markdown = markdown + "\n* run `npm install`\n"
+markdown = markdown + "\nBegin the tutorial `npm start`"
+markdown = markdown + "\n\n## Manual tutorial version"
+
 
 var prompts = new Rx.Subject();
 
@@ -65,6 +67,7 @@ YAML.load('steps.yml', function(docs)
     parts.forEach(function (item) {
         markdown = markdown + "## " + item.name + "\n"
         var part = item.name;
+        markdown = markdown + "\n\n### " + item.name
         var stepNum = 0;
         var stepList = item.steps;
 
@@ -72,6 +75,10 @@ YAML.load('steps.yml', function(docs)
         stepList.forEach(function (step) {
             stepNum++;
             commands.push(step.com)
+            markdown = markdown + "\n\n### Step" + stepNum
+            markdown = markdown + "\n\n" + step.cap
+            markdown = markdown + "\n\n`" + step.com + "`"
+
             prompts.onNext({type: 'confirm',name: stepIndex, message: "\n \n \n" + part + " Step: " + stepNum + "\n" + step.cap + "\n \n" + step.com + "\n \nPress enter to the run the above command for the step.", default: true});
             stepIndex++;
         })

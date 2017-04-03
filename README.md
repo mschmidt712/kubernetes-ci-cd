@@ -1,23 +1,8 @@
-# Kubernetes white paper for Linux.com
+# Kubernetes ci/cd whitepaper for Linux.com
 
-## Get started
-Requirements
-* nodejs
-* kubectl
-* virtualbox
-* minikube
-* At least 4GB of available memory, 8GB for part 5
+ This readme is dynamically generated when the interactive tutorial is run## Interactive tutorial version
 
-```
-git clone git@github.com:kenzanlabs/kubernetes-ci-cd.git; cd kubernetes-ci-cd
-
-npm install
-```
-
-## Interactive tutorial
-
-```
-npm start
-```
-
-## Manual tutorial
+* clone this repo
+* Ensure you are starting with a clean slate: `minikube delete; minikube rm -rf ~/.minikube; rm -rf ~/.kube`
+* run `npm install`
+Begin the tutorial `npm start`## Part 1
