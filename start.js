@@ -2,26 +2,35 @@
 
 YAML = require('yamljs');
 var inquirer = require('inquirer');
+var Rx = require('rx');
 
-var questions = [];
-inquirer.prompt(questions);
+var prompts = new Rx.Subject();
 
-console.log('Welcome to the Linux.com interactive Kubernetes tutorial by Kenzan');
+var stepIndex = 1;
+var docList = [];
+
+inquirer.prompt(prompts).ui.process.subscribe(
+
+  function (answers) {
+    answerIndex = answers.name*1
+    answerIndex--;
+	console.log("command is " + answerIndex)
+    console.log(docList[0].steps[answerIndex].com);
+},
+  function(err){
+    console.log('error')
+},
+  function(message){
+      console.log('complete')
+  }
+);
+
+prompts.onNext({type: 'confirm',name: "Begin", message: "Welcome to the Linux.com interactive Kubernetes tutorial by Kenzan. Press enter to begin\n", default: true});
 
 
-function start() {
-var inquirer = require('inquirer');
-    inquirer.prompt([{type: 'confirm',name: 'start', message: caption, default: true},]).then(function (answers) {
-        if (answers.start){
-           if (command == "begin"){
-               start();
-           }
-        }
-    });
-
-}
 YAML.load('steps.yml', function(docs)
 {
+    docList = docs.parts;
     var parts = docs.parts;
 
     parts.forEach(function (item) {
@@ -29,26 +38,19 @@ YAML.load('steps.yml', function(docs)
         var part = item.name;
         var stepNum = 0;
         var stepList = item.steps;
-        console.log(item.name)
 
         // console.log(item.steps);
         stepList.forEach(function (step) {
-            console.log(part + " - Step " + stepNum);
-            console.log(step.cap);
+            stepNum++;
+            //console.log(part + " - Step " + stepNum);
+            //console.log(step.cap);
 
-            ask(step.cap, step.com)
+            //ask(step.cap, step.com)
+            prompts.onNext({type: 'confirm',name: stepIndex, message: "\n \n \n" + part + " Step: " + stepNum + "\n" + step.cap + "\n \n" + step.com + "\n \nPress enter to the run the above command for the step.", default: true});
+            stepIndex++;
         })
 
-        
-
+    
     })
+    prompts.onCompleted();
 });
-
-
-
-function ask(caption, command) {
-    // questions.push();
-    prompts.onNext({type: 'confirm',name: 'start', message: caption, default: true});
-}
-
-start();
