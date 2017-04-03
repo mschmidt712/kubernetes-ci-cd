@@ -62,7 +62,11 @@ app.post('/loadtest/concurrent', function (req, res) {
   } 
   async.map(myUrls, function(url, callback) {
     request(url, function(error, response, html){
-      console.log(response);
+      if (response && response.hasProperty("responseCode")) {
+        console.log(response.responseCode);
+      } else {
+        console.log(error);
+      }
     });
   }, function(err, results) {
     console.log(results);
@@ -77,7 +81,11 @@ app.post('/loadtest/consecutive', function (req, res) {
   var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
-      console.log(error);
+      if (response && response.hasProperty("responseCode")) {
+        console.log(response.responseCode);
+      } else {
+        console.log(error);
+      }
     });
   }
   res.send('consecutive done');
