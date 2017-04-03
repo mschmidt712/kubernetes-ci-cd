@@ -3,6 +3,7 @@
 YAML = require('yamljs');
 var inquirer = require('inquirer');
 var Rx = require('rx');
+const execSync = require('child_process').execSync;
 
 var prompts = new Rx.Subject();
 
@@ -17,8 +18,8 @@ inquirer.prompt(prompts).ui.process.subscribe(
     // //answerIndex--;
 	//console.log("answerIndex " + answerIndex)
     cmd = commands[answerIndex];
-    console.log("command is " + cmd);
-    //console.log(commands);
+    //console.log("command is " + cmd);
+    execSync(cmd, {stdio:[0,1,2]})
 },
   function(err){
     console.log('error')
