@@ -35,6 +35,7 @@ inquirer.prompt(prompts).ui.process.subscribe(
 },
   function(message){
       console.log('complete')
+      console.log(markdown)
   }
 );
 
@@ -55,10 +56,6 @@ YAML.load('steps.yml', function(docs)
         // console.log(item.steps);
         stepList.forEach(function (step) {
             stepNum++;
-            //console.log(part + " - Step " + stepNum);
-            //console.log(step.cap);
-
-            //ask(step.cap, step.com)
             commands.push(step.com)
             prompts.onNext({type: 'confirm',name: stepIndex, message: "\n \n \n" + part + " Step: " + stepNum + "\n" + step.cap + "\n \n" + step.com + "\n \nPress enter to the run the above command for the step.", default: true});
             stepIndex++;
@@ -67,4 +64,6 @@ YAML.load('steps.yml', function(docs)
     
     })
     prompts.onCompleted();
+
+
 });

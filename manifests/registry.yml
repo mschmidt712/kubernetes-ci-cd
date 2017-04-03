@@ -42,6 +42,24 @@ spec:
     tier: registry
   type: NodePort
 ---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: registry-ui
+  labels:
+    app: registry
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: registry
+  selector:
+    app: registry
+    tier: registry
+  type: NodePort
+---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
