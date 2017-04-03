@@ -10,8 +10,8 @@ parts:
       - cap: Enable addons
         com: minikube addons enable heapster; minikube addons enable ingress
 
-      - cap: View minikube dashboard
-        com: minikube service kubernetes-dashboard --namespace kube-system
+      - cap: Wait 20 seconds and view minikube dashboard
+        com: sleep 20; minikube service kubernetes-dashboard --namespace kube-system
 
       - cap: Deploy the public nginx image from DockerHub
         com: kubectl run nginx --image nginx --port 80
