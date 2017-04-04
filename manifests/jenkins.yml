@@ -74,23 +74,3 @@ spec:
       - name: jenkins-persistent-storage
         persistentVolumeClaim:
           claimName: jenkins-claim
-
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: jenkins-services
-  annotations:
-    ingress.kubernetes.io/rewrite-target: /
-spec:
-  backend:
-    serviceName: default-http-backend
-    servicePort: 80
-  rules:
-  - host: jenkins.127.0.0.1.xip.io
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: jenkins
-          servicePort: 8080

@@ -11,7 +11,9 @@
 
 Begin the tutorial `npm start`
 
-## Manual tutorial version## Part 1
+## Manual tutorial version
+
+## Part 1
 
 
 ### Part 1
@@ -86,7 +88,7 @@ We will now build the image with a special name that is pointing at our cluster 
 
 Before we can push our image we need to set up a temporary proxy. This is a container that listens on 127.0.0dockdr .1:30400 and forwads to our cluster. By default the docker client can only push to non https via localhost.
 
-`docker run -d -e "REGIP=192.168.99.100" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:192.168.99.100:30400"`
+`docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"`
 
 ### Step13
 
