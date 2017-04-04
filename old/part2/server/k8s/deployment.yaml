@@ -17,9 +17,17 @@ spec:
       - image: 127.0.0.1:30912/services:__TAG__
         name: services
         imagePullPolicy: Always
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/up.sh"]
+          preStop:
+            exec:
+              command: ["/down.sh"]        
         ports:
         - containerPort: 3000
           name: services
+
 ---
 apiVersion: v1
 kind: Service

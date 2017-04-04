@@ -99,11 +99,13 @@ app.post('/loadtest/consecutive', function (req, res) {
 
 
 app.get('/up/:podId', function (req, res) {
+  console.log('Server UP: %s', req.param.podId);
   etcd.set("pod-list/" + req.params.podId, req.params.podId);
   res.send('done');
 })
 
 app.get('/down/:podId', function (req, res) {
+  console.log('Server DOWN: %s', req.param.podId);
   etcd.del("pod-list/" + req.params.podId, req.params.podId);
   res.send('done');
 })
