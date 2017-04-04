@@ -38,7 +38,7 @@ parts:
         com: docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan
 
       - cap: Before we can push our image we need to set up a temporary proxy. This is a container that listens on 127.0.0.1:30400 and forwads to our cluster. By default the docker client can only push to non https via localhost.
-        com: docker stop docat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
+        com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
       - cap: We can now push our image.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
