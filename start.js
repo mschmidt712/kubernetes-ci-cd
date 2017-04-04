@@ -19,7 +19,7 @@ markdown = markdown + "\n* clone this repo\n"
 markdown = markdown + "\n* Ensure you are starting with a clean slate: `minikube delete; minikube rm -rf ~/.minikube; rm -rf ~/.kube`\n"
 markdown = markdown + "\n* run `npm install`\n"
 markdown = markdown + "\nBegin the tutorial `npm start`"
-markdown = markdown + "\n\n## Manual tutorial version"
+markdown = markdown + "\n\n## Manual tutorial version\n\n"
 
 
 var prompts = new Rx.Subject();
