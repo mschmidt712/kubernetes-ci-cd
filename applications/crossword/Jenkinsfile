@@ -15,7 +15,7 @@ node {
 
     stage "Build"
     
-        sh "docker build -t ${imageName} old/part2/server"
+        sh "docker build -t ${imageName} applications/crossword"
     
     stage "Push"
 
@@ -23,5 +23,5 @@ node {
 
     stage "Deploy"
 
-        sh "sed 's#__TAG__#'$COMMITTAG'#' old/part2/server/k8s/deployment.yaml | kubectl apply -f -"
+        sh "sed 's#__TAG__#'$COMMITTAG'#' applications/crossword/k8s/deployment.yaml | kubectl apply -f -"
 }
