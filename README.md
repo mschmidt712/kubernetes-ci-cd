@@ -1,6 +1,6 @@
 # Kubernetes ci/cd whitepaper for Linux.com
 
- This readme is dynamically generated when the interactive tutorial is run
+ This readme is dynamically generated when `node readme.js`
 
 ## Interactive tutorial version
 * clone this repo
@@ -17,6 +17,8 @@ Begin the tutorial `npm start`
 
 
 ### Part 1
+
+
 
 ### Step1
 
@@ -117,6 +119,8 @@ View the app
 
 ### Part 2
 
+
+
 ### Step1
 
 Install Jenkins
@@ -149,6 +153,8 @@ Push a change to your fork. Run job again. View changes
 
 
 ### Part 4
+
+
 
 ### Step1
 
