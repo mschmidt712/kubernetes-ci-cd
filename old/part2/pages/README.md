@@ -29,4 +29,3 @@ Note: Replace MINIKUBEIP with your minikube ip
 Change MINIKUBEIP to your minikube ip and load the application below
 
     http://kr8sswordz.MINIKUBEIP.xip.io/ 
-

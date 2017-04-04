@@ -9,4 +9,22 @@
   text-align: center;
   font-size: 1rem;
   height: 1.25rem;
+
+  &.active {
+    background-color: $kubernetes-blue;
+    animation: fadein ease-in;
+    animation-direction: alternate;
+    animation-duration: 1s;
+  }
+}
+
+@keyframes fadein {
+    from {
+      background: #32CD32;
+      opacity: 0.5;
+    }
+    to   {
+      background: #32CD32;
+      opacity: 1;
+    }
 }

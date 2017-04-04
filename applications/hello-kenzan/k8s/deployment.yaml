@@ -35,18 +35,3 @@ spec:
         ports:
         - containerPort: 80
           name: hello-kenzan
-          
-# ---
-# apiVersion: extensions/v1beta1
-# kind: Ingress
-# metadata:
-#  name: hello-kenzan-ingress
-# spec:
-#  rules:
-#    - host: hello-kenzan.MINIKUBEIP.xip.io
-#      http:
-#        paths:
-#          - path: /
-#            backend:
-#              serviceName: hello-kenzan
-#              servicePort: 80
