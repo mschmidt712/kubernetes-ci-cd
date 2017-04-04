@@ -5,7 +5,7 @@ parts:
     steps:
 
       - cap: Start up the cluster with minikibe
-        com: minikube start --memory 6000 --cpus 2 --kubernetes-version v1.6.0
+        com: minikube start --memory 8000 --cpus 2 --kubernetes-version v1.6.0
 
       - cap: Enable addons
         com: minikube addons enable heapster; minikube addons enable ingress
@@ -110,3 +110,16 @@ parts:
 
       - cap: View kubescale application
         com: minikube service kubescale
+
+  - name: Part 5
+    intro: Spinnaker
+    steps:
+
+      - cap: Initialize Helm
+        com: helm init; sleep 10; kubectl --namespace kube-system rollout status deployment/tiller-deploy
+
+      - cap: Install Chart
+        com: helm install --name spinnaker applications/spinnaker-helm/spinnaker-chart
+      
+      - cap: Launch Deck
+        com: minikube service deck
