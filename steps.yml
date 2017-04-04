@@ -111,15 +111,15 @@ parts:
       - cap: View kubescale application
         com: minikube service kubescale
 
-  - name: Part 5
-    intro: Spinnaker
-    steps:
+  # - name: Part 5
+  #   intro: Spinnaker
+  #   steps:
 
-      - cap: Initialize Helm
-        com: helm init; sleep 10; kubectl --namespace kube-system rollout status deployment/tiller-deploy
+  #     - cap: Initialize Helm
+  #       com: helm init; sleep 10; kubectl --namespace kube-system rollout status deployment/tiller-deploy
 
-      - cap: Install Chart
-        com: helm install --name spinnaker applications/spinnaker-helm/spinnaker-chart
+  #     - cap: Install Chart
+  #       com: helm install --name spinnaker applications/spinnaker-helm/spinnaker-chart
       
-      - cap: Launch Deck
-        com: minikube service deck
+  #     - cap: Launch Deck
+  #       com: minikube service deck
