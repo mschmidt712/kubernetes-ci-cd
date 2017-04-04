@@ -1,0 +1,32 @@
+{
+  "name": "monitor",
+  "version": "1.0.0",
+  "description": "A service for updating the cache and emitting websocket events back to the frontend",
+  "main": "index.js",
+  "scripts": {
+    "debug": "node --inspect=5858 index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenzanlabs/kubernetes-ci-cd.git"
+  },
+  "keywords": [
+    "monitor",
+    "cache",
+    "blog"
+  ],
+  "author": "Evan Yeager",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kenzanlabs/kubernetes-ci-cd/issues"
+  },
+  "homepage": "https://github.com/kenzanlabs/kubernetes-ci-cd#readme",
+  "dependencies": {
+    "async": "2.2.0",
+    "body-parser": "1.17.1",
+    "express": "4.15.2",
+    "node-etcd": "5.0.3",
+    "request": "2.81.0",
+    "socket.io": "1.7.3"
+  }
+}
