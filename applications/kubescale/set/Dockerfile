@@ -12,6 +12,6 @@ COPY down.sh /down.sh
 
 RUN npm install
 
-RUN mpm install -g nodemon
+RUN npm install -g nodemon
 
 CMD ["nodemon", "server.js"]

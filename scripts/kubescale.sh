@@ -1,13 +1,18 @@
 #!/bin/bash
 
-echo "creating pod-list etcd directory"
-kubectl exec -it example-etcd-cluster-0000 apk update
-kubectl exec -it example-etcd-cluster-0000 apk add ca-certificates
-kubectl exec -it example-etcd-cluster-0000 apk update-ca-certificates
-kubectl exec -it example-etcd-cluster-0000 apk add bash wget
-kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.com/moondev/86ebfc39998049d3f0c10848f4c72c57/raw/62cb237a115d4884cec4c5d94751cf5586f44b4b/mkdir.sh
-kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
-kubectl exec -it example-etcd-cluster-0000 /mkdir.sh
+# echo "creating pod-list etcd directory"
+# kubectl exec -it example-etcd-cluster-0000 apk update
+# kubectl exec -it example-etcd-cluster-0000 apk add ca-certificates
+# kubectl exec -it example-etcd-cluster-0000 apk update-ca-certificates
+# kubectl exec -it example-etcd-cluster-0000 apk add bash wget
+# kubectl exec -it example-etcd-cluster-0000 wget https://gist.githubusercontent.com/moondev/86ebfc39998049d3f0c10848f4c72c57/raw/62cb237a115d4884cec4c5d94751cf5586f44b4b/mkdir.sh
+# kubectl exec -it example-etcd-cluster-0000 chmod +x mkdir.sh
+
+
+kubectl exec -it example-etcd-cluster-0000 echo "#!/usr/bin/env bash\n\nexport ETCDCTL_ENDPOINT='http://example-etcd-cluster-client-service:2379'\nectdctl mkdir pod-list" > /mkd.sh
+kubectl exec -it example-etcd-cluster-0000 chmod 0777 /mkd.sh
+
+kubectl exec -it example-etcd-cluster-0000 cat /mkd.sh
 
 # echo "building kubescale image"
 
