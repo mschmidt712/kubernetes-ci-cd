@@ -1,9 +1,12 @@
 'use strict';
+var request = require('request');
+
 
 module.exports = function(Crossword) {
 
   Crossword.get = function(cb) {
     Crossword.findOne(function(err, crossword) {
+      request("http://monitor-scale:3001/hit/123");
       if(err) handleError(err.message, cb);
       cb(null, crossword);
     });

@@ -1,5 +1,10 @@
 #!/bin/bash
 
-docker build -t `minikube ip`:30912/services:1.0.0 .
-docker push `minikube ip`:30912/services:1.0.0
-kubectl apply -f k8s/deployment.yaml
+TAG=`git rev-parse --short HEAD`
+echo $TAG
+
+docker build -t `minikube ip`:30912/services:$TAG .
+docker push `minikube ip`:30912/services:$TAG
+
+
+sed 's#__TAG__#'$TAG'#' k8s/deployment.yaml | kubectl apply -f -
