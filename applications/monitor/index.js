@@ -60,9 +60,10 @@ app.post('/scale', function (req, res) {
 app.post('/loadtest/concurrent', function (req, res) {
   //TODO Change this to point to the crossword server deployment
   var count = req.body.count;
+  var url = servicesHost + ":" + servicesPort + "/crossword";
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
-    myUrls.push("http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale");
+    myUrls.push(url);
   } 
   async.map(myUrls, function(url, callback) {
     request(url, function(error, response, html){
@@ -82,7 +83,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 app.post('/loadtest/consecutive', function (req, res) {
   //TODO Change this to point to the crossword server deployment
   var count = req.body.count;
-  var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
+  var url = servicesHost + ":" + servicesPort + "/crossword";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
       if (response && response.hasOwnProperty("statusCode")) {
