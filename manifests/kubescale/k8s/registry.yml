@@ -42,24 +42,6 @@ spec:
     tier: registry
   type: NodePort
 ---
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: registry-ui
-  labels:
-    app: registry
-spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-      name: registry
-  selector:
-    app: registry
-    tier: registry
-  type: NodePort
----
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -102,3 +84,59 @@ spec:
       - name: registry-persistent-storage
         persistentVolumeClaim:
           claimName: registry-claim
+
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Deployment
+# metadata:
+#   name: registryui
+# spec:
+#   replicas: 1
+#   template:
+#     metadata:
+#       labels:
+#         app: registryui
+#     spec:
+#       containers:
+#       - name: registryui
+#         image: hyper/docker-registry-web
+#         ports:
+#         - containerPort: 8080
+#         env:
+#         - name: REGISTRY_URL
+#           value: http://registry:5000/v2
+#         - name: REGISTRY_NAME
+#           value: cluster-registry
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: registryui
+#   labels:
+#     app: registryui
+# spec:
+#   ports:
+#     - port: 8080
+#       targetPort: 8080
+#       name: registry
+#   selector:
+#     app: registryui
+#     tier: registryui
+#   type: NodePort
+
+
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#  name: registryui-ingress
+# spec:
+#  rules:
+#    - host: registry.192.168.64.3.xip.io
+#      http:
+#        paths:
+#          - path: /
+#            backend:
+#              serviceName: registryui
+#              servicePort: 8080

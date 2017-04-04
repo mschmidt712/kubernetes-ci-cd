@@ -1,0 +1,29 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@blueprintjs/core": "^1.12.0",
+    "body-parser": "^1.17.1",
+    "classnames": "^2.2.5",
+    "express": "^4.15.2",
+    "express-ws": "^3.0.0",
+    "node-etcd": "^5.0.3",
+    "node-serialize": "0.0.4",
+    "nodejs-etcd": "^0.1.1",
+    "react": "^15.4.2",
+    "react-addons-css-transition-group": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "socket.io": "^1.7.3",
+    "tether": "^1.4.0",
+    "ws": "^2.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
