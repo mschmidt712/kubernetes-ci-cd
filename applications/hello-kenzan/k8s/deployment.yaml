@@ -30,23 +30,8 @@ spec:
         tier: hello-kenzan
     spec:
       containers:
-      - image: 127.0.0.1:30912/hellokenzan:latest
+      - image: 127.0.0.1:30400/hello-kenzan:latest
         name: hello-kenzan
         ports:
         - containerPort: 80
           name: hello-kenzan
-          
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
- name: hello-kenzan-ingress
-spec:
- rules:
-   - host: hello-kenzan.192.168.99.100.xip.io
-     http:
-       paths:
-         - path: /
-           backend:
-             serviceName: hello-kenzan
-             servicePort: 80
