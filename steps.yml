@@ -52,12 +52,15 @@ parts:
       - cap: View the app
         com: minikube service hello-kenzan
 
-  # - name: Part 2
-  #   intro: In this part we will Setup Jenkins, for the repo and setup an automated Jenkins job build, push and deploy our custom appliction.
-  #   steps:
+  - name: Part 2
+    intro: In this part we will Setup Jenkins, and setup an automated jon to build, push and deploy our custom appliction.
+    steps:
 
-  #     - cap: Install Jenkins
-  #       com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
+      - cap: Install Jenkins
+        com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
+
+      - cap: Configure Jenkind
+        com: minikube service jenkins
 
       # - cap: View Jenkins at http://jenkins.127.0.0.1.xip.io and finish setting it up with the defaults.
       
