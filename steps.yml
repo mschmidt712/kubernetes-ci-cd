@@ -5,7 +5,7 @@ parts:
     steps:
 
       - cap: Start up the cluster with minikibe
-        com: minikube start --memory 4000 --cpus 2 --kubernetes-version v1.6.0
+        com: minikube start --memory 6000 --cpus 2 --kubernetes-version v1.6.0
 
       - cap: Enable addons
         com: minikube addons enable heapster; minikube addons enable ingress
@@ -31,7 +31,7 @@ parts:
       - cap: View registry UI
         com: minikube service registry-ui
 
-      - cap: Edit the contents of applications/hello-kenzan/index.html
+      - cap: Edit the contents of applications/hello-kenzan/index.html. This will open the file with the nano editor. When finished press ctrl + x to exit and confirm save.
         com: nano applications/hello-kenzan/index.html
 
       - cap: We will now build the image with a special name that is pointing at our cluster registry.
@@ -43,7 +43,7 @@ parts:
       - cap: We can now push our image.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
 
-      - cap: Stop the registry proxy
+      - cap: Stop the registry proxy.
         com: docker stop socat-registry; docker rm socat-registry
 
       - cap: Now that our image is on the cluster we can deploy the manifests
@@ -59,18 +59,11 @@ parts:
       - cap: Install Jenkins
         com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
 
-      - cap: Configure Jenkind
+      - cap: Get Jenkins admin password
+        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
+
+      - cap: Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. For "repository url" enter https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
         com: minikube service jenkins
-
-      # - cap: View Jenkins at http://jenkins.127.0.0.1.xip.io and finish setting it up with the defaults.
-      
-      # - cap: Create a new pipeline job through the ui
-
-      # - cap: Fork the kenzan repo, put your forked repo url in the the spot below.
-
-      # - cap: For Jenkinsfile put "jenkinsfiles/Part 2"
-
-      # - cap: Run the job and be sure evrything deploys.
 
   # - name: Part 3
   #   intro: part 3 intro here
