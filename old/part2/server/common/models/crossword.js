@@ -6,7 +6,7 @@ module.exports = function(Crossword) {
 
   Crossword.get = function(cb) {
     Crossword.findOne(function(err, crossword) {
-      request("http://monitor-scale:3001/hit/123");
+      fireHit();
       if(err) handleError(err.message, cb);
       cb(null, crossword);
     });
@@ -15,6 +15,7 @@ module.exports = function(Crossword) {
   Crossword.put = function(words, cb) {
     if(words) {
       Crossword.findOne(function (err, crossword) {
+        fireHit();
         if (err) handleError(err.message, cb);
         for (var j = 0; j < words.length; j++) {
           var word = words[j];
@@ -39,6 +40,7 @@ module.exports = function(Crossword) {
 
   Crossword.clear = function(cb) {
     Crossword.findOne(function(err, crossword) {
+      fireHit();
       if(err) handleError(err.message, cb);
       var updatedWords = [];
       for (var i = 0; i < crossword.words.length; i++) {
@@ -51,6 +53,12 @@ module.exports = function(Crossword) {
         cb(null);
       });
     });
+  }
+  
+  function fireHit() {
+    var podId = process.env.HOSTNAME;
+    var url = "http://monitor-scale:3001/hit/" + podId;
+    request(url);
   }
 
   function handleError(msg, cb, status) {

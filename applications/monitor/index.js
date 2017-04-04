@@ -115,7 +115,7 @@ app.get('/hit/:podId', function (req, res) {
   var d = new Date();
   var n = d.getTime();
 
-  console.log("Emitting hit");
+  console.log("Emitting hit from %s", req.params.podId);
   io.emit('hit', { podId: req.params.podId, time: n });
   res.send('done')
 })
