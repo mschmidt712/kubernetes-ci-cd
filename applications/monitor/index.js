@@ -12,6 +12,9 @@ var exec = require('child_process').exec;
 
 var bodyParser = require("body-parser");
 
+var servicesHost = process.env.SERVICES_SERVICE_HOST;
+var servicesPort = process.env.SERVICES_SERVICE_PORT;
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -30,12 +33,12 @@ function showVal(val) {
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
   // TODO Scale the crossword server instead of hello-kenzan -- Change URL and metadata
-  var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/hello-kenzan/scale";
+  var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/services/scale";
   var putBody = {
     kind:"Scale",
     apiVersion:"extensions/v1beta1",
     metadata: { 
-      name:"hello-kenzan",
+      name:"services",
       namespace:"default"
     },
     spec: {
@@ -127,6 +130,7 @@ app.get('/', function(req,res){
 });
 
 http.listen(3001, function () {
+  console.log('Services at ' + servicesHost + ':' + servicesPort);
   console.log('Listening on port 3001!')
 });
 
