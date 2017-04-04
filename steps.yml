@@ -44,7 +44,7 @@ parts:
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
 
       - cap: Stop the registry proxy.
-        com: docker stop socat-registry; docker rm socat-registry
+        com: docker stop socat-registry;
 
       - cap: Now that our image is on the cluster we can deploy the manifests
         com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml
@@ -62,14 +62,48 @@ parts:
       - cap: Get Jenkins admin password
         com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
 
-      - cap: Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. For "repository url" enter https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
+      - cap: Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. Fork repo and put "repository url" as your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
         com: minikube service jenkins
 
-  # - name: Part 3
-  #   intro: part 3 intro here
+      - cap: View updated application
+        com: minikube service hello-kenzan
 
-  # - name: Part 4
-  #   intro: part 4 intro here
+      - cap: Push a change to your fork. Run job again. View changes
+        com: minikube service hello-kenzan
 
-  # - name: Part 5
-  #   intro: part 5 intro here
+  - name: Part 4
+    intro: Kubescale
+    steps:
+
+      - cap: Bootstrap etcd operator on the cluster
+        com: scripts/etcd.sh
+
+      - cap: Setup etcd directory for kubescale
+        com: scripts/kubescale.sh
+
+      - cap: build kubescale image
+        com:  docker build -t 127.0.0.1:30400/kubescale:latest -f applications/kubescale/Dockerfile applications/kubescale
+
+      - cap: build scaling image
+        com:  docker build -t 127.0.0.1:30400/set:latest -f applications/kubescale/set/Dockerfile applications/kubescale/set
+
+      - cap: Start the registry proxy.
+        com: docker start socat-registry
+
+      - cap: Push the kubescale image
+        com: docker push 127.0.0.1:30400/kubescale:latest
+
+      - cap: Push the scaling image
+        com: docker push 127.0.0.1:30400/set:latest
+
+      - cap: Stop the registry proxy
+        com: docker stop socat-registry
+
+      - cap: Deploy kubescale
+        com: kubectl apply -f applications/kubescale/k8s/kubescale.yml; kubectl rollout status deployment/kubescale 
+
+      - cap: Deploy scaling set
+        com: kubectl apply -f applications/kubescale/k8s/set.yml; kubectl rollout status deployment/set
+
+      - cap: View kubescale application
+        com: minikube service kubescale
