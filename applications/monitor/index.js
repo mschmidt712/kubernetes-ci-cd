@@ -60,7 +60,7 @@ app.post('/scale', function (req, res) {
 app.post('/loadtest/concurrent', function (req, res) {
   //TODO Change this to point to the crossword server deployment
   var count = req.body.count;
-  var url = "http://" + servicesHost + ":" + servicesPort + "/crossword";
+  var url = "http://" + servicesHost + ":" + servicesPort + "/puzzle/v1/crossword";
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
     myUrls.push(url);
@@ -83,7 +83,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 app.post('/loadtest/consecutive', function (req, res) {
   //TODO Change this to point to the crossword server deployment
   var count = req.body.count;
-  var url = "http://" + servicesHost + ":" + servicesPort + "/crossword";
+  var url = "http://" + servicesHost + ":" + servicesPort + "/puzzle/v1/crossword";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
       if (response && response.hasOwnProperty("statusCode")) {
