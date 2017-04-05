@@ -1,22 +1,30 @@
 import * as types from '../actions/actionTypes';
 
+
 const initialState = {
-  id: '',
-  puzzleData: []
+  connected: false,
+  pods: [],
+  activePod: undefined
 };
 
-export default function puzzleReducer (state = initialState, action) {
+export default function websocketReducer (state = initialState, action) {
   switch (action.type) {
-    case types.puzzle.GET_PUZZLE_DATA: {
+    case types.websocket.CONNECT_TO_SOCKET: {
       return Object.assign({}, state, {
-        id: action.data.id,
-        puzzleData: action.data.words
+        connected: true
       });
     }
-    case types.puzzle.SUBMIT_PUZZLE_DATA: {
+    case types.websocket.DISCONNECT_FROM_SOCKET: {
       return Object.assign({}, state, {
-        puzzleData: action.data
+        connected: false
       });
+    }
+    case types.websocket.PODS: {
+      console.log('pods emit handler', action.data.pods);
+      return Object.assign({}, state, { pods: [0, 1, 2, 4] });
+    }
+    case types.websocket.ACTIVE_INSTANCE: {
+      return Object.assign({}, state, { activePod: action.data.podId });
     }
     default: {
       return state;

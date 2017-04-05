@@ -1,0 +1,27 @@
+front50:
+  image: quay.io/spinnaker/front50
+  tag: v1.69.0
+
+clouddriver:
+  image: quay.io/spinnaker/clouddriver
+  tag: v1.490.0
+
+orca:
+  image: quay.io/spinnaker/orca
+  tag: v1.304.0
+
+echo:
+  image: quay.io/spinnaker/echo
+  tag: v1.132.0
+
+gate:
+  image: quay.io/spinnaker/gate
+  tag: v3.1.0
+
+igor:
+  image: quay.io/spinnaker/igor
+  tag: v1.64.0
+
+deck:
+  image: quay.io/spinnaker/deck
+  tag: v2.1028.0
