@@ -30,7 +30,7 @@ spec:
         tier: monitor-scale
     spec:
       containers:
-      - image: 127.0.0.1:30400/monitor-scale:__TAG__
+      - image: 127.0.0.1:30400/monitor-scale:latest
         name: monitor-scale
         imagePullPolicy: Always
         ports:
