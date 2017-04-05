@@ -22,5 +22,5 @@ node {
 
     stage "Deploy"
 
-        sh "sed 's#127.0.0.1:30400/monitor-scale:latest#'$BUILDIMG'#' applications/monitor-scale/k8s/monitor-scale.yaml | kubectl apply -f -"
+        sh "sed 's#127.0.0.1:30400/monitor-scale:latest#'$BUILDIMG'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -"
 }
