@@ -1,5 +1,5 @@
-docker build -t 127.0.0.1:30400/kubescale:latest -f applications/monitor/Dockerfile applications/monitor
-docker build -t 127.0.0.1:30400/kubescale:latest -f applications/crossword/Dockerfile applications/crossword
+docker build -t 127.0.0.1:30400/monitor-scale:latest -f applications/monitor/Dockerfile applications/monitor
+docker build -t 127.0.0.1:30400/services:latest -f applications/crossword/Dockerfile applications/crossword
 
 #Setup the proxy for the registry
 docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
