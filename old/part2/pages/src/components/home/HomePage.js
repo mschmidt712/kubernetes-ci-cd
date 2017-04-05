@@ -1,14 +1,19 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+<<<<<<< HEAD
 
 import homePageActions from '../../actions/homepageActions';
+=======
+import classNames from 'classnames';
+import * as actions from '../../actions/puzzleActions';
+>>>>>>> 1c1fb34027839cc72a5f7a7f66ddaad3db5cbccf
 import PuzzleComponent from './PuzzleComponent';
 import InstanceComponent from './InstancesComponent';
 import DataFlowArrow from './DataFlowArrow';
-import puzzleArray from '../../../puzzle.json';
 
 class HomePage extends React.Component {
+<<<<<<< HEAD
   constructor (props) {
     super(props);
 
@@ -118,6 +123,19 @@ class HomePage extends React.Component {
         />
         <div className="data-flow">
           <DataFlowArrow className="k8instances" />
+=======
+  render () {
+    const sendingDataClass = classNames({
+      'data-flow': true,
+      'active': this.props.sendingData
+    });
+
+    return (
+      <div className="home-page">
+        <PuzzleComponent />
+        <div className={sendingDataClass}>
+          <DataFlowArrow className="k8instances" active={this.props.sendingData} reverse={false}/>
+>>>>>>> 1c1fb34027839cc72a5f7a7f66ddaad3db5cbccf
         </div>
         <div className="instances">
           <InstanceComponent />
@@ -140,20 +158,38 @@ class HomePage extends React.Component {
 }
 
 HomePage.propTypes = {
+<<<<<<< HEAD
   params: PropTypes.objectOf(PropTypes.string),
   actions: PropTypes.objectOf(PropTypes.func),
   state: PropTypes.object
+=======
+  actions: PropTypes.objectOf(PropTypes.func),
+  state: PropTypes.object,
+  sendingData: PropTypes.bool,
+  fromCache: PropTypes.bool,
+  fromMongo: PropTypes.bool
+>>>>>>> 1c1fb34027839cc72a5f7a7f66ddaad3db5cbccf
 };
 
 function mapStateToProps (state) {
   return {
+<<<<<<< HEAD
     state: state
+=======
+    sendingData: state.puzzle.sendingData,
+    fromCache: state.puzzle.fromCache,
+    fromMongo: state.puzzle.fromMongo
+>>>>>>> 1c1fb34027839cc72a5f7a7f66ddaad3db5cbccf
   };
 }
 
 function mapDispatchToProps (dispatch) {
   return {
+<<<<<<< HEAD
     actions: bindActionCreators(homePageActions, dispatch)
+=======
+    actions: bindActionCreators(actions, dispatch)
+>>>>>>> 1c1fb34027839cc72a5f7a7f66ddaad3db5cbccf
   };
 }
 
