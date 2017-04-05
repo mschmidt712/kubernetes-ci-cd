@@ -1,8 +1,7 @@
 import io from 'socket.io-client';
 import constants from '../constants';
 import * as types from './actionTypes';
-const serverHostname = process.env.MONITOR_SCALE_SERVICE_HOST;
-const baseUrl = `http://${serverHostname}:3001`;
+const baseUrl = `http://monitor-scale:3001`;
 const socket = io(baseUrl);
 
 export function connectToSocket () {
