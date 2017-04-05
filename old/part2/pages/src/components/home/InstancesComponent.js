@@ -22,7 +22,7 @@ class InstancesComponent extends React.Component {
   }
 
   componentWillMount () {
-    this.props.actions.connectToSocket(this.state.instanceData.instanceCurrentCount);
+    // this.props.actions.connectToSocket(this.state.instanceData.instanceCurrentCount);
   }
 
   componentWillReceiveProps (newProps) {
