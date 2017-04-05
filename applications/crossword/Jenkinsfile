@@ -10,7 +10,6 @@ node {
     appName = "services"
     registryHost = "127.0.0.1:30400/"
     imageName = "${registryHost}${appName}:${tag}"
-    env.COMMITTAG=tag
     env.BUILDIMG=imageName
 
     stage "Build"
@@ -22,6 +21,6 @@ node {
         sh "docker push ${imageName}"
 
     stage "Deploy"
-
-        sh "sed 's#__TAG__#'$COMMITTAG'#' applications/crossword/k8s/deployment.yaml | kubectl apply -f -"
+        
+        sh "sed 's#127.0.0.1:30400/services:latest#'$BUILDIMG'#' applications/crossword/k8s/deployment.yaml | kubectl apply -f -"
 }
