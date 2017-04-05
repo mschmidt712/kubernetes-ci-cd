@@ -1,6 +1,7 @@
 import * as actions from './actionTypes';
+import constants from '../constants';
 import toastr from 'toastr';
-const baseUrl = `http://services:3000/puzzle/v1`;
+const baseUrl = `http://services.kr8sswordz.${constants.minikubeIp}.xip.io/puzzle/v1`;
 const arrowDisplayTime = 1000;
 
 export function getPuzzleDataSuccess (json) {

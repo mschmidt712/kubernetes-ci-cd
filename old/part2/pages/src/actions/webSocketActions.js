@@ -1,7 +1,8 @@
 import io from 'socket.io-client';
 import constants from '../constants';
 import * as types from './actionTypes';
-const baseUrl = `http://monitor-scale:3001`;
+
+const baseUrl = `http://monitor-scale.${constants.minikubeIp}.xip.io`;
 const socket = io(baseUrl);
 
 export function connectToSocket () {
