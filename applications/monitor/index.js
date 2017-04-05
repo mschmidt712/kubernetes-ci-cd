@@ -26,6 +26,7 @@ watcher.on("change", showVal);
 
 function showVal(val) {
 
+  console.log("")
   var pods = etcd.getSync("pod-list",{ recursive: true });
   console.log("Emitting pod list: %s", JSON.stringify(pods));
   io.emit('pods', { pods: pods.body.node.nodes });
@@ -120,11 +121,14 @@ app.get('/hit/:podId', function (req, res) {
 io.on('connection', function(socket){
   
   console.log("Initial websocket connection made");
-  showVal();
+  var pods = etcd.getSync("pod-list",{ recursive: true });
+  console.log("Emitting pod list: %s", JSON.stringify(pods));
+  io.emit('pods', { pods: pods.body.node.nodes });
 });
 
 app.get('/', function(req,res){
-
+  
+  var pods = etcd.getSync("pod-list",{ recursive: true });
   res.send('basic GET successful');
 });
 
