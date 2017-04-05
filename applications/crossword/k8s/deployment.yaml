@@ -1,0 +1,100 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: services
+  labels:
+    app: services
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: services
+        tier: services
+    spec:
+      containers:
+      - image: 127.0.0.1:30912/services:__TAG__
+        name: services
+        imagePullPolicy: Always
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/up.sh"]
+          preStop:
+            exec:
+              command: ["/down.sh"]        
+        ports:
+        - containerPort: 3000
+          name: services
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: services
+  labels:
+    app: services
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: services
+    tier: services
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mongo
+        tier: mongo
+    spec:
+      containers:
+      - image: mongo:latest
+        name: mongo
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27017
+          name: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    app: mongo
+    tier: mongo
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+ name: services
+spec:
+  backend:
+    serviceName: services
+    servicePort: 3000
+  rules:
+  - host: services.kr8sswordz.192.168.99.100.xip.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: services
+          servicePort: 3000

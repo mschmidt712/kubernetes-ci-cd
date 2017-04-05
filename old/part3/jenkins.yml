@@ -83,7 +83,7 @@ metadata:
  name: jenkins-ingress
 spec:
  rules:
-   - host: jenkins.MINIKUBEIP.xip.io
+   - host: jenkins.192.168.99.100.xip.io
      http:
        paths:
          - path: /

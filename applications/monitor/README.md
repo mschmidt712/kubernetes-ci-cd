@@ -1,0 +1,1 @@
+This appication provides an API to track when servers go up and down, caching that data and sending the list of crossword servers to the frontend using websockets.  Additionally, this API provides an endpoint to scale the crossword deployment.

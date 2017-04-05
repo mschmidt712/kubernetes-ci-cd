@@ -6,13 +6,15 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package.json /usr/src/app/
-COPY gulpfile.js /usr/src/app/
 
 RUN npm install
+RUN npm install -g nodemon
 
 # Bundle app source
 COPY . /usr/src/app
 
-EXPOSE 3002
+#Expose port 3001 so the monitor service is reachable
+EXPOSE 3001
+EXPOSE 8080
 
-CMD [ "npm", "run", "start" ]
+CMD ["nodemon", "index.js"]
