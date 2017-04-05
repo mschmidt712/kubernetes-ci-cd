@@ -61,6 +61,8 @@ class InstancesComponent extends React.Component {
     this.setState({
       instanceData
     });
+
+    this.props.actions.scale();
   }
 
   render () {

@@ -26,6 +26,10 @@ export default function websocketReducer (state = initialState, action) {
     case types.websocket.ACTIVE_INSTANCE: {
       return Object.assign({}, state, { activePod: action.data.podId });
     }
+    case types.websocket.SCALE: {
+      // Do we need any hanlding here or will the changes be picked up by the websocket?
+      return state;
+    }
     default: {
       return state;
     }
