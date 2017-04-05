@@ -70,6 +70,22 @@ parts:
 
       - cap: Push a change to your fork. Run job again. View changes
         com: minikube service hello-kenzan
+  
+  - name: Part 3
+    intro: This part will have us setup the various applications that will present the crossword puzzle.  We will run a sample etcd cluster as a cache, a pages application containing the front-end, a crossword server using mongodb, and a monitoring and scaling server application. 
+    steps:
+
+      - cap: Bootstrap etcd operator on the cluster
+        com: scripts/etcd.sh
+
+      - cap: Run job to create etcd directory
+        com: kubectl create -f manifests/etcd-job.yml
+
+      - cap: Check job status
+        com: kubectl describe jobs/etcd-job
+
+      - cap: Bootstrap the crossword services and monitoring applications, creating a docker image and storing it in the local registry
+        com: scripts/monitor.sh
 
   - name: Part 4
     intro: Kubescale
