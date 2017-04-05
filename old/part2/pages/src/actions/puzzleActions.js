@@ -1,6 +1,7 @@
 import * as actions from './actionTypes';
 import toastr from 'toastr';
-const baseUrl = `http://${location.hostname}:3000/puzzle/v1`;
+const serverHostname = process.env.SERVICES_SERVICE_HOST;
+const baseUrl = `http://${serverHostname}:3000/puzzle/v1`;
 const arrowDisplayTime = 1000;
 
 export function getPuzzleDataSuccess (json) {

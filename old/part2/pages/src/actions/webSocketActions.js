@@ -1,8 +1,8 @@
 import io from 'socket.io-client';
 import constants from '../constants';
 import * as types from './actionTypes';
-
-const baseUrl = `http://monitor-scale.${constants.minikubeIp}.xip.io:3001`;
+const serverHostname = process.env.MONITOR_SCALE_SERVICE_HOST;
+const baseUrl = `http://${serverHostname}:3001`;
 const socket = io(baseUrl);
 
 export function connectToSocket () {
@@ -54,7 +54,7 @@ export function submitConcurrentRequests (count) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return fetch(`${baseUrl}/load-test/concurrent`, {
+    return fetch(`${baseUrl}/loadtest/concurrent`, {
       method: 'POST',
       headers,
       body: submission
@@ -71,7 +71,7 @@ export function submitConsecutiveRequests (count) {
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
-    return fetch(`${baseUrl}/load-test/consecutive`, {
+    return fetch(`${baseUrl}/loadtest/consecutive`, {
       method: 'POST',
       headers,
       body: submission
