@@ -62,7 +62,7 @@ class InstancesComponent extends React.Component {
       instanceData
     });
 
-    this.props.actions.scale();
+    this.props.actions.scale(this.state.instanceData.instanceCurrentCount);
   }
 
   render () {
