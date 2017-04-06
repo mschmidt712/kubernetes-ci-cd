@@ -3,7 +3,7 @@ import constants from '../constants';
 import * as types from './actionTypes';
 
 const baseUrl = `http://monitor-scale.${constants.minikubeIp}.xip.io`;
-// const socket = io(baseUrl);
+const socket = io(baseUrl);
 
 export function connectToSocket () {
   return dispatch => {
