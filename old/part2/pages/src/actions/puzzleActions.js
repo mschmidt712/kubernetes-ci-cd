@@ -1,6 +1,5 @@
 import * as actions from './actionTypes';
 import constants from '../constants';
-import toastr from 'toastr';
 const baseUrl = `http://services.kr8sswordz.${constants.minikubeIp}.xip.io/puzzle/v1`;
 const arrowDisplayTime = 1000;
 
@@ -34,7 +33,6 @@ export function getPuzzleData () {
         return dispatch(getPuzzleDataSuccess(json));
       })
       .catch(err => {
-        toastr.error(err);
         dispatch(getPuzzleDataFailure(err));
       });
   };
@@ -61,19 +59,16 @@ export function submitPuzzleData (id, data) {
     })
       .then((resp) => {
         if (resp.status === 204) {
-          toastr.success(`Progress saved!`);
           dispatch({type: actions.puzzle.FROM_MONGO, data: true});
           setTimeout(() => {
             return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
           }, arrowDisplayTime);
           dispatch(submitPuzzleDataSuccess(data));
         } else {
-          toastr.error(`We're sorry! Something went wrong on your request.`);
           dispatch(submitPuzzleDataFailure);
         }
       })
       .catch((err) => {
-        toastr.error(err);
         dispatch(submitPuzzleDataFailure);
       });
   };
