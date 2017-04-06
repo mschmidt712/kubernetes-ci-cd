@@ -41,13 +41,6 @@ export default function puzzleReducer (state = initialState, action) {
         fromCache: action.data
       });
     }
-    case types.websocket.PODS: {
-      console.log('pods emit handler', action.data.pods);
-      return Object.assign({}, state, { pods: [0, 1, 2, 4] });
-    }
-    case types.websocket.ACTIVE_INSTANCE: {
-      return Object.assign({}, state, { activePod: action.data.podId });
-    }
     default: {
       return state;
     }

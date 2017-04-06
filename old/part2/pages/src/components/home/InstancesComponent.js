@@ -12,8 +12,7 @@ class InstancesComponent extends React.Component {
     this.state = {
       instanceData: {
         instanceFinalCount: 3,
-        instanceCurrentCount: 3,
-        pods: props.pods
+        instanceCurrentCount: 3
       }
     };
 
@@ -23,18 +22,6 @@ class InstancesComponent extends React.Component {
 
   componentWillMount () {
     this.props.actions.connectToSocket(this.state.instanceData.instanceCurrentCount);
-  }
-
-  componentWillReceiveProps (newProps) {
-    if (newProps.pods !== this.props.pods) {
-      const instanceData = Object.assign({}, this.state.instanceData, {
-        pods: newProps.pods
-      });
-
-      this.setState({
-        instanceData
-      });
-    }
   }
 
   componentWillUnmount () {
@@ -75,6 +62,7 @@ class InstancesComponent extends React.Component {
       <InstanceGrid
         properties={instanceProps}
         instanceData={this.state.instanceData}
+        pods={this.props.pods}
         activeInstance={this.props.activeInstance}>
       </InstanceGrid>
     );

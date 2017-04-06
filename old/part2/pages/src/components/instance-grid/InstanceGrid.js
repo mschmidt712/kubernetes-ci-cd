@@ -3,17 +3,14 @@ import classNames from 'classnames';
 import Slider from '../shared/Slider';
 
 function InstanceGrid (props) {
-  let instances = [];
-  for (let i = 0; i < props.instanceData.instanceFinalCount; i++) {
+  const instances = props.pods.map((pod, index) => {
     const instanceClass = classNames({
       instance: true,
-      active: i === props.activeInstance
+      active: pod === props.activeInstance
     });
 
-    instances.push(<div key={i} className={instanceClass}>{i}</div>);
-  }
-
-  console.log(props.properties);
+    return <div key={pod} className={instanceClass}>{pod}</div>;
+  });
 
   return (
     <div>
@@ -47,7 +44,8 @@ InstanceGrid.propTypes = {
     instanceCurrentCount: PropTypes.number,
     instanceFinalCount: PropTypes.number
   }),
-  activeInstance: PropTypes.number
+  pods: PropTypes.array,
+  activeInstance: PropTypes.string
 };
 
 export default InstanceGrid;
