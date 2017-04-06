@@ -34,6 +34,7 @@ function showVal(val) {
 
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
+  console.log('Count requested is: %s', scale);
   var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/services/scale";
   var putBody = {
     kind:"Scale",
