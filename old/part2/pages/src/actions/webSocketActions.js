@@ -11,10 +11,14 @@ export function connectToSocket () {
       dispatch({type: 'CONNECT_TO_SOCKET'});
     });
     socket.on('pods', (data) => {
-      dispatch({ type: types.websocket.PODS, data });
+      const pods = data.pods.map(pod => (
+        concatServiceName(pod.value)
+      ));
+      dispatch({ type: types.websocket.PODS, pods });
     });
     socket.on('hit', (data) => {
-      dispatch({ type: types.websocket.ACTIVE_INSTANCE, data });
+      const activeInstance = concatServiceName(data.podId);
+      dispatch({ type: types.websocket.ACTIVE_INSTANCE, activeInstance });
     });
   };
 }
@@ -42,7 +46,6 @@ export function scale (data) {
       resp.json()
     ))
     .then(resp => {
-      console.log(resp);
       dispatch({type: 'SCALE', data: resp});
     });
   };
@@ -80,4 +83,12 @@ export function submitConsecutiveRequests (count) {
       throw (err);
     });
   };
+}
+
+function concatServiceName (name) {
+  if (name.startsWith('services-')) {
+    return name.substring(9);
+  } else {
+    return name;
+  }
 }
