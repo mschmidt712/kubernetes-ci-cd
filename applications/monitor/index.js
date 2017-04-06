@@ -28,7 +28,6 @@ watcher.on("change", showVal);
 
 function showVal(val) {
 
-  console.log("Retrieving pod-list")
   var pods = etcd.getSync("pod-list",{ recursive: true });
   io.emit('pods', { pods: pods.body.node.nodes });
 }

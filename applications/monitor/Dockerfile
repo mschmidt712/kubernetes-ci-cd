@@ -15,5 +15,6 @@ COPY . /usr/src/app
 #Expose port 3001 so the monitor service is reachable
 EXPOSE 3001
 EXPOSE 8080
+EXPOSE 5858
 
-CMD ["node", "debug", "index.js"]
+CMD ["node", "--inspect", "index.js"]
