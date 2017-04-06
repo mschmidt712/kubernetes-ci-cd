@@ -123,6 +123,8 @@ app.get('/hit/:podId', function (req, res) {
 io.on('connection', function(socket){
   
   console.log("Websocket connection established.");
+  var pods = etcd.getSync("pod-list",{ recursive: true });
+  socket.emit('pods', { pods: pods.body.node.nodes });
   socket.on('disconnect', function() {
     console.log("Websocket disconnect.");
   })
