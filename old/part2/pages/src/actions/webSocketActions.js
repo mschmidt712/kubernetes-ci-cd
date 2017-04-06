@@ -29,7 +29,7 @@ export function disconnectFromSocket () {
 
 export function scale (data) {
   return dispatch => {
-    const submission = JSON.stringify(data);
+    const submission = JSON.stringify({'count': data});
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
