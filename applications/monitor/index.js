@@ -7,6 +7,8 @@ var async = require('async');
 var io = require('socket.io')(http);
 var path    = require("path");
 var Etcd = require('node-etcd')
+var cors = require('cors');
+
 app.use(express.static('public'))
 
 var bodyParser = require("body-parser");
@@ -16,6 +18,7 @@ var servicesPort = process.env.SERVICES_SERVICE_PORT;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors());
 
 etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
 
@@ -135,6 +138,6 @@ app.get('/', function(req,res){
 
 http.listen(3001, function () {
   console.log('Services at ' + servicesHost + ':' + servicesPort);
-  console.log('Listening on port 3001!')
+  console.log('Listening on port 3001!');
 });
 
