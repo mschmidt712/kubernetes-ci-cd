@@ -10,10 +10,7 @@ class InstancesComponent extends React.Component {
     super(props);
 
     this.state = {
-      instanceData: {
-        instanceFinalCount: 3,
-        instanceCurrentCount: 3
-      }
+      instanceCount: props.pods.length
     };
 
     this.handleSlider = this.handleSlider.bind(this);
@@ -21,7 +18,15 @@ class InstancesComponent extends React.Component {
   }
 
   componentWillMount () {
-    this.props.actions.connectToSocket(this.state.instanceData.instanceCurrentCount);
+    this.props.actions.connectToSocket();
+  }
+
+  componentWillReceiveProps (newProps) {
+    if (newProps.pods !== this.props.pods) {
+      this.setState({
+        instanceCount: newProps.pods.length
+      });
+    }
   }
 
   componentWillUnmount () {
@@ -29,27 +34,13 @@ class InstancesComponent extends React.Component {
   }
 
   handleSlider (event, value) {
-    const instanceData = Object.assign({}, this.state.instanceData, {
-      instanceCurrentCount: value,
-      instanceFinalCount: this.state.instanceData.instanceFinalCount
-    });
-
     this.setState({
-      instanceData
+      instanceCount: value
     });
   }
 
   onScale () {
-    const instanceData = Object.assign({}, this.state.instanceData, {
-      instanceCurrentCount: this.state.instanceData.instanceCurrentCount,
-      instanceFinalCount: this.state.instanceData.instanceCurrentCount
-    });
-
-    this.setState({
-      instanceData
-    });
-
-    this.props.actions.scale(this.state.instanceData.instanceCurrentCount);
+    this.props.actions.scale(this.state.instanceCount);
   }
 
   render () {
@@ -61,7 +52,7 @@ class InstancesComponent extends React.Component {
     return (
       <InstanceGrid
         properties={instanceProps}
-        instanceData={this.state.instanceData}
+        instanceCount={this.state.instanceCount}
         pods={this.props.pods}
         activeInstance={this.props.activeInstance}>
       </InstanceGrid>
