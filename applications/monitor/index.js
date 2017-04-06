@@ -30,7 +30,6 @@ function showVal(val) {
 
   console.log("Retrieving pod-list")
   var pods = etcd.getSync("pod-list",{ recursive: true });
-  console.log("Emitting pod list: %s", JSON.stringify(pods));
   io.emit('pods', { pods: pods.body.node.nodes });
 }
 
@@ -56,7 +55,7 @@ app.post('/scale', function (req, res) {
     if (err) {
       return console.error('Failed to scale:', err);
     }
-    console.log('Scale success:', body);
+    console.log('Scale success!');
     res.send('success');
   });
 });
@@ -131,8 +130,6 @@ io.on('connection', function(socket){
 });
 
 app.get('/', function(req,res){
-  
-  var pods = etcd.getSync("pod-list",{ recursive: true });
   res.send('basic GET successful');
 });
 
