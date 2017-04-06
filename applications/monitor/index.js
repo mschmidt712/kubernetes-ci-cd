@@ -8,7 +8,6 @@ var io = require('socket.io')(http);
 var path    = require("path");
 var Etcd = require('node-etcd')
 app.use(express.static('public'))
-var exec = require('child_process').exec;
 
 var bodyParser = require("body-parser");
 
@@ -26,7 +25,7 @@ watcher.on("change", showVal);
 
 function showVal(val) {
 
-  console.log("")
+  console.log("Retrieving pod-list")
   var pods = etcd.getSync("pod-list",{ recursive: true });
   console.log("Emitting pod list: %s", JSON.stringify(pods));
   io.emit('pods', { pods: pods.body.node.nodes });
@@ -121,10 +120,10 @@ app.get('/hit/:podId', function (req, res) {
 
 io.on('connection', function(socket){
   
-  console.log("Initial websocket connection made");
-  var pods = etcd.getSync("pod-list",{ recursive: true });
-  console.log("Emitting pod list: %s", JSON.stringify(pods));
-  io.emit('pods', { pods: pods.body.node.nodes });
+  console.log("Websocket connection established.");
+  socket.on('disconnect', function() {
+    console.log("Websocket disconnect.");
+  })
 });
 
 app.get('/', function(req,res){
