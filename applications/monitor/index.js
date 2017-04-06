@@ -61,6 +61,7 @@ app.post('/scale', function (req, res) {
 app.post('/loadtest/concurrent', function (req, res) {
 
   var count = req.body.count;
+  console.log('Count requested is: %s', count);
   var url = "http://" + servicesHost + ":" + servicesPort + "/puzzle/v1/crossword";
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {

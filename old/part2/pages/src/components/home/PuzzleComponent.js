@@ -247,8 +247,8 @@ class PuzzleComponent extends React.Component {
             <div className="request-slider">
               <Slider properties={sliderProperties}/>
               <div className="button-row center">
-                <button className="primary compact" onClick={this.submitConcurrentRequests}><strong>Concurrent</strong> Requests {this.state.sliderCount}</button>
-                <button className="primary compact" onClick={this.submitConsecutiveRequests}><strong>Consecutive</strong> Requests {this.state.sliderCount}</button>
+                <button className="primary compact" type="button" onClick={this.submitConcurrentRequests}><strong>Concurrent</strong> Requests {this.state.sliderCount}</button>
+                <button className="primary compact" type="button" onClick={this.submitConsecutiveRequests}><strong>Consecutive</strong> Requests {this.state.sliderCount}</button>
               </div>
             </div>
             <div className="button-row">
