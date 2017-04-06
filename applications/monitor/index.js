@@ -120,11 +120,22 @@ app.get('/hit/:podId', function (req, res) {
   res.send('hit done')
 })
 
+app.get('/pods', function (req, res) {
+
+  var pods = etcd.getSync("pod-list",{ recursive: true });
+  io.emit('pods', { pods: pods.body.node.nodes });
+  res.send('pods sent')
+})
+
+app.delete('/pods', function (req, res) {
+
+  var pods = etcd.delSync("pod-list/",{ recursive: true });
+  res.send('pods deleted')
+})
+
 io.on('connection', function(socket){
   
   console.log("Websocket connection established.");
-  var pods = etcd.getSync("pod-list",{ recursive: true });
-  socket.emit('pods', { pods: pods.body.node.nodes });
   socket.on('disconnect', function() {
     console.log("Websocket disconnect.");
   })
@@ -135,7 +146,6 @@ app.get('/', function(req,res){
 });
 
 http.listen(3001, function () {
-  console.log('Services at ' + servicesHost + ':' + servicesPort);
   console.log('Listening on port 3001!');
 });
 

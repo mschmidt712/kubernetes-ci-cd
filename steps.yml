@@ -87,6 +87,15 @@ parts:
       - cap: Bootstrap the crossword services and monitoring applications, creating a docker image and storing it in the local registry
         com: scripts/monitor.sh
 
+      - cap: Bootstrap the frontend web application
+        com: scripts/monitor.sh
+
+      - cap: See all the pods running using kubectl.
+        com: kubectl get pods
+
+      - cap: Start the web application in your default browser
+        com: minikube service kr8sswordz
+
   - name: Part 4
     intro: Kubescale
     steps:
