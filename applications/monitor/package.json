@@ -4,7 +4,7 @@
   "description": "A service for updating the cache and emitting websocket events back to the frontend",
   "main": "index.js",
   "scripts": {
-    "debug": "node --inspect=5858 index.js"
+    "debug": "node --inspect index.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   "dependencies": {
     "async": "2.2.0",
     "body-parser": "1.17.1",
+    "cors": "2.8.3",
     "express": "4.15.2",
     "node-etcd": "5.0.3",
     "request": "2.81.0",

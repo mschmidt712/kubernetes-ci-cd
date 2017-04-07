@@ -2,8 +2,9 @@
 
 .instance {
   display: inline-block;
+  box-sizing: border-box;
   background-color: $kubernetes-blue;
-  width: 33%;
+  width: 100%;
   margin-bottom: 0.25rem;
   color: #fff;
   text-align: center;

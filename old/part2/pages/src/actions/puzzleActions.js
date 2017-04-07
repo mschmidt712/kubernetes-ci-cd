@@ -1,6 +1,15 @@
 import * as actions from './actionTypes';
-import toastr from 'toastr';
-const baseUrl = `http://services.${location.hostname}/puzzle/v1`;
+import constants from '../constants';
+const baseUrl = `http://services.kr8sswordz.${constants.minikubeIp}.xip.io/puzzle/v1`;
+const arrowDisplayTime = 1000;
+
+export function getPuzzleDataSuccess (json) {
+  return {type: actions.puzzle.GET_PUZZLE_DATA_SUCCESS, data: json};
+}
+
+export function getPuzzleDataFailure () {
+  return {type: actions.puzzle.GET_PUZZLE_DATA_FAILURE};
+}
 
 export function getPuzzleData () {
   return dispatch => {
@@ -9,9 +18,32 @@ export function getPuzzleData () {
         return resp.json();
       })
       .then((json) => {
-        dispatch({type: actions.puzzle.GET_PUZZLE_DATA, data: json});
+        if (json.fromCache) {
+          dispatch({type: actions.puzzle.FROM_CACHE, data: true});
+          setTimeout(() => {
+            return dispatch({type: actions.puzzle.FROM_CACHE, data: false});
+          }, arrowDisplayTime);
+        } else {
+          dispatch({type: actions.puzzle.FROM_MONGO, data: true});
+          setTimeout(() => {
+            return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
+          }, arrowDisplayTime);
+        }
+
+        return dispatch(getPuzzleDataSuccess(json));
+      })
+      .catch(err => {
+        dispatch(getPuzzleDataFailure(err));
       });
   };
+}
+
+export function submitPuzzleDataSuccess (json) {
+  return {type: actions.puzzle.SUBMIT_PUZZLE_DATA_SUCCESS, data: json};
+}
+
+export function submitPuzzleDataFailure () {
+  return {type: actions.puzzle.SUBMIT_PUZZLE_DATA_FAILURE};
 }
 
 export function submitPuzzleData (id, data) {
@@ -27,11 +59,44 @@ export function submitPuzzleData (id, data) {
     })
       .then((resp) => {
         if (resp.status === 204) {
-          toastr.success(`Progress saved!`);
-          dispatch({type: actions.puzzle.SUBMIT_PUZZLE_DATA, data});
+          dispatch({type: actions.puzzle.FROM_MONGO, data: true});
+          setTimeout(() => {
+            return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
+          }, arrowDisplayTime);
+          dispatch(submitPuzzleDataSuccess(data));
         } else {
-          toastr.error(`We're sorry! Something went wrong on your request.`);
+          dispatch(submitPuzzleDataFailure);
         }
+      })
+      .catch((err) => {
+        dispatch(submitPuzzleDataFailure);
       });
+  };
+}
+
+export function sendingData () {
+  return dispatch => {
+    dispatch({type: actions.puzzle.SENDING_DATA, data: true});
+    setTimeout(() => {
+      return dispatch({type: actions.puzzle.SENDING_DATA, data: false});
+    }, arrowDisplayTime);
+  };
+}
+
+export function fromCache () {
+  return dispatch => {
+    dispatch({type: actions.puzzle.FROM_CACHE, data: true});
+    setTimeout(() => {
+      return dispatch({type: actions.puzzle.FROM_CACHE, data: false});
+    }, arrowDisplayTime);
+  };
+}
+
+export function fromMongo () {
+  return dispatch => {
+    dispatch({type: actions.puzzle.FROM_MONGO, data: true});
+    setTimeout(() => {
+      return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
+    }, arrowDisplayTime);
   };
 }

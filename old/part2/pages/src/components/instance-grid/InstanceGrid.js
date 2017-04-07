@@ -3,13 +3,17 @@ import classNames from 'classnames';
 import Slider from '../shared/Slider';
 
 function InstanceGrid (props) {
-  const instances = props.instanceData.pods.map(podId => {
+  const instances = props.pods.map((pod, index) => {
     const instanceClass = classNames({
       instance: true,
-      active: podId == props.activeInstance
+      active: pod === props.activeInstance
     });
 
-    return (<div key={podId} className={instanceClass}>{podId}</div>);
+    return <div key={pod} className={instanceClass}>{pod}</div>;
+  });
+
+  const sliderProps = Object.assign({}, props.properties, {
+    value: props.instanceCount
   });
 
   return (
@@ -18,8 +22,8 @@ function InstanceGrid (props) {
         {instances}
       </div>
       <div className="button-row instance-buttons">
-        <Slider properties={props.properties} />
-        <button className="primary" onClick={props.properties.onScale}>Scale {props.instanceData.instanceCurrentCount}</button>
+        <Slider properties={sliderProps} />
+        <button className="primary" onClick={props.properties.onScale}>Scale {props.instanceCount}</button>
       </div>
       <div className="scale-hints">
         <p>Choose the number of instances you want to scale in your cluster and click "Scale".
@@ -40,11 +44,8 @@ InstanceGrid.propTypes = {
     getSliderValue: PropTypes.func,
     onScale: PropTypes.func
   }),
-  instanceData: PropTypes.shape({
-    instanceCurrentCount: PropTypes.number,
-    instanceFinalCount: PropTypes.number,
-    pods: PropTypes.array
-  }),
+  instanceCount: PropTypes.number,
+  pods: PropTypes.array,
   activeInstance: PropTypes.string
 };
 
