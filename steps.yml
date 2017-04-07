@@ -59,11 +59,11 @@ parts:
       - cap: Install Jenkins
         com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
 
-      - cap: Get Jenkins admin password
-        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
-
-      - cap: Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. Fork repo and put "repository url" as your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
+      - cap: Open the Jenkins service running in our cluster.  You will retrieve the admin password in the next step.
         com: minikube service jenkins
+
+      - cap: Get Jenkins admin password. Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. Fork repo and put "repository url" as your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
+        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
 
       - cap: View updated application
         com: minikube service hello-kenzan
@@ -135,45 +135,45 @@ parts:
       - cap: Start the web application in your default browser
         com: minikube service kr8sswordz
 
-  - name: Part 4
-    intro: Kubescale
-    steps:
+#  - name: Part 4
+#    intro: Kubescale
+#    steps:
 
-      - cap: Bootstrap etcd operator on the cluster
-        com: scripts/etcd.sh
+#      - cap: Bootstrap etcd operator on the cluster
+#        com: scripts/etcd.sh
 
-      - cap: Run job to create etcd directory
-        com: kubectl create -f manifests/etcd-job.yml
+#      - cap: Run job to create etcd directory
+#        com: kubectl create -f manifests/etcd-job.yml
 
-      - cap: Check job status
-        com: kubectl describe jobs/etcd-job
+#      - cap: Check job status
+#        com: kubectl describe jobs/etcd-job
 
-      - cap: build kubescale image
-        com: docker build -t 127.0.0.1:30400/kubescale:latest -f applications/kubescale/Dockerfile applications/kubescale
+#      - cap: build kubescale image
+#        com: docker build -t 127.0.0.1:30400/kubescale:latest -f applications/kubescale/Dockerfile applications/kubescale
 
-      - cap: build scaling image
-        com: docker build -t 127.0.0.1:30400/set:latest -f applications/kubescale/set/Dockerfile applications/kubescale/set
+#      - cap: build scaling image
+#        com: docker build -t 127.0.0.1:30400/set:latest -f applications/kubescale/set/Dockerfile applications/kubescale/set
 
-      - cap: Start the registry proxy.
-        com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
+#      - cap: Start the registry proxy.
+#        com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
-      - cap: Push the kubescale image
-        com: docker push 127.0.0.1:30400/kubescale:latest
+#      - cap: Push the kubescale image
+#        com: docker push 127.0.0.1:30400/kubescale:latest
 
-      - cap: Push the scaling image
-        com: docker push 127.0.0.1:30400/set:latest
+#      - cap: Push the scaling image
+#        com: docker push 127.0.0.1:30400/set:latest
 
-      - cap: Stop the registry proxy
-        com: docker stop socat-registry
+#      - cap: Stop the registry proxy
+#        com: docker stop socat-registry
 
-      - cap: Deploy kubescale
-        com: kubectl apply -f applications/kubescale/k8s/kubescale.yml; kubectl rollout status deployment/kubescale 
+#      - cap: Deploy kubescale
+#        com: kubectl apply -f applications/kubescale/k8s/kubescale.yml; kubectl rollout status deployment/kubescale 
 
-      - cap: Deploy scaling set
-        com: kubectl apply -f applications/kubescale/k8s/set.yml; kubectl rollout status deployment/set
+#      - cap: Deploy scaling set
+#        com: kubectl apply -f applications/kubescale/k8s/set.yml; kubectl rollout status deployment/set
 
-      - cap: View kubescale application
-        com: minikube service kubescale
+#      - cap: View kubescale application
+#        com: minikube service kubescale
 
   # - name: Part 5
   #   intro: Spinnaker
