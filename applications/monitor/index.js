@@ -23,7 +23,7 @@ app.use(cors());
 etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
 
 var watcher = etcd.watcher("pod-list", null, {recursive: true})
-watcher.on("change", showVal);
+watcher.on("change", console.log);
 
 function showVal(val) {
 
