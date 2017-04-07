@@ -59,9 +59,11 @@ export function submitPuzzleData (id, data) {
     })
       .then((resp) => {
         if (resp.status === 204) {
-          dispatch({type: actions.puzzle.FROM_MONGO, data: true});
+          dispatch({type: actions.puzzle.FROM_MONGO, data: true}); // light up mongo arrow
+          dispatch({type: actions.puzzle.TO_MONGO, data: true}); // reverse mongo arrow direction
           setTimeout(() => {
-            return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
+            dispatch({type: actions.puzzle.TO_MONGO, data: false});
+            dispatch({type: actions.puzzle.FROM_MONGO, data: false});
           }, arrowDisplayTime);
           dispatch(submitPuzzleDataSuccess(data));
         } else {
@@ -97,6 +99,15 @@ export function fromMongo () {
     dispatch({type: actions.puzzle.FROM_MONGO, data: true});
     setTimeout(() => {
       return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
+    }, arrowDisplayTime);
+  };
+}
+
+export function toMongo () {
+  return dispatch => {
+    dispatch({type: actions.puzzle.TO_MONGO, data: true});
+    setTimeout(() => {
+      return dispatch({type: actions.puzzle.TO_MONGO, data: false});
     }, arrowDisplayTime);
   };
 }

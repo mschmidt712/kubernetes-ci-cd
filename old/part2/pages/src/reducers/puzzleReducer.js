@@ -2,6 +2,7 @@ import * as types from '../actions/actionTypes';
 
 const initialState = {
   fromCache: false,
+  toMongo: false,
   fromMongo: false,
   sendingData: false,
   puzzleId: '',
@@ -29,6 +30,11 @@ export default function puzzleReducer (state = initialState, action) {
     case types.puzzle.SENDING_DATA: {
       return Object.assign({}, state, {
         sendingData: action.data
+      });
+    }
+    case types.puzzle.TO_MONGO: {
+      return Object.assign({}, state, {
+        toMongo: action.data
       });
     }
     case types.puzzle.FROM_MONGO: {

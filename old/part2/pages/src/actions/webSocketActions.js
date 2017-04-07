@@ -62,12 +62,6 @@ export function scale (data) {
       method: 'POST',
       headers,
       body: submission
-    })
-    .then(resp => (
-      resp.json()
-    ))
-    .then(resp => {
-      dispatch({type: 'SCALE', data: resp});
     });
   };
 }
