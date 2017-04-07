@@ -22,8 +22,7 @@ app.use(cors());
 
 etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
 
-watcher = etcd.watcher("pod-list", null, {recursive: true})
-
+var watcher = etcd.watcher("pod-list", null, {recursive: true})
 watcher.on("change", showVal);
 
 function showVal(val) {
@@ -147,5 +146,6 @@ app.get('/', function(req,res){
 
 http.listen(3001, function () {
   console.log('Listening on port 3001!');
+  
 });
 
