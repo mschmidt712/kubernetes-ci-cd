@@ -22,8 +22,12 @@ export default function websocketReducer (state = initialState, action) {
       return Object.assign({}, state, { pods: action.pods });
     }
     case types.websocket.POD_UP: {
-      const pods = [...state.pods, action.pod];
-      return Object.assign({}, state, { pods });
+      if (state.pods.includes(action.pod)) {
+        return state;
+      } else {
+        const pods = [...state.pods, action.pod];
+        return Object.assign({}, state, { pods });
+      }
     }
     case types.websocket.POD_DOWN: {
       const pods = state.pods.filter(pod => (
