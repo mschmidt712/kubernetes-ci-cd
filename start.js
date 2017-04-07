@@ -9,10 +9,14 @@ const execSync = require('child_process').execSync;
 
 inquirer.prompt(prompts).ui.process.subscribe(
     function(answers) {
-        execSync(answers.name, {
-            stdio: [0, 1, 2],
-            env: process.env
-        })
+        if(answers.hasOwnProperty('answer') && answers['answer'] === true){
+            execSync(answers.name, {
+                stdio: [0, 1, 2],
+                env: process.env
+            })
+        } else {
+            console.log('Skipping execution of: ', answers.name)
+        }
     },
     function(err) {
         console.log('error')
