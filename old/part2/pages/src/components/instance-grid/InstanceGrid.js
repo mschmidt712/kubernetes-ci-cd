@@ -12,13 +12,17 @@ function InstanceGrid (props) {
     return <div key={pod} className={instanceClass}>{pod}</div>;
   });
 
+  const sliderProps = Object.assign({}, props.properties, {
+    value: props.instanceCount
+  });
+
   return (
     <div>
       <div className="instance-grid">
         {instances}
       </div>
       <div className="button-row instance-buttons">
-        <Slider properties={props.properties} />
+        <Slider properties={sliderProps} />
         <button className="primary" onClick={props.properties.onScale}>Scale {props.instanceCount}</button>
       </div>
       <div className="scale-hints">
