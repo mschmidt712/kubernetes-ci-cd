@@ -119,7 +119,6 @@ app.get('/hit/:podId', function (req, res) {
 })
 
 app.get('/pods', function (req, res) {
-
   var pods = etcd.getSync("pod-list",{ recursive: true });
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({pods: pods.body.node.nodes}));
@@ -145,6 +144,5 @@ app.get('/', function(req,res){
 
 http.listen(3001, function () {
   console.log('Listening on port 3001!');
-  
 });
 
