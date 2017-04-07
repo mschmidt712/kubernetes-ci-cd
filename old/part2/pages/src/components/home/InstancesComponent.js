@@ -18,6 +18,7 @@ class InstancesComponent extends React.Component {
   }
 
   componentWillMount () {
+    this.props.actions.getPods();
     this.props.actions.connectToSocket();
   }
 
