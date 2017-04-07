@@ -85,13 +85,13 @@ parts:
         com: kubectl describe jobs/etcd-job
       
       - cap: Now we're going to walk through an initial build of the monitoring and scaling service for our crosswords application.
-        com: docker build -t 127.0.0.1:30400/monitor-scale:latest -f applications/monitor/Dockerfile applications/monitor
+        com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor/Dockerfile applications/monitor
 
       - cap: Setup the proxy in order to push the monitoring docker image to our cluster's registry
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
       - cap: Push the image
-        com: docker push 127.0.0.1:30400/monitor-scale:latest
+        com: docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD`
 
       - cap: Stop the registry proxy
         com: docker stop socat-registry
@@ -100,7 +100,10 @@ parts:
         com: minikube service registry-ui
 
       - cap: Create the deployment and service for the monitoring and scaling server and wait for it to be deployed
-        com: kubectl apply -f applications/monitor/k8s/monitor-scale.yaml; kubectl rollout status deployment/monitor-scale
+        com: sed 's#127.0.0.1:30400/services:latest#127.0.0.1:30400/services:'`git rev-parse --short HEAD`'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -
+      
+      - cap: Wait for the deployment to run
+        com: kubectl rollout status deployment/monitor-scale
 
       - cap: See the montior-scale-* pod running using kubectl.
         com: kubectl get pods
