@@ -3,24 +3,13 @@
 YAML = require('yamljs');
 var inquirer = require('inquirer');
 var Rx = require('rx');
+var prompts = new Rx.Subject();
+
 const execSync = require('child_process').execSync;
 
-var config = {
-    maxBuffer: 10000 * 1024,
-    env: process.env
-};
-
-var prompts = new Rx.Subject();
-var stepIndex = 1;
-var commands = [];
-
 inquirer.prompt(prompts).ui.process.subscribe(
-
     function(answers) {
-        answerIndex = answers.name * 1
-        answerIndex = answerIndex - 1;
-        cmd = commands[answerIndex];
-        execSync(cmd, {
+        execSync(answers.name, {
             stdio: [0, 1, 2],
             env: process.env
         })
@@ -35,25 +24,21 @@ inquirer.prompt(prompts).ui.process.subscribe(
 
 prompts.onNext({
     type: 'confirm',
-    name: "Begin",
+    name: ":",
     message: "Welcome to the Linux.com interactive Kubernetes tutorial by Kenzan. Press enter to begin\n",
     default: true
 });
 
 YAML.load('steps.yml', function(docs) {
-    var parts = docs.parts;
-
-    parts.forEach(function(item) {
-        var stepList = item.steps;
-        stepList.forEach(function(step) {
-            commands.push(step.com)
+    var stepIndex = 1;
+    docs.parts.forEach(function(item) {
+        item.steps.forEach(function(step) {
             prompts.onNext({
                 type: 'confirm',
-                name: stepIndex,
-                message: "\n\n\n" + item.name + " Step: " + stepIndex + "\n" + step.cap + "\n\n" + step.com + "\n\nPress enter to the run the above command for the step.",
+                name: step.com,
+                message: "\n\n\n" + item.name + " Step: " + stepIndex++ + "\n" + step.cap + "\n\n" + step.com + "\n\nPress enter to the run the above command for the step.",
                 default: true
             });
-            stepIndex++;
         })
     })
     prompts.onCompleted();
