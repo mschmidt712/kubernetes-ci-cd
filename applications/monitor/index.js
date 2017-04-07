@@ -100,13 +100,13 @@ app.post('/loadtest/consecutive', function (req, res) {
 
 app.get('/up/:podId', function (req, res) {
   console.log('Server UP: %s', req.params.podId);
-  etcd.set("pod-list/" + req.params.podId, req.params.podId);
+  etcd.setSync("pod-list/" + req.params.podId, req.params.podId);
   res.send('up done');
 })
 
 app.get('/down/:podId', function (req, res) {
   console.log('Server DOWN: %s', req.params.podId);
-  etcd.del("pod-list/" + req.params.podId, req.params.podId);
+  etcd.delSync("pod-list/" + req.params.podId, req.params.podId);
   res.send('down done');
 })
 
