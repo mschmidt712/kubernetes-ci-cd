@@ -83,12 +83,14 @@ parts:
 
       - cap: Check job status
         com: kubectl describe jobs/etcd-job
+      
+      - cap: Now we're going to walk through an initial build of the monitoring and scaling service for our crosswords application. 
 
       - cap: Bootstrap the crossword services and monitoring applications, creating a docker image and storing it in the local registry
         com: scripts/monitor.sh
 
       - cap: Bootstrap the frontend web application
-        com: scripts/monitor.sh
+        com: scripts/pages.sh
 
       - cap: See all the pods running using kubectl.
         com: kubectl get pods

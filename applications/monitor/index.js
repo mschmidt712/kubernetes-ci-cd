@@ -27,7 +27,6 @@ watcher.on("change", showVal);
 
 function showVal(val) {
 
-  //var pods = etcd.getSync("pod-list",{ recursive: true });
   var podChange = { pods: val.node.key, action: val.action };
   console.log(JSON.stringify(podChange));
   io.emit('pods', podChange);
@@ -124,8 +123,8 @@ app.get('/hit/:podId', function (req, res) {
 app.get('/pods', function (req, res) {
 
   var pods = etcd.getSync("pod-list",{ recursive: true });
-  io.emit('pods', { pods: pods.body.node.nodes });
-  res.send('pods sent')
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({pods: pods}));
 })
 
 app.delete('/pods', function (req, res) {
