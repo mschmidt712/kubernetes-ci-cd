@@ -23,12 +23,14 @@ app.use(cors());
 etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
 
 var watcher = etcd.watcher("pod-list", null, {recursive: true})
-watcher.on("change", console.log);
+watcher.on("change", showVal);
 
 function showVal(val) {
 
-  var pods = etcd.getSync("pod-list",{ recursive: true });
-  io.emit('pods', { pods: pods.body.node.nodes });
+  //var pods = etcd.getSync("pod-list",{ recursive: true });
+  var podChange = { pods: val.node.key, action: val.action };
+  console.log(JSON.stringify(podChange));
+  io.emit('pods', podChange);
 }
 
 app.post('/scale', function (req, res) {
