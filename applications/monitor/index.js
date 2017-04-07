@@ -13,8 +13,8 @@ app.use(express.static('public'))
 
 var bodyParser = require("body-parser");
 
-var servicesHost = process.env.SERVICES_SERVICE_HOST;
-var servicesPort = process.env.SERVICES_SERVICE_PORT;
+//var servicesHost = process.env.SERVICES_SERVICE_HOST;
+//var servicesPort = process.env.SERVICES_SERVICE_PORT;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -61,7 +61,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 
   var count = req.body.count;
   console.log('Count requested is: %s', count);
-  var url = "http://" + servicesHost + ":" + servicesPort + "/puzzle/v1/crossword";
+  var url = "http://services:3000/puzzle/v1/crossword";
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
     myUrls.push(url);
@@ -83,7 +83,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 app.post('/loadtest/consecutive', function (req, res) {
   
   var count = req.body.count;
-  var url = "http://" + servicesHost + ":" + servicesPort + "/puzzle/v1/crossword";
+  var url = "http://services:3000/puzzle/v1/crossword";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
       if (response && response.hasOwnProperty("statusCode")) {

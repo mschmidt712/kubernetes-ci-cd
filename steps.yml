@@ -100,7 +100,7 @@ parts:
         com: minikube service registry-ui
 
       - cap: Create the deployment and service for the monitoring and scaling server and wait for it to be deployed
-        com: sed 's#127.0.0.1:30400/services:latest#127.0.0.1:30400/services:'`git rev-parse --short HEAD`'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -
+        com: sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -
       
       - cap: Wait for the deployment to run
         com: kubectl rollout status deployment/monitor-scale
@@ -117,22 +117,13 @@ parts:
       - cap: See the monitor-scale deployment is setup using kubectl
         com: kubectl get deployments
 
-      - cap: Delete the monitor-scale pod and watch as k8s brings it back up. Note that everything wrapped in tick marks is used to parse the unique name of the pod from the get pods display.
-        com: kubectl delete pod `kubectl get pods --selector=app=monitor-scale --output=jsonpath={.items[1]..metadata.name}`
-
-      - cap: If you act quickly you might see one pod terminating while a new uniquely identified pod is created.
-        com: kubectl get pods
-
-      - cap: Run this command to make sure the re-deployment of the pod is complete
-        com: kubectl rollout status deployment/monitor-scale
-
-      - cap: Bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry
+      - cap: Now we will bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry. This script runs the same steps as before for a different service application.
         com: scripts/server.sh
 
       - cap: Check to see if services has been deployed
         com: kubectl rollout status deployment/services
 
-      - cap: Bootstrap the frontend web application
+      - cap: Bootstrap the frontend web application.  This script follows the same steps as before but 
         com: scripts/pages.sh
 
       - cap: Check to see if the front end has been deployed

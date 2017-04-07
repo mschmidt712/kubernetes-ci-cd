@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Retrieve the latest git commit hash
-TAG = `git rev-parse --short HEAD` 
+TAG=`git rev-parse --short HEAD` 
 
 #Build the docker image
 docker build -t 127.0.0.1:30400/kr8sswordz:$TAG -f old/part2/pages/Dockerfile old/part2/pages
