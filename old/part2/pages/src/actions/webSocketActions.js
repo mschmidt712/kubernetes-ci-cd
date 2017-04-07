@@ -5,16 +5,37 @@ import * as types from './actionTypes';
 const baseUrl = `http://monitor-scale.${constants.minikubeIp}.xip.io`;
 const socket = io(baseUrl);
 
+export function getPods () {
+  return dispatch => {
+    return fetch(`${baseUrl}/pods`)
+      .then(resp => (
+        resp.json()
+      ))
+      .then(json => {
+        const pods = json.pods.map(pod => (
+          concatServiceName(pod.key)
+        ));
+        dispatch({type: types.websocket.GET_PODS, pods});
+      })
+      .catch(err => {
+        throw err;
+      });
+  };
+}
+
 export function connectToSocket () {
   return dispatch => {
     socket.open(() => {
       dispatch({type: 'CONNECT_TO_SOCKET'});
     });
     socket.on('pods', (data) => {
-      const pods = data.pods.map(pod => (
-        concatServiceName(pod.value)
-      ));
-      dispatch({ type: types.websocket.PODS, pods });
+      const pod = concatServiceName(data.pods);
+
+      if (data.action === 'set') {
+        dispatch({ type: types.websocket.POD_UP, pod });
+      } else if (data.action === 'delete') {
+        dispatch({ type: types.websocket.POD_DOWN, pod });
+      }
     });
     socket.on('hit', (data) => {
       const activeInstance = concatServiceName(data.podId);
@@ -86,9 +107,12 @@ export function submitConsecutiveRequests (count) {
 }
 
 function concatServiceName (name) {
-  if (name.startsWith('services-')) {
-    return name.substring(9);
+  const parts = name.split('/');
+  const serviceName = parts[parts.length - 1];
+
+  if (serviceName.startsWith('services-')) {
+    return serviceName.substring(9);
   } else {
-    return name;
+    return serviceName;
   }
 }

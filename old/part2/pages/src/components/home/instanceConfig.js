@@ -1,7 +1,7 @@
 export const instanceConfig = {
-  min: 3,
-  max: 48,
-  step: 3,
-  defaultValue: 3,
-  value: 3
+  min: 0,
+  max: 16,
+  step: 1,
+  defaultValue: 0,
+  value: 0
 };

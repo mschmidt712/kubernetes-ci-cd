@@ -18,8 +18,18 @@ export default function websocketReducer (state = initialState, action) {
         connected: false
       });
     }
-    case types.websocket.PODS: {
+    case types.websocket.GET_PODS: {
       return Object.assign({}, state, { pods: action.pods });
+    }
+    case types.websocket.POD_UP: {
+      const pods = [...state.pods, action.pod];
+      return Object.assign({}, state, { pods });
+    }
+    case types.websocket.POD_DOWN: {
+      const pods = state.pods.filter(pod => (
+        pod !== action.pod
+      ));
+      return Object.assign({}, state, { pods });
     }
     case types.websocket.ACTIVE_INSTANCE: {
       return Object.assign({}, state, { activePod: action.activeInstance });
