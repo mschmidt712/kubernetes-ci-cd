@@ -7,32 +7,32 @@ var async = require('async');
 var io = require('socket.io')(http);
 var path    = require("path");
 var Etcd = require('node-etcd')
+var cors = require('cors');
+
 app.use(express.static('public'))
-var exec = require('child_process').exec;
 
 var bodyParser = require("body-parser");
 
-var servicesHost = process.env.SERVICES_SERVICE_HOST;
-var servicesPort = process.env.SERVICES_SERVICE_PORT;
+//var servicesHost = process.env.SERVICES_SERVICE_HOST;
+//var servicesPort = process.env.SERVICES_SERVICE_PORT;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cors());
 
 etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
 
-watcher = etcd.watcher("pod-list", null, {recursive: true})
+var watcher = etcd.watcher("pod-list", null, {recursive: true})
+watcher.on("change", function(val) {
 
-watcher.on("change", showVal);
-
-function showVal(val) {
- pods = etcd.getSync("pod-list",{ recursive: true })
-  io.emit('pods', { pods: pods.body.node.nodes });
-
-}
+  var podChange = { pods: val.node.key, action: val.action };
+  console.log(JSON.stringify(podChange));
+  io.emit('pods', podChange);
+});
 
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
-  // TODO Scale the crossword server instead of hello-kenzan -- Change URL and metadata
+  console.log('Count requested is: %s', scale);
   var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/services/scale";
   var putBody = {
     kind:"Scale",
@@ -52,15 +52,16 @@ app.post('/scale', function (req, res) {
     if (err) {
       return console.error('Failed to scale:', err);
     }
-    console.log('Scale success:', body);
+    console.log('Scale success!');
     res.send('success');
   });
 });
 
 app.post('/loadtest/concurrent', function (req, res) {
-  //TODO Change this to point to the crossword server deployment
+
   var count = req.body.count;
-  var url = "http://" + servicesHost + ":" + servicesPort + "/puzzle/v1/crossword";
+  console.log('Count requested is: %s', count);
+  var url = "http://services:3000/puzzle/v1/crossword";
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
     myUrls.push(url);
@@ -79,11 +80,10 @@ app.post('/loadtest/concurrent', function (req, res) {
   res.send('concurrent done');
 });
 
-
 app.post('/loadtest/consecutive', function (req, res) {
-  //TODO Change this to point to the crossword server deployment
+  
   var count = req.body.count;
-  var url = "http://" + servicesHost + ":" + servicesPort + "/puzzle/v1/crossword";
+  var url = "http://services:3000/puzzle/v1/crossword";
   for (var i = 0; i < req.body.count; i++) {
     request(url, function(error, response, html) {
       if (response && response.hasOwnProperty("statusCode")) {
@@ -96,18 +96,16 @@ app.post('/loadtest/consecutive', function (req, res) {
   res.send('consecutive done');
 });
 
-
-
 app.get('/up/:podId', function (req, res) {
   console.log('Server UP: %s', req.params.podId);
-  etcd.set("pod-list/" + req.params.podId, req.params.podId);
-  res.send('done');
+  etcd.setSync("pod-list/" + req.params.podId, req.params.podId);
+  res.send('up done');
 })
 
 app.get('/down/:podId', function (req, res) {
   console.log('Server DOWN: %s', req.params.podId);
-  etcd.del("pod-list/" + req.params.podId, req.params.podId);
-  res.send('done');
+  etcd.delSync("pod-list/" + req.params.podId, req.params.podId);
+  res.send('down done');
 })
 
 app.get('/hit/:podId', function (req, res) {
@@ -117,23 +115,34 @@ app.get('/hit/:podId', function (req, res) {
 
   console.log("Emitting hit from %s", req.params.podId);
   io.emit('hit', { podId: req.params.podId, time: n });
-  res.send('done')
+  res.send('hit done')
+})
+
+app.get('/pods', function (req, res) {
+  var pods = etcd.getSync("pod-list",{ recursive: true });
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({pods: pods.body.node.nodes}));
+})
+
+app.delete('/pods', function (req, res) {
+
+  var pods = etcd.delSync("pod-list/",{ recursive: true });
+  res.send('pods deleted')
 })
 
 io.on('connection', function(socket){
   
-  console.log("websocket connection made");
-  //pods = etcd.getSync("pod-list",{ recursive: true })
-  io.emit('pods', { pods: ["1","2","3","4","5"] });
+  console.log("Websocket connection established.");
+  socket.on('disconnect', function() {
+    console.log("Websocket disconnect.");
+  })
 });
 
 app.get('/', function(req,res){
-
   res.send('basic GET successful');
 });
 
 http.listen(3001, function () {
-  console.log('Services at ' + servicesHost + ':' + servicesPort);
-  console.log('Listening on port 3001!')
+  console.log('Listening on port 3001!');
 });
 

@@ -8,7 +8,6 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 
 RUN npm install
-RUN npm install -g nodemon
 
 # Bundle app source
 COPY . /usr/src/app
@@ -17,4 +16,4 @@ COPY . /usr/src/app
 EXPOSE 3001
 EXPOSE 8080
 
-CMD ["nodemon", "index.js"]
+CMD ["node", "index.js"]

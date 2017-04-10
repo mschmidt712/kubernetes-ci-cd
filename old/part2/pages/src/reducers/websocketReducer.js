@@ -1,6 +1,5 @@
 import * as types from '../actions/actionTypes';
 
-
 const initialState = {
   connected: false,
   pods: [],
@@ -19,12 +18,28 @@ export default function websocketReducer (state = initialState, action) {
         connected: false
       });
     }
-    case types.websocket.PODS: {
-      console.log('pods emit handler', action.data.pods);
-      return Object.assign({}, state, { pods: [0, 1, 2, 4] });
+    case types.websocket.GET_PODS: {
+      return Object.assign({}, state, { pods: action.pods });
+    }
+    case types.websocket.POD_UP: {
+      if (state.pods.includes(action.pod)) {
+        return state;
+      } else {
+        const pods = [...state.pods, action.pod];
+        return Object.assign({}, state, { pods });
+      }
+    }
+    case types.websocket.POD_DOWN: {
+      const pods = state.pods.filter(pod => (
+        pod !== action.pod
+      ));
+      return Object.assign({}, state, { pods });
     }
     case types.websocket.ACTIVE_INSTANCE: {
-      return Object.assign({}, state, { activePod: action.data.podId });
+      return Object.assign({}, state, { activePod: action.activeInstance });
+    }
+    case types.websocket.SCALE: {
+      return state;
     }
     default: {
       return state;
