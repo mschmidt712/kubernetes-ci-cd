@@ -59,20 +59,20 @@ parts:
       - cap: Install Jenkins
         com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
 
-      - cap: Get Jenkins admin password
-        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
-
-      - cap: Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. Fork repo and put "repository url" as your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
+      - cap: Open the Jenkins service running in our cluster.  You will retrieve the admin password in the next step.
         com: minikube service jenkins
+
+      - cap: Get Jenkins admin password. Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. Fork repo and put "repository url" as your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
+        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
 
       - cap: View updated application
         com: minikube service hello-kenzan
 
       - cap: Push a change to your fork. Run job again. View changes
         com: minikube service hello-kenzan
-
-  - name: Part 4
-    intro: Kubescale
+  
+  - name: Part 3
+    intro: This part will have us setup the various applications that will present the crossword puzzle.  We will run a sample etcd cluster as a cache, a pages application containing the front-end, a crossword server using mongodb, and a monitoring and scaling server application. 
     steps:
 
       - cap: Bootstrap etcd operator on the cluster
@@ -83,33 +83,100 @@ parts:
 
       - cap: Check job status
         com: kubectl describe jobs/etcd-job
+      
+      - cap: The crossword application is a multi-tier application and its services depend on each other.  For our first step we will create the 3 services ahead of time so that the deployments are already aware of them later.
+        com: kubectl apply -f manifests/all-services.yml
+      
+      - cap: Now we're going to walk through an initial build of the monitoring and scaling service for our crosswords application.
+        com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor/Dockerfile applications/monitor
 
-      - cap: build kubescale image
-        com: docker build -t 127.0.0.1:30400/kubescale:latest -f applications/kubescale/Dockerfile applications/kubescale
-
-      - cap: build scaling image
-        com: docker build -t 127.0.0.1:30400/set:latest -f applications/kubescale/set/Dockerfile applications/kubescale/set
-
-      - cap: Start the registry proxy.
+      - cap: Setup the proxy in order to push the monitoring docker image to our cluster's registry
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
-      - cap: Push the kubescale image
-        com: docker push 127.0.0.1:30400/kubescale:latest
-
-      - cap: Push the scaling image
-        com: docker push 127.0.0.1:30400/set:latest
+      - cap: Push the image
+        com: docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD`
 
       - cap: Stop the registry proxy
         com: docker stop socat-registry
+      
+      - cap: Verify that the image is in our local registry using the registry-ui
+        com: minikube service registry-ui
 
-      - cap: Deploy kubescale
-        com: kubectl apply -f applications/kubescale/k8s/kubescale.yml; kubectl rollout status deployment/kubescale 
+      - cap: Create the deployment and service for the monitoring and scaling server and wait for it to be deployed
+        com: sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -
+      
+      - cap: Wait for the deployment to run
+        com: kubectl rollout status deployment/monitor-scale
 
-      - cap: Deploy scaling set
-        com: kubectl apply -f applications/kubescale/k8s/set.yml; kubectl rollout status deployment/set
+      - cap: See the montior-scale-* pod running using kubectl.
+        com: kubectl get pods
 
-      - cap: View kubescale application
-        com: minikube service kubescale
+      - cap: See the montior-scale-* service is setup using kubectl.
+        com: kubectl get services
+
+      - cap: See the montior-scale-* ingress is configured using kubectl.
+        com: kubectl get ingress
+
+      - cap: See the monitor-scale deployment is setup using kubectl
+        com: kubectl get deployments
+
+      - cap: Now we will bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry. This script runs the same steps as before for a different service application.
+        com: scripts/server.sh
+
+      - cap: Check to see if services has been deployed
+        com: kubectl rollout status deployment/services
+
+      - cap: Bootstrap the frontend web application.  This script follows the same steps as before but 
+        com: scripts/pages.sh
+
+      - cap: Check to see if the front end has been deployed
+        com: kubectl rollout status deployment/kr8sswordz
+
+      - cap: See all the pods running using kubectl.
+        com: kubectl get pods
+
+      - cap: Start the web application in your default browser
+        com: minikube service kr8sswordz
+
+#  - name: Part 4
+#    intro: Kubescale
+#    steps:
+
+#      - cap: Bootstrap etcd operator on the cluster
+#        com: scripts/etcd.sh
+
+#      - cap: Run job to create etcd directory
+#        com: kubectl create -f manifests/etcd-job.yml
+
+#      - cap: Check job status
+#        com: kubectl describe jobs/etcd-job
+
+#      - cap: build kubescale image
+#        com: docker build -t 127.0.0.1:30400/kubescale:latest -f applications/kubescale/Dockerfile applications/kubescale
+
+#      - cap: build scaling image
+#        com: docker build -t 127.0.0.1:30400/set:latest -f applications/kubescale/set/Dockerfile applications/kubescale/set
+
+#      - cap: Start the registry proxy.
+#        com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
+
+#      - cap: Push the kubescale image
+#        com: docker push 127.0.0.1:30400/kubescale:latest
+
+#      - cap: Push the scaling image
+#        com: docker push 127.0.0.1:30400/set:latest
+
+#      - cap: Stop the registry proxy
+#        com: docker stop socat-registry
+
+#      - cap: Deploy kubescale
+#        com: kubectl apply -f applications/kubescale/k8s/kubescale.yml; kubectl rollout status deployment/kubescale 
+
+#      - cap: Deploy scaling set
+#        com: kubectl apply -f applications/kubescale/k8s/set.yml; kubectl rollout status deployment/set
+
+#      - cap: View kubescale application
+#        com: minikube service kubescale
 
   # - name: Part 5
   #   intro: Spinnaker

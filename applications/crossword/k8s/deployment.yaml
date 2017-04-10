@@ -14,7 +14,7 @@ spec:
         tier: services
     spec:
       containers:
-      - image: 127.0.0.1:30912/services:__TAG__
+      - image: 127.0.0.1:30400/services:latest
         name: services
         imagePullPolicy: Always
         lifecycle:
