@@ -4,7 +4,7 @@
     "wordNbr": 7,
     "startx" : 7,
     "starty" : 10,
-    "wordOrientation": "down",
+    "wordOrientation": "across",
     "hint": "Our company name :-)",
     "enteredValue": "******"
   },
