@@ -63,12 +63,12 @@
     "enteredValue": "****"
   },
   {
-    "word": "k8",
+    "word": "k8s",
     "wordNbr": 5,
     "startx" : 3,
     "starty" : 4,
     "wordOrientation": "across",
     "hint": "Shorthand for Kubernetes",
-    "enteredValue": "**"
+    "enteredValue": "***"
   }
 ]
