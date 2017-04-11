@@ -2,8 +2,8 @@
   {
     "word": "Kenzan",
     "wordNbr": 1,
-    "startx" : 6,
-    "starty" : 0,
+    "startx" : 7,
+    "starty" : 10,
     "wordOrientation": "down",
     "hint": "Our company name :-)",
     "enteredValue": "******"
