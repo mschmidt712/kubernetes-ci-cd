@@ -169,7 +169,7 @@ class PuzzleComponent extends React.Component {
   }
 
   convertPuzzleGridToPuzzleArray () {
-    const submission = this.props.puzzleArray.map((word) => {
+    const submission = this.props.puzzleData.map((word) => {
       const startx = word.startx;
       const starty = word.starty;
       const length = word.word.length;
@@ -209,7 +209,7 @@ class PuzzleComponent extends React.Component {
   }
 
   clearPuzzle () {
-    let submission = [...this.props.puzzleArray];
+    let submission = [...this.props.puzzleData];
     submission = submission.map(obj => {
       const letters = obj.enteredValue.length;
       obj.enteredValue = new Array(letters).fill('*').join('');
