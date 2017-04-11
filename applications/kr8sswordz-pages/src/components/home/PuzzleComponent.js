@@ -217,6 +217,7 @@ class PuzzleComponent extends React.Component {
     });
 
     this.props.puzzleActions.sendingData();
+    console.log('component', submission);
     this.props.puzzleActions.submitPuzzleData(this.props.puzzleId, submission);
   }
 
