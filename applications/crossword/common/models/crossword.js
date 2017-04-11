@@ -22,7 +22,7 @@ module.exports = function(Crossword) {
           var updatedWords = [];
           for (var i = 0; i < crossword.words.length; i++) {
             var crosswordWord = crossword.words[i];
-            if (crosswordWord.wordNbr === word.wordNbr) {
+            if (crosswordWord.wordNbr === word.wordNbr && crosswordWord.wordOrientation === word.wordOrientation) {
               crosswordWord.enteredValue = word.enteredValue;
               //crosswordWord.wordOrientation = word.wordOrientation;
             }
@@ -54,7 +54,7 @@ module.exports = function(Crossword) {
       });
     });
   }
-  
+
   function fireHit() {
     var podId = process.env.HOSTNAME;
     var url = "http://monitor-scale:3001/hit/" + podId;
