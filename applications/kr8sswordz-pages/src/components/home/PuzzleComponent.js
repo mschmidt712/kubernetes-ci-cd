@@ -35,8 +35,8 @@ class PuzzleComponent extends React.Component {
   }
 
   componentWillReceiveProps (newProps) {
-    if (this.props.puzzleArray !== newProps.puzzleArray) {
-      this.initializePuzzleArray(newProps.puzzleArray);
+    if (this.props.puzzleData !== newProps.puzzleData) {
+      this.initializePuzzleArray(newProps.puzzleData);
     }
   }
 
@@ -283,14 +283,14 @@ PuzzleComponent.propTypes = {
   puzzleActions: PropTypes.objectOf(PropTypes.func),
   webSocketActions: PropTypes.objectOf(PropTypes.func),
   state: PropTypes.object,
-  puzzleArray: PropTypes.array,
+  puzzleData: PropTypes.array,
   puzzleId: PropTypes.string
 };
 
 function mapStateToProps (state) {
   return {
     puzzleId: state.puzzle.id,
-    puzzleArray: state.puzzle.puzzleData
+    puzzleData: state.puzzle.puzzleData
   };
 }
 
