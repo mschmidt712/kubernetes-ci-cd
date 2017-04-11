@@ -33,6 +33,7 @@ export function getPuzzleData () {
         return dispatch(getPuzzleDataSuccess(json));
       })
       .catch(err => {
+        console.log(err);
         dispatch(getPuzzleDataFailure(err));
       });
   };
