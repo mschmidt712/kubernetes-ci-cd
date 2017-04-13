@@ -1,0 +1,20 @@
+parts:
+
+  - name: Part 2
+    intro: In this part we will Setup Jenkins, and setup an automated jon to build, push and deploy our custom appliction.
+    steps:
+
+      - cap: Install Jenkins
+        com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
+
+      - cap: Open the Jenkins service running in our cluster.  You will retrieve the admin password in the next step.
+        com: minikube service jenkins
+
+      - cap: Get Jenkins admin password. Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. Fork repo and put "repository url" as your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
+        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
+
+      - cap: View updated application
+        com: minikube service hello-kenzan
+
+      - cap: Push a change to your fork. Run job again. View changes
+        com: minikube service hello-kenzan
