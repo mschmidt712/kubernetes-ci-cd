@@ -8,24 +8,26 @@ module.exports = function(Crossword) {
 
   Crossword.get = function(cb) {
     
-    var cachedPuzzle = etcd.getSync("puzzle");
+    var etcdPuzzleResp = etcd.getSync("puzzle");
     
-    if (cachedPuzzle && !cachedPuzzle.err) {
-      
-      console.log(`cached puzzle: ${cachedPuzzle}`);
+    if (etcdPuzzleResp && !etcdPuzzleResp.err) {
+
+      console.log(`Responding with cache`);
       fireHit();
-      // TODO Set fromCache:true
-      cb(null, JSON.parse(cachedPuzzle.body.node.value));
+      var cachedPuzzle = JSON.parse(etcdPuzzleResp.body.node.value);
+      cachedPuzzle.fromCache = true;
+      cb(null, cachedPuzzle);
     } else {
       Crossword.findOne(function(err, crossword) {
+
         fireHit();
         if(err) {
           handleError(err.message, cb);
         } else {
           var puzzleString = JSON.stringify(crossword);
           etcd.setSync("puzzle", puzzleString, { ttl: 30 });
-          console.log(`From mongo: ${puzzleString}`);
-          crossword.fromCache=false;
+          console.log(`Responding from Mongo`);
+          crossword.fromCache = false;
           cb(null, crossword);
         }
       });
@@ -34,6 +36,7 @@ module.exports = function(Crossword) {
 
   Crossword.put = function(words, cb) {
     if(words) {
+      etcd.delSync("puzzle");
       Crossword.findOne(function (err, crossword) {
         fireHit();
         if (err) handleError(err.message, cb);
