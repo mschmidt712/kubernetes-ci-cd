@@ -15,7 +15,7 @@ module.exports = function(Crossword) {
       console.log(`cached puzzle: ${cachedPuzzle}`);
       fireHit();
       // TODO Set fromCache:true
-      cb(null, JSON.parse(cachedPuzzle));
+      cb(null, JSON.parse(cachedPuzzle.body.node.value));
     } else {
       Crossword.findOne(function(err, crossword) {
         fireHit();
