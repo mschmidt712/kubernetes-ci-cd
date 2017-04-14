@@ -1,15 +1,32 @@
 'use strict';
 var request = require('request');
-
+var Etcd = require('node-etcd')
 
 module.exports = function(Crossword) {
 
+  var etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
+
   Crossword.get = function(cb) {
-    Crossword.findOne(function(err, crossword) {
+    
+    var cachedPuzzle = etcd.getSync("puzzle");
+    console.log(`cached puzzle: ${cachedPuzzle}`);
+    if (cachedPuzzle) {
       fireHit();
-      if(err) handleError(err.message, cb);
-      cb(null, crossword);
-    });
+      // TODO Set fromCache: true
+      cb(null, cachedPuzzle);
+    } else {
+      Crossword.findOne(function(err, crossword) {
+        fireHit();
+        if(err) {
+          handleError(err.message, cb);
+        } else {
+          etcd.setSync("puzzle", crossword, { ttl: 30 }, console.log);
+          console.log(`From mongo: ${crossword}`);
+          // TODO Set fromCache: false
+          cb(null, crossword);
+        }
+      });
+    }
   }
 
   Crossword.put = function(words, cb) {
