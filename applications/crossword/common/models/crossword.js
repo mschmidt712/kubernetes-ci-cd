@@ -11,20 +11,21 @@ module.exports = function(Crossword) {
     var cachedPuzzle = etcd.getSync("puzzle");
     
     if (cachedPuzzle && !cachedPuzzle.err) {
-      var puzzleString = JSON.stringify(cachedPuzzle);
-      console.log(`cached puzzle: ${puzzleString}`);
+      
+      console.log(`cached puzzle: ${cachedPuzzle}`);
       fireHit();
-      // TODO Set fromCache: true
-      cb(null, cachedPuzzle);
+      // TODO Set fromCache:true
+      cb(null, JSON.parse(cachedPuzzle));
     } else {
       Crossword.findOne(function(err, crossword) {
         fireHit();
         if(err) {
           handleError(err.message, cb);
         } else {
-          etcd.setSync("puzzle", crossword, { ttl: 30 }, console.log);
-          console.log(`From mongo: ${crossword}`);
-          // TODO Set fromCache: false
+          var puzzleString = JSON.stringify(crossword);
+          etcd.setSync("puzzle", puzzleString, { ttl: 30 });
+          console.log(`From mongo: ${puzzleString}`);
+          crossword.fromCache=false;
           cb(null, crossword);
         }
       });
