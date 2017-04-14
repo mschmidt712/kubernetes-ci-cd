@@ -9,8 +9,10 @@ module.exports = function(Crossword) {
   Crossword.get = function(cb) {
     
     var cachedPuzzle = etcd.getSync("puzzle");
-    console.log(`cached puzzle: ${cachedPuzzle}`);
-    if (cachedPuzzle) {
+    
+    if (cachedPuzzle && !cachedPuzzle.err) {
+      var puzzleString = JSON.stringify(cachedPuzzle);
+      console.log(`cached puzzle: ${puzzleString}`);
       fireHit();
       // TODO Set fromCache: true
       cb(null, cachedPuzzle);
