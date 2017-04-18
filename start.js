@@ -7,6 +7,9 @@ var prompts = new Rx.Subject();
 
 const execSync = require('child_process').execSync;
 
+var ymlpath = process.argv[2];
+
+
 inquirer.prompt(prompts).ui.process.subscribe(
     function(answers) {
         if(answers.hasOwnProperty('answer') && answers['answer'] === true){
@@ -33,7 +36,7 @@ prompts.onNext({
     default: true
 });
 
-YAML.load('steps.yml', function(docs) {
+YAML.load(ymlpath, function(docs) {
     var stepIndex = 1;
     docs.parts.forEach(function(item) {
         item.steps.forEach(function(step) {
