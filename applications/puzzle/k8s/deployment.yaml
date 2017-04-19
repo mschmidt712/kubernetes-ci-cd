@@ -1,21 +1,21 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: services
+  name: puzzle
   labels:
-    app: services
+    app: puzzle
 spec:
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: services
-        tier: services
+        app: puzzle
+        tier: puzzle
     spec:
       containers:
-      - image: 127.0.0.1:30400/services:latest
-        name: services
+      - image: 127.0.0.1:30400/puzzle:latest
+        name: puzzle
         imagePullPolicy: Always
         lifecycle:
           postStart:
@@ -26,22 +26,22 @@ spec:
               command: ["/down.sh"]        
         ports:
         - containerPort: 3000
-          name: services
+          name: puzzle
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: services
+  name: puzzle
   labels:
-    app: services
+    app: puzzle
 spec:
   ports:
     - port: 3000
       targetPort: 3000
   selector:
-    app: services
-    tier: services
+    app: puzzle
+    tier: puzzle
   type: NodePort
 ---
 apiVersion: extensions/v1beta1
@@ -85,16 +85,16 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
- name: services
+ name: puzzle
 spec:
   backend:
-    serviceName: services
+    serviceName: puzzle
     servicePort: 3000
   rules:
-  - host: services.kr8sswordz.192.168.99.100.xip.io
+  - host: puzzle.192.168.99.100.xip.io
     http:
       paths:
       - path: /
         backend:
-          serviceName: services
+          serviceName: puzzle
           servicePort: 3000

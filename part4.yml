@@ -22,8 +22,8 @@ parts:
       - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
         com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
 
-      - cap: Set the "Script Path" to applications/monitor/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/monitor/Jenkinsfile'
+      - cap: Set the "Script Path" to applications/monitor-scale/Jenkinsfile
+        com: echo 'Set the "Script Path" to applications/monitor-scale/Jenkinsfile'
 
       - cap: Save and run the job using the "Build Now" button.
         com: echo 'Save and run the job using the "Build Now" button.'
@@ -40,8 +40,8 @@ parts:
       - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
         com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
 
-      - cap: Set the "Script Path" to applications/crossword/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/crossword/Jenkinsfile'
+      - cap: Set the "Script Path" to applications/puzzle/Jenkinsfile
+        com: echo 'Set the "Script Path" to applications/puzzle/Jenkinsfile'
 
       - cap: Save and run the job using the "Build Now" button.
         com: echo 'Save and run the job using the "Build Now" button.'
@@ -67,5 +67,14 @@ parts:
       - cap: View updated application
         com: minikube service kr8sswordz
 
-      - cap: Push a change to your fork TODO. Run job again. View changes
+      - cap: Edit the contents of 'applications/puzzle/common/crossword.js' by uncommenting line 43. This will open the file with the nano editor. When finished press ctrl + x to exit and confirm save.
+        com: nano applications/puzzle/common/crossword.js
+
+      - cap: Commit and push the change to your fork and run the Puzzle Service Pipeline in Jenkins.
+        com: echo 'Commit and push the change to your fork and run the Puzzle Service Pipeline in Jenkins.'
+      
+      - cap: Wait for the new puzzle pod enter the 'Running' state.
+        com: kubectl get pods
+
+      - cap: Rerun the application and see that a puzzle pod in the middle of the page turns green when clicking the Submit button.
         com: minikube service kr8sswordz

@@ -16,16 +16,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: services
+  name: puzzle
   labels:
-    app: services
+    app: puzzle
 spec:
   ports:
     - port: 3000
       targetPort: 3000
   selector:
-    app: services
-    tier: services
+    app: puzzle
+    tier: puzzle
   type: NodePort
 ---
 apiVersion: v1
