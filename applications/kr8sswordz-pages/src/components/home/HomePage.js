@@ -6,6 +6,7 @@ import * as actions from '../../actions/puzzleActions';
 import PuzzleComponent from './PuzzleComponent';
 import InstanceComponent from './InstancesComponent';
 import DataFlowArrow from './DataFlowArrow';
+import Database from './Database';
 
 class HomePage extends React.Component {
   render () {
@@ -17,23 +18,12 @@ class HomePage extends React.Component {
     return (
       <div className="home-page">
         <PuzzleComponent />
-        <div className={sendingDataClass}>
-          <DataFlowArrow className="k8instances" active={this.props.sendingData} reverse={false}/>
-        </div>
         <div className="instances">
           <InstanceComponent />
         </div>
-        <div className="data-flow image-column">
-          <DataFlowArrow className="mongo" active={this.props.fromMongo} reverse/>
-          <DataFlowArrow className="etcd" active={this.props.fromCache} reverse/>
-        </div>
         <div className="dbs image-column">
-          <div className="mongo">
-            <img src={`../../assets/mongo.png`}/>
-          </div>
-          <div className="etcd">
-            <img src={`../../assets/etcd.png`}/>
-          </div>
+          <Database databaseName="MongoDB" active={this.props.fromMongo}/>
+          <Database databaseName="etcd" active={this.props.fromCache}/>
         </div>
       </div>
     );

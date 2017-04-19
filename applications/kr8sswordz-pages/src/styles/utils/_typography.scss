@@ -1,4 +1,59 @@
-@import 'https://fonts.googleapis.com/css?family=Roboto';
+@import 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800';
+@import './variables';
+
+// Roboto Font
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/fonts/Roboto-Regular-webfont.eot');
+  src: url('../../assets/fonts/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../../assets/fonts/Roboto-Regular-webfont.woff') format('woff'),
+    url('../../assets/fonts/Roboto-Regular-webfont.ttf') format('truetype'),
+    url('../../assets/fonts/Roboto-Regular-webfont.svg') format('svg');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/fonts/Roboto-Light-webfont.eot');
+  src: url('../../assets/fonts/Roboto-Light-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../../assets/fonts/Roboto-Light-webfont.woff') format('woff'),
+    url('../../assets/fonts/Roboto-Light-webfont.ttf') format('truetype'),
+    url('../../assets/fonts/Roboto-Light-webfont.svg') format('svg');
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/fonts/Roboto-LightItalic-webfont.eot');
+  src: url('../../assets/fonts/Roboto-LightItalic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../../assets/fonts/Roboto-LightItalic-webfont.woff') format('woff'),
+    url('../../assets/fonts/Roboto-LightItalic-webfont.ttf') format('truetype'),
+    url('../../assets/fonts/Roboto-LightItalic-webfont.svg') format('svg');
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/fonts/Roboto-Bold-webfont.eot');
+  src: url('../../assets/fonts/Roboto-Bold-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../../assets/fonts/Roboto-Bold-webfont.woff') format('woff'),
+    url('../../assets/fonts/Roboto-Bold-webfont.ttf') format('truetype'),
+    url('../../assets/fonts/Roboto-Bold-webfont.svg') format('svg');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../../assets/fonts/Roboto-BoldItalic-webfont.eot');
+  src: url('../../assets/fonts/Roboto-BoldItalic-webfont.eot?#iefix') format('embedded-opentype'),
+    url('../../assets/fonts/Roboto-BoldItalic-webfont.woff') format('woff'),
+    url('../../assets/fonts/Roboto-BoldItalic-webfont.ttf') format('truetype'),
+    url('../../assets/fonts/Roboto-BoldItalic-webfont.svg') format('svg');
+  font-weight: 600;
+  font-style: italic;
+}
+
 @import './variables';
 
 h1,
@@ -10,6 +65,7 @@ h6 {
     font-weight: 300;
     line-height: 1.5;
     margin-top: 0;
+    color: $brand-blue;
 
     &.bold {
         font-weight: 400;
@@ -36,7 +92,8 @@ $header-count: 6;
 
 p {
   line-height: 1.5;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  color: $brand-blue;
 
   &.bold {
       font-weight: 800;

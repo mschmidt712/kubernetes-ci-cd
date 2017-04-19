@@ -60,11 +60,6 @@ export function submitPuzzleData (id, data) {
     })
       .then((resp) => {
         if (resp.status === 204) {
-          dispatch({type: actions.puzzle.FROM_MONGO, data: true});
-          setTimeout(() => {
-            return dispatch({type: actions.puzzle.FROM_MONGO, data: false});
-          }, arrowDisplayTime);
-          console.log('action', data);
           dispatch(submitPuzzleDataSuccess(data));
         } else {
           dispatch(submitPuzzleDataFailure);
@@ -82,11 +77,9 @@ export function clearPuzzleData (id, data) {
       method: 'CLEAR'
     })
       .then((resp) => {
-        console.log(resp);
         resp.json();
       })
       .then((json) => {
-        console.log(json);
         dispatch({type: actions.puzzle.CLEAR_PUZZLE_DATA, data: json});
       })
       .catch((err) => {
