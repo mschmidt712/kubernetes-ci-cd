@@ -66,7 +66,7 @@ module.exports = function(Crossword) {
   Crossword.clear = function(cb) {
     
     Crossword.findOne(function(err, crossword) {
-      
+      fireHit();      
       if(err) handleError(err.message, cb);
       var updatedWords = [];
       for (var i = 0; i < crossword.words.length; i++) {
@@ -75,7 +75,6 @@ module.exports = function(Crossword) {
         updatedWords.push(crosswordWord);
       }
       crossword.updateAttribute('words', updatedWords, function(err, crossword) {
-        fireHit();
         if(err) handleError(err.message, cb);
         cb(null);
       });
