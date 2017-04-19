@@ -13,10 +13,11 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "echo 'start the tutorial by running: npm run part1'",
+    "start": "echo 'Begin the current interactive tutorial by executing: npm run <part> where <part> can be part1, part2, part3 or part4'",
     "part1": "node start.js part1.yml",
     "part2": "node start.js part2.yml",
-    "part3": "node start.js part3.yml"
+    "part3": "node start.js part3.yml",
+    "part4": "node start.js part4.yml"    
   },
   "repository": {
     "type": "git",

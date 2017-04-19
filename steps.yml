@@ -106,7 +106,7 @@ parts:
         com: kubectl apply -f manifests/all-services.yml
       
       - cap: Now we're going to walk through an initial build of the monitoring and scaling service for our crosswords application.
-        com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor/Dockerfile applications/monitor
+        com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale
 
       - cap: Setup the proxy in order to push the monitoring docker image to our cluster's registry
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
@@ -121,7 +121,7 @@ parts:
         com: minikube service registry-ui
 
       - cap: Create the deployment and service for the monitoring and scaling server and wait for it to be deployed
-        com: sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -
+        com: sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -
       
       - cap: Wait for the deployment to run
         com: kubectl rollout status deployment/monitor-scale
@@ -139,13 +139,13 @@ parts:
         com: kubectl get deployments
 
       - cap: Now we will bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry. This script runs the same steps as before for a different service application.
-        com: scripts/server.sh
+        com: scripts/puzzle.sh
 
-      - cap: Check to see if services has been deployed
-        com: kubectl rollout status deployment/services
+      - cap: Check to see if the puzzle service has been deployed
+        com: kubectl rollout status deployment/puzzle
 
       - cap: Bootstrap the frontend web application.  This script follows the same steps as before but 
-        com: scripts/pages.sh
+        com: scripts/kr8sswordz-pages.sh
 
       - cap: Check to see if the front end has been deployed
         com: kubectl rollout status deployment/kr8sswordz
@@ -166,24 +166,6 @@ parts:
       - cap: Login as admin, if necessary.
         com: echo 'Login as admin, if necessary.' 
 
-      - cap: Click "New Item" and create an item with a name like "Monitor Scale Service Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "Monitor Scale Service Pipeline", choosing the type "Pipeline". Click OK.'
-
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
-
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
-
-      - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
-        com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
-
-      - cap: Set the "Script Path" to applications/monitor/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/monitor/Jenkinsfile'
-
-      - cap: Save and run the job using the "Build Now" button.
-        com: echo 'Save and run the job using the "Build Now" button.'
-
       - cap: Click "New Item" and create an item with a name like "Puzzle Service Pipeline", choosing the type "Pipeline". Click OK.
         com: echo 'Click "New Item" and create an item with a name like "Puzzle Service Pipeline", choosing the type "Pipeline". Click OK.'
 
@@ -196,31 +178,25 @@ parts:
       - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
         com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
 
-      - cap: Set the "Script Path" to applications/crossword/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/crossword/Jenkinsfile'
-
-      - cap: Save and run the job using the "Build Now" button.
-        com: echo 'Save and run the job using the "Build Now" button.'
-
-      - cap: Click "New Item" and create an item with a name like "kr8sswordz FrontEnd Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "kr8sswordz FrontEnd Pipeline", choosing the type "Pipeline". Click OK.'
-
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
-
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
-
-      - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
-        com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
-
-      - cap: Set the "Script Path" to applications/kr8sswordz-pages/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/kr8sswordz-pages/Jenkinsfile'
+      - cap: Set the "Script Path" to applications/puzzle/Jenkinsfile
+        com: echo 'Set the "Script Path" to applications/puzzle/Jenkinsfile'
 
       - cap: Save and run the job using the "Build Now" button.
         com: echo 'Save and run the job using the "Build Now" button.'
 
       - cap: View updated application
+        com: minikube service kr8sswordz
+
+      - cap: Edit the contents of 'applications/puzzle/common/crossword.js' by uncommenting line 43. This will open the file with the nano editor. When finished press ctrl + x to exit and confirm save.
+        com: nano applications/puzzle/common/crossword.js
+
+      - cap: Commit and push the change to your fork and run the Puzzle Service Pipeline in Jenkins.
+        com: echo 'Commit and push the change to your fork and run the Puzzle Service Pipeline in Jenkins.'
+      
+      - cap: Wait for the new puzzle pod enter the 'Running' state.
+        com: kubectl get pods
+
+      - cap: Rerun the application and see that a puzzle pod in the middle of the page turns green when clicking the Submit button.
         com: minikube service kr8sswordz
 
   # - name: Part 5
