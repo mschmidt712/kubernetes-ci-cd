@@ -5,7 +5,7 @@ var Etcd = require('node-etcd')
 module.exports = function(Crossword) {
 
   var etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
-
+  fireHit();
   Crossword.get = function(cb) {
     
     var etcdPuzzleResp = etcd.getSync("puzzle");
@@ -13,14 +13,14 @@ module.exports = function(Crossword) {
     if (etcdPuzzleResp && !etcdPuzzleResp.err) {
 
       console.log(`Responding with cache`);
-      fireHit();
+      
       var cachedPuzzle = JSON.parse(etcdPuzzleResp.body.node.value);
       cachedPuzzle.fromCache = true;
       cb(null, cachedPuzzle);
     } else {
       Crossword.findOne(function(err, crossword) {
 
-        fireHit();
+        
         if(err) {
           handleError(err.message, cb);
         } else {
@@ -64,8 +64,9 @@ module.exports = function(Crossword) {
   }
 
   Crossword.clear = function(cb) {
+    fireHit();
     Crossword.findOne(function(err, crossword) {
-      fireHit();
+      
       if(err) handleError(err.message, cb);
       var updatedWords = [];
       for (var i = 0; i < crossword.words.length; i++) {

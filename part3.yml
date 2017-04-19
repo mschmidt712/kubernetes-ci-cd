@@ -52,8 +52,8 @@ parts:
       - cap: Now we will bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry. This script runs the same steps as before for a different service application.
         com: scripts/puzzle.sh
 
-      - cap: Check to see if services has been deployed
-        com: kubectl rollout status deployment/services
+      - cap: Check to see if the puzzle service has been deployed
+        com: kubectl rollout status deployment/puzzle
 
       - cap: Bootstrap the frontend web application.  This script follows the same steps as before but 
         com: scripts/kr8sswordz-pages.sh
