@@ -13,14 +13,14 @@ module.exports = function(Crossword) {
     if (etcdPuzzleResp && !etcdPuzzleResp.err) {
 
       console.log(`Responding with cache`);
-      
+      fireHit();
       var cachedPuzzle = JSON.parse(etcdPuzzleResp.body.node.value);
       cachedPuzzle.fromCache = true;
       cb(null, cachedPuzzle);
     } else {
       Crossword.findOne(function(err, crossword) {
 
-        
+        fireHit();
         if(err) {
           handleError(err.message, cb);
         } else {
@@ -64,7 +64,7 @@ module.exports = function(Crossword) {
   }
 
   Crossword.clear = function(cb) {
-    fireHit();
+    
     Crossword.findOne(function(err, crossword) {
       
       if(err) handleError(err.message, cb);
@@ -75,6 +75,7 @@ module.exports = function(Crossword) {
         updatedWords.push(crosswordWord);
       }
       crossword.updateAttribute('words', updatedWords, function(err, crossword) {
+        fireHit();
         if(err) handleError(err.message, cb);
         cb(null);
       });
