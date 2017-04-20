@@ -12,7 +12,7 @@ class InstancesComponent extends React.Component {
 
     this.state = {
       scaleCount: props.pods.length,
-      consecutiveRequestCount: 1
+      consecutiveRequestCount: 10
     };
 
     this.handleScaleSlider = this.handleScaleSlider.bind(this);
@@ -64,9 +64,9 @@ class InstancesComponent extends React.Component {
       onScale: this.onScale
     });
     const consecutiveRequestProps = {
-      min: 1,
-      max: 50,
-      step: 1,
+      min: 10,
+      max: 500,
+      step: 10,
       value: this.state.consecutiveRequestCount,
       onChange: this.handleConsecutiveRequestSlider
     };

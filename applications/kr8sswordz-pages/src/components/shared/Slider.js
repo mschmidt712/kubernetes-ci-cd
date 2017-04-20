@@ -20,6 +20,7 @@ class SliderComponent extends React.Component {
     ReactDOM.render(<ReactSlider
       min={this.props.properties.min}
       max={this.props.properties.max}
+      step={this.props.properties.step}
       onChange={this.props.properties.onChange}
       value={this.props.properties.value}
     >
