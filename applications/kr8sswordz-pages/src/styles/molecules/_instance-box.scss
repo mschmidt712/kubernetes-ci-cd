@@ -22,11 +22,11 @@
 
 @keyframes fadein {
     from {
-      background: #32CD32;
+      background: $highlight-green;
       opacity: 0.5;
     }
     to   {
-      background: #32CD32;
+      background: $highlight-green;
       opacity: 1;
     }
 }

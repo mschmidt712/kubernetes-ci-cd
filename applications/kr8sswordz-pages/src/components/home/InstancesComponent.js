@@ -12,7 +12,7 @@ class InstancesComponent extends React.Component {
 
     this.state = {
       scaleCount: props.pods.length,
-      consecutiveRequestCount: 1
+      consecutiveRequestCount: 10
     };
 
     this.handleScaleSlider = this.handleScaleSlider.bind(this);
@@ -38,9 +38,9 @@ class InstancesComponent extends React.Component {
     this.props.actions.disconnectFromSocket();
   }
 
-  handleConsecutiveRequestSlider (e, v) {
+  handleConsecutiveRequestSlider (value) {
     this.setState({
-      consecutiveRequestCount: v
+      consecutiveRequestCount: value
     });
   }
 
@@ -48,7 +48,7 @@ class InstancesComponent extends React.Component {
     this.props.actions.submitConsecutiveRequests(this.state.consecutiveRequestCount);
   }
 
-  handleScaleSlider (event, value) {
+  handleScaleSlider (value) {
     this.setState({
       scaleCount: value
     });
@@ -64,10 +64,10 @@ class InstancesComponent extends React.Component {
       onScale: this.onScale
     });
     const consecutiveRequestProps = {
-      min: 1,
-      max: 50,
-      step: 1,
-      defaultValue: this.state.consecutiveRequestCount,
+      min: 10,
+      max: 500,
+      step: 10,
+      value: this.state.consecutiveRequestCount,
       onChange: this.handleConsecutiveRequestSlider
     };
 
@@ -80,11 +80,11 @@ class InstancesComponent extends React.Component {
       </InstanceGrid>
       <div className="button-row instance-buttons">
         <Slider properties={consecutiveRequestProps} />
-        <button className="primary" onClick={this.submitConsecutiveRequests}>Consecutive Requests {this.state.consecutiveRequestCount}</button>
+        <button className="primary" onClick={this.submitConsecutiveRequests}>Load Test</button>
       </div>
       <div className="scale-hints">
-        <p>Choose the number of consecutive you want to make and click "Consecutive Requests".
-          This will call our service the given number of times and you can observe the calls being made in the instance grid above. </p>
+        <p>Choose the number of consecutive requests you want to make and click "Load Test."
+          This will call the puzzle service the given number of times and you can observe the calls being made in the instance grid above. </p>
       </div>
     </div>);
   }

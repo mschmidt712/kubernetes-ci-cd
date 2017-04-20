@@ -47,7 +47,7 @@ export function submitPuzzleDataFailure () {
   return {type: actions.puzzle.SUBMIT_PUZZLE_DATA_FAILURE};
 }
 
-export function submitPuzzleData (id, data) {
+export function submitPuzzleData (data) {
   return dispatch => {
     const submission = JSON.stringify(data);
     const headers = new Headers();
@@ -71,16 +71,15 @@ export function submitPuzzleData (id, data) {
   };
 }
 
-export function clearPuzzleData (id, data) {
+export function clearPuzzleData (data) {
   return dispatch => {
-    return fetch(`${baseUrl}/crossword`, {
-      method: 'CLEAR'
+    return fetch(`${baseUrl}/crossword/clear`, {
+      method: 'PUT'
     })
       .then((resp) => {
-        resp.json();
-      })
-      .then((json) => {
-        dispatch({type: actions.puzzle.CLEAR_PUZZLE_DATA, data: json});
+        if (resp.status === 204) {
+          dispatch({type: actions.puzzle.CLEAR_PUZZLE_DATA, data});
+        }
       })
       .catch((err) => {
         console.log(err);

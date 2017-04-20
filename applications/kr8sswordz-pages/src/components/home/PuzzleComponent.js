@@ -37,11 +37,11 @@ class PuzzleComponent extends React.Component {
 
   initializeGrid () {
     const puzzleGrid = [];
-    const maxRows = 12;
-    const maxColumns = 11;
+    const maxColumns = 12;
+    const maxRows = 13;
 
-    for (var i = 0; i < maxColumns; i++) {
-      puzzleGrid.push(new Array(maxRows).fill(''));
+    for (var i = 0; i < maxRows; i++) {
+      puzzleGrid.push(new Array(maxColumns).fill(''));
     }
 
     return puzzleGrid;
@@ -197,17 +197,14 @@ class PuzzleComponent extends React.Component {
       return obj;
     });
 
-    this.props.puzzleActions.sendingData();
-    console.log('component', submission);
-    this.props.puzzleActions.submitPuzzleData(this.props.puzzleId, submission);
+    this.props.puzzleActions.clearPuzzleData(submission);
   }
 
   submitPuzzle (e) {
     e.preventDefault();
     const submission = this.convertPuzzleGridToPuzzleArray();
 
-    this.props.puzzleActions.sendingData();
-    this.props.puzzleActions.submitPuzzleData(this.props.puzzleId, submission);
+    this.props.puzzleActions.submitPuzzleData(submission);
   }
 
   render () {

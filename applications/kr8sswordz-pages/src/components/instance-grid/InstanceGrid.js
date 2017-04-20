@@ -23,7 +23,7 @@ function InstanceGrid (props) {
       </div>
       <div className="button-row instance-buttons">
         <Slider properties={sliderProps} />
-        <button className="primary" onClick={props.properties.onScale}>Scale {props.instanceCount}</button>
+        <button className="primary" onClick={props.properties.onScale}>Scale</button>
       </div>
       <div className="scale-hints">
         <p>Choose the number of instances you want to scale in your cluster and click "Scale".
