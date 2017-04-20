@@ -5,9 +5,10 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package.json /usr/src/app/
+ADD package.json yarn.lock /usr/src/app/
 
-RUN npm install
+RUN npm install -g yarn
+RUN yarn install
 
 # Bundle app source
 COPY . /usr/src/app

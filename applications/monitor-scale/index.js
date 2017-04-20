@@ -81,15 +81,22 @@ app.post('/loadtest/consecutive', function (req, res) {
   
   var count = req.body.count;
   var url = "http://puzzle:3000/puzzle/v1/crossword";
+  var callArray = [];
+
   for (var i = 0; i < req.body.count; i++) {
-    request(url, function(error, response, html) {
-      if (response && response.hasOwnProperty("statusCode")) {
-        console.log(response.statusCode);
-      } else {
-        console.log("Error:" + error);
-      }
+    
+    callArray.push(function (cb) {
+      setTimeout(function () {
+        request(url, function(error, response, html) {
+          cb(null, response && response.statusCode);
+        });
+      }, 100);
     });
   }
+  async.series(callArray, function (err, results) {
+    var finalCount = results && results.length;
+    console.log(`${finalCount} requests sent.`)
+  });
   res.send('consecutive done');
 });
 
