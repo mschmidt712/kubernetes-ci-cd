@@ -1,20 +1,27 @@
-.slider-container {
-  display: flex;
-  align-items: center;
+@import '../utils/variables';
 
-  .slider-title {
-    width: 40%;
-  }
-  .slider {
-    width: 60%;
-  }
+.slider {
+  height: 2px;
+  background-color: $brand-dark-gray;
 }
 
-.request-slider {
-  .slider-container {
-    .slider {
-      width: 90%;
-      margin: auto;
-    }
-  }
+.handle {
+  height: 12px;
+  width: 12px;
+  background-color: $true-white;
+  border: 3px solid $brand-dark-gray;
+  border-radius: 100%;
+  top: -7px;
+}
+
+.slider-count {
+  position: absolute;
+  top: 12px;
+  left: -9px;
+  font-size: 0.9rem;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

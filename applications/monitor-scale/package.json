@@ -6,10 +6,7 @@
   "scripts": {
     "start": "node ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kenzanlabs/kubernetes-ci-cd.git"
-  },
+  "repository": "git+https://github.com/kenzanlabs/kubernetes-ci-cd.git",
   "keywords": [
     "monitor",
     "cache",

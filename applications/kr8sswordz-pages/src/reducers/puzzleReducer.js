@@ -26,6 +26,11 @@ export default function puzzleReducer (state = initialState, action) {
     case types.puzzle.SUBMIT_PUZZLE_DATA_FAILURE: {
       return state;
     }
+    case types.puzzle.CLEAR_PUZZLE_DATA: {
+      return Object.assign({}, state, {
+        puzzleData: action.data
+      });
+    }
     case types.puzzle.SENDING_DATA: {
       return Object.assign({}, state, {
         sendingData: action.data
