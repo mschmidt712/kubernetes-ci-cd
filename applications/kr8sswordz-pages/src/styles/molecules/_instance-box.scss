@@ -14,19 +14,5 @@
 
   &.active {
     background-color: $kubernetes-blue;
-    animation: fadein ease-in;
-    animation-direction: alternate;
-    animation-duration: 1s;
   }
-}
-
-@keyframes fadein {
-    from {
-      background: $highlight-green;
-      opacity: 0.5;
-    }
-    to   {
-      background: $highlight-green;
-      opacity: 1;
-    }
 }
