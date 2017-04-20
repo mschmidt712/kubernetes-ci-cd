@@ -1,0 +1,20 @@
+.slider-container {
+  display: flex;
+  align-items: center;
+
+  .slider-title {
+    width: 40%;
+  }
+  .slider-box {
+    width: 100%;
+  }
+}
+
+.request-slider {
+  .slider-container {
+    .slider-box {
+      width: 90%;
+      margin: auto;
+    }
+  }
+}

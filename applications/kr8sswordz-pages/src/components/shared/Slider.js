@@ -1,24 +1,44 @@
 import React, { PropTypes } from 'react';
-import Slider from 'material-ui/Slider';
+import ReactDOM from 'react-dom';
+import ReactSlider from 'react-slider';
 
-function SliderComponent (props) {
-  return (
-    <div className="slider-container">
-      {props.title &&
-        <p className="slider-title inline bold">{props.title}</p>}
-      <div className="slider">
-        <Slider
-          min={props.properties.min}
-          max={props.properties.max}
-          step={props.properties.step}
-          defaultValue={props.properties.defaultValue}
-          onChange={props.properties.onChange}
-          sliderStyle={{'margin': 0}}
-          style={{'color': '#158d8b'}}
-          />
+class SliderComponent extends React.Component {
+  constructor (props) {
+    super(props);
+
+    this.renderSliderElement = this.renderSliderElement.bind(this);
+  }
+  componentDidMount () {
+    this.renderSliderElement();
+  }
+
+  componentDidUpdate () {
+    this.renderSliderElement();
+  }
+
+  renderSliderElement () {
+    ReactDOM.render(<ReactSlider
+      min={this.props.properties.min}
+      max={this.props.properties.max}
+      onChange={this.props.properties.onChange}
+      value={this.props.properties.value}
+    >
+      <div className="slider-count">{this.props.properties.value}</div>
+    </ReactSlider>, this.sliderRef);
+  }
+
+  render () {
+    return (
+      <div className="slider-container">
+        {this.props.title &&
+          <p className="slider-title inline bold">{this.props.title}</p>}
+        <div
+          className="slider-box"
+          ref={(sliderRef) => { this.sliderRef = sliderRef; }}
+        />
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 SliderComponent.propTypes = {
@@ -28,6 +48,7 @@ SliderComponent.propTypes = {
     max: PropTypes.number,
     step: PropTypes.number,
     defaultValue: PropTypes.number,
+    value: PropTypes.number,
     onChange: PropTypes.func
   }).isRequired
 };
