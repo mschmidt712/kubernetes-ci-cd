@@ -14,5 +14,16 @@
 
   &.active {
     background-color: $kubernetes-blue;
+    animation: fadein;
+    animation-duration: 1s;
   }
+}
+
+@keyframes fadein {
+    from {
+      background: $highlight-green;
+    }
+    to   {
+      background: $kubernetes-blue;
+    }
 }
