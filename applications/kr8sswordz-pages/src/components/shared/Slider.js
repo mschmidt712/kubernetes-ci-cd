@@ -14,6 +14,7 @@ function SliderComponent (props) {
           defaultValue={props.properties.defaultValue}
           onChange={props.properties.onChange}
           sliderStyle={{'margin': 0}}
+          style={{'color': '#158d8b'}}
           />
       </div>
     </div>

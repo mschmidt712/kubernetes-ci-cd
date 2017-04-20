@@ -2,9 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as puzzleActions from '../../actions/puzzleActions';
-import * as webSocketActions from '../../actions/webSocketActions';
 import Cell from '../shared/Cell';
-import Slider from '../shared/Slider';
 import _ from 'lodash';
 
 class PuzzleComponent extends React.Component {
@@ -22,9 +20,6 @@ class PuzzleComponent extends React.Component {
     this.onCellInput = this.onCellInput.bind(this);
     this.initializePuzzleArray = this.initializePuzzleArray.bind(this);
     this.convertPuzzleGridToPuzzleArray = this.convertPuzzleGridToPuzzleArray.bind(this);
-    this.handleSlider = this.handleSlider.bind(this);
-    this.submitConsecutiveRequests = this.submitConsecutiveRequests.bind(this);
-    this.submitConcurrentRequests = this.submitConcurrentRequests.bind(this);
     this.reloadPuzzle = this.reloadPuzzle.bind(this);
     this.clearPuzzle = this.clearPuzzle.bind(this);
     this.submitPuzzle = this.submitPuzzle.bind(this);
@@ -154,20 +149,6 @@ class PuzzleComponent extends React.Component {
     });
   }
 
-  handleSlider (e, v) {
-    this.setState({
-      sliderCount: v
-    });
-  }
-
-  submitConcurrentRequests () {
-    this.props.webSocketActions.submitConcurrentRequests(this.state.sliderCount);
-  }
-
-  submitConsecutiveRequests () {
-    this.props.webSocketActions.submitConsecutiveRequests(this.state.sliderCount);
-  }
-
   convertPuzzleGridToPuzzleArray () {
     const submission = this.props.puzzleData.map((word) => {
       const startx = word.startx;
@@ -230,27 +211,12 @@ class PuzzleComponent extends React.Component {
   }
 
   render () {
-    const sliderProperties = {
-      min: 1,
-      max: 50,
-      step: 1,
-      defaultValue: this.state.sliderCount,
-      onChange: this.handleSlider
-    };
-
     return (
       <div className="crossword-container">
         <div className="puzzle-container">
           <form onSubmit={this.submitPuzzle}>
             <div className="puzzle">
               {this.state.cells}
-            </div>
-            <div className="request-slider">
-              <Slider properties={sliderProperties}/>
-              <div className="button-row center">
-                <button className="primary compact" type="button" onClick={this.submitConcurrentRequests}><strong>Concurrent</strong> Requests {this.state.sliderCount}</button>
-                <button className="primary compact" type="button" onClick={this.submitConsecutiveRequests}><strong>Consecutive</strong> Requests {this.state.sliderCount}</button>
-              </div>
             </div>
             <div className="button-row">
               <button className="secondary" type="button" onClick={this.reloadPuzzle}>Reload</button>
@@ -282,7 +248,6 @@ class PuzzleComponent extends React.Component {
 
 PuzzleComponent.propTypes = {
   puzzleActions: PropTypes.objectOf(PropTypes.func),
-  webSocketActions: PropTypes.objectOf(PropTypes.func),
   state: PropTypes.object,
   puzzleData: PropTypes.array,
   puzzleId: PropTypes.string
@@ -297,8 +262,7 @@ function mapStateToProps (state) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    puzzleActions: bindActionCreators(puzzleActions, dispatch),
-    webSocketActions: bindActionCreators(webSocketActions, dispatch)
+    puzzleActions: bindActionCreators(puzzleActions, dispatch)
   };
 }
 
