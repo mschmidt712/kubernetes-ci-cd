@@ -4,200 +4,200 @@ parts:
     intro: In this part we will setup a local cluster with minikube, deploy a public image from dockerhub, customize that image, and then finally deploy it inside our local cluster.
     steps:
 
-      - cap: Start up the cluster with minikube
-        com: minikube start --memory 6000 --cpus 2 --kubernetes-version v1.6.0
+      - cap: Start up the Kubernetes cluster with Minikube, giving it some extra resources.
+        com: minikube start --memory 8000 --cpus 2 --kubernetes-version v1.6.0
 
-      - cap: Enable addons
+      - cap: Enable the Minikube add-ons Heapster and Ingress.
         com: minikube addons enable heapster; minikube addons enable ingress
 
-      - cap: Wait 20 seconds and view minikube dashboard
+      - cap: Wait 20 seconds, and then view the Minikube Dashboard, a web UI for managing deployments.
         com: sleep 20; minikube service kubernetes-dashboard --namespace kube-system
 
-      - cap: Deploy the public nginx image from DockerHub
+      - cap: Deploy the public nginx image from DockerHub into a pod. Nginx is an open source web server that will automatically download from Docker Hub if it’s not available locally.
         com: kubectl run nginx --image nginx --port 80
 
-      - cap: Create a service for deployment
+      - cap: Create a service for deployment. This will expose the nginx pod so you can access it with a web browser.
         com: kubectl expose deployment nginx --type NodePort --port 80
 
-      - cap: Launch browser to test service
+      - cap: Launch a web browser to test the service. The nginx welcome page displays, which means the service is up and running.
         com: minikube service nginx
 
-      - cap: Install registry
+      - cap: Set up the cluster registry by applying a .yml manifest file.
         com: kubectl apply -f manifests/registry.yml
 
-      - cap: Wait for registry to deploy
+      - cap: Wait for the registry to finish deploying. Note that this may take several minutes.
         com: kubectl rollout status deployments/registry
 
-      - cap: View registry UI
+      - cap: View the registry user interface in a web browser.
         com: minikube service registry-ui
 
-      - cap: Edit the contents of applications/hello-kenzan/index.html. This will open the file with the nano editor. When finished press ctrl + x to exit and confirm save.
+      - cap: Let’s make a change to an HTML file in the cloned project. Running the command below will open /applications/hello-kenzan/index.html in the nano text editor. Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. When you’re done, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
         com: nano applications/hello-kenzan/index.html
 
-      - cap: We will now build the image with a special name that is pointing at our cluster registry.
+      - cap: Now let’s build an image, giving it a special name that points to our local cluster registry.
         com: docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan
 
-      - cap: Before we can push our image we need to set up a temporary proxy. This is a container that listens on 127.0.0.1:30400 and forwads to our cluster. By default the docker client can only push to non https via localhost.
+      - cap: We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster.
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
-      - cap: We can now push our image.
+      - cap: With our proxy container up and running, we can now push our image to the local repository.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
 
-      - cap: Stop the registry proxy.
+      - cap: The proxy’s work is done, so you can go ahead and stop it.
         com: docker stop socat-registry;
 
-      - cap: Now that our image is on the cluster we can deploy the manifests
+      - cap: With the image in our cluster registry, the last thing to do is apply the manifest to create and deploy the hello-kenzan pod based on the image.
         com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml
 
-      - cap: View the app
+      - cap: Launch a web browser and view the service.
         com: minikube service hello-kenzan
 
   - name: Part 2
-    intro: In this part we will Setup Jenkins, and setup an automated jon to build, push and deploy our custom appliction.
+    intro: In this part we will Setup Jenkins, and setup an automated pipeline to build, push and deploy our custom appliction.
     steps:
 
-      - cap: Install Jenkins
+      - cap: Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
         com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
 
-      - cap: Open the Jenkins service running in our cluster.  You will retrieve the admin password in the next step.
+      - cap: Open the Jenkins UI in a web browser.
         com: minikube service jenkins
 
-      - cap: Get Jenkins admin password with the following command.
+      - cap: Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT.
         com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
 
-      - cap: Enter the password above into the Jenkins page and choose to install the suggested plugins.
-        com: echo 'Enter the password above into the Jenkins page and choose to install the suggested plugins.' 
+      - cap: Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install suggested plugins and wait for the process to complete.
+        com: echo '' 
 
-      - cap: Create an admin user when prompted in Jenkins (or click the skip link in the lower right).
-        com: echo 'Create an admin user when prompted in Jenkins (or click the skip link in the lower right).'
+      - cap: Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins.
+        com: echo ''
 
-      - cap: Click "New Item" and create an item with a name like "Hello-Kenzan Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "Hello-Kenzan Pipeline", choosing the type "Pipeline". Click OK.'
+      - cap: We now want to create a new pipeline for use with our Hello-Kenzan app. On the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
+        com: echo ''
 
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
+      - cap: Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM". 
+        com: echo ''
 
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
+      - cap: Change the SCM to Git. 
+        com: echo ''
 
-      - cap: Fork the kenzanlabs repository in github and set the "Repository URL" to your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
-        com: echo 'Fork the kenzanlabs repository in github and set the "Repository URL" to your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.'
+      - cap: Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline. 
+        com: echo ''
 
-      - cap: View updated application
+      - cap: Now view the Hello-Kenzan application.
         com: minikube service hello-kenzan
 
-      - cap: Push a change to your fork. Run job again. View changes
+      - cap: Push a change to your fork. Run job again. View the changes.
         com: minikube service hello-kenzan
   
   - name: Part 3
     intro: This part will have us setup the various applications that will present the crossword puzzle.  We will run a sample etcd cluster as a cache, a pages application containing the front-end, a crossword server using mongodb, and a monitoring and scaling server application. 
     steps:
 
-      - cap: Bootstrap etcd operator on the cluster
+      - cap: Start the etcd operator and service on the cluster. You may notice errors showing up as it is waiting to start up the cluster. This is normal until it starts.
         com: scripts/etcd.sh
 
-      - cap: Run job to create etcd directory
+      - cap: Now that we have an etcd service, we need an etcd client. The following command will set up a directory within etcd for storing key-value pairs, and then run the etcd client.
         com: kubectl create -f manifests/etcd-job.yml
 
-      - cap: Check job status
+      - cap: Check the status of the job in step 2 to make sure it deployed.
         com: kubectl describe jobs/etcd-job
       
-      - cap: The crossword application is a multi-tier application and its services depend on each other.  For our first step we will create the 3 services ahead of time so that the deployments are already aware of them later.
+      - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
         com: kubectl apply -f manifests/all-services.yml
       
-      - cap: Now we're going to walk through an initial build of the monitoring and scaling service for our crosswords application.
+      - cap: Now we're going to walk through an initial build of the monitor-scale service.
         com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale
 
-      - cap: Setup the proxy in order to push the monitoring docker image to our cluster's registry
+      - cap: Set up a proxy so we can push the monitor-scale Docker image we just built to our cluster's registry.
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
-      - cap: Push the image
+      - cap: Push the monitor-scale image to the registry.
         com: docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD`
 
-      - cap: Stop the registry proxy
+      - cap: The proxy’s work is done, so go ahead and stop it.
         com: docker stop socat-registry
       
-      - cap: Verify that the image is in our local registry using the registry-ui
+      - cap: Open the registry UI and verify that the monitor-scale image is in our local registry.
         com: minikube service registry-ui
 
-      - cap: Create the deployment and service for the monitoring and scaling server and wait for it to be deployed
+      - cap: Create the monitor-scale deployment and service. 
         com: sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -
       
-      - cap: Wait for the deployment to run
+      - cap: Wait for the monitor-scale deployment to finish.
         com: kubectl rollout status deployment/monitor-scale
 
-      - cap: See the montior-scale-* pod running using kubectl.
+      - cap: View pods to see the monitor-scale pod running.
         com: kubectl get pods
 
-      - cap: See the montior-scale-* service is setup using kubectl.
+      - cap: View services to see the monitor-scale service. 
         com: kubectl get services
 
-      - cap: See the montior-scale-* ingress is configured using kubectl.
+      - cap: View ingress rules to see the monitor-scale ingress rule.
         com: kubectl get ingress
 
-      - cap: See the monitor-scale deployment is setup using kubectl
+      - cap: View deployments to see the monitor-scale deployment.
         com: kubectl get deployments
 
-      - cap: Now we will bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry. This script runs the same steps as before for a different service application.
+      - cap: We will run a script to bootstrap the puzzle and mongo services, creating Docker images and storing them in the local registry. The puzzle.sh script runs through the same build, proxy, push, and deploy steps we just ran through manually for both services.
         com: scripts/puzzle.sh
 
-      - cap: Check to see if the puzzle service has been deployed
+      - cap: Check to see if the puzzle and mongo services have been deployed.
         com: kubectl rollout status deployment/puzzle
 
-      - cap: Bootstrap the frontend web application.  This script follows the same steps as before but 
+      - cap: Bootstrap the kr8sswordz frontend web application. This script follows the same build proxy, push, and deploy steps that the other services followed.
         com: scripts/kr8sswordz-pages.sh
 
-      - cap: Check to see if the front end has been deployed
+      - cap: Check to see if the frontend has been deployed.
         com: kubectl rollout status deployment/kr8sswordz
 
-      - cap: See all the pods running using kubectl.
+      - cap: Check out all the pods that are running.
         com: kubectl get pods
 
-      - cap: Start the web application in your default browser
+      - cap: Start the web application in your default browser. You may have to refresh your browser so that the puzzle appears properly.
         com: minikube service kr8sswordz
 
   - name: Part 4
-    intro: In this part we will return to our Jenkins instance and setup jobs for each component of the kr8sswordz application.
+    intro: In this part we will return to our Jenkins instance and setup a pipeline for the kr8sswordz application.
     steps:
 
-      - cap: Open the Jenkins service running in our cluster.
+      - cap: Enter the following command to open the Jenkins UI in a web browser. Log in to Jenkins using the username and password you previously set up.  
         com: minikube service jenkins
 
-      - cap: Login as admin, if necessary.
-        com: echo 'Login as admin, if necessary.' 
+      - cap: We’ll want to create a new pipeline for the puzzle service that we previously deployed. On the left in Jenkins, click New Item.
+        com: echo ''
+    
+      - cap: Enter the item name as "Puzzle-Service", click Pipeline, and click OK.
+        com: echo '' 
 
-      - cap: Click "New Item" and create an item with a name like "Puzzle Service Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "Puzzle Service Pipeline", choosing the type "Pipeline". Click OK.'
+      - cap: Under the Build Triggers section, select Poll SCM. For the Schedule, enter the the string H/5 * * * * which will poll the Git repo every 5 minutes for changes. 
+        com: echo ''
 
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
+      - cap: In the Pipeline section, change the Definition to "Pipeline script from SCM". Set the SCM property to GIT. Set the Repository URL to your forked repo (created in Part 2), such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd.git. Set the Script Path to applications/puzzle/Jenkinsfile 
+        com: echo ''
 
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
+      - cap: When you are finished, click Save. On the left, click Build Now to run the new pipeline. You should see it successfully run through the build, push, and deploy steps in a few minutes.
+        com: echo ''
 
-      - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
-        com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
-
-      - cap: Set the "Script Path" to applications/puzzle/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/puzzle/Jenkinsfile'
-
-      - cap: Save and run the job using the "Build Now" button.
-        com: echo 'Save and run the job using the "Build Now" button.'
-
-      - cap: View updated application
+      - cap: View the Kr8sswordz application.
         com: minikube service kr8sswordz
+        
+      - cap: Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the green hit does not register on the puzzle services.
+        com: echo ''
 
-      - cap: Edit the contents of 'applications/puzzle/common/crossword.js' by uncommenting line 43. This will open the file with the nano editor. When finished press ctrl + x to exit and confirm save.
-        com: nano applications/puzzle/common/crossword.js
+      - cap: Edit applications/puzzle/common/models/crossword.js in the nano editor. You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes. Press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
+        com: nano applications/puzzle/common/models/crossword.js
 
-      - cap: Commit and push the change to your fork and run the Puzzle Service Pipeline in Jenkins.
-        com: echo 'Commit and push the change to your fork and run the Puzzle Service Pipeline in Jenkins.'
+      - cap: Commit and push the change to your forked Git repo. 
+        com: echo ''
       
-      - cap: Wait for the new puzzle pod enter the 'Running' state.
-        com: kubectl get pods
-
-      - cap: Rerun the application and see that a puzzle pod in the middle of the page turns green when clicking the Submit button.
-        com: minikube service kr8sswordz
+      - cap: In Jenkins, open up the Puzzle-Service pipeline and wait until it triggers a build. It should trigger every 5 minutes.
+        com: echo ''
+ 
+      - cap: After it triggers, observe how the puzzle services disappear in the Kr8sswordz Puzzle app, and how new ones take their place.
+        com: echo ''   
+        
+      - cap: Try clicking Submit to test that hits now register as light green.
+        com: echo ''  
 
   # - name: Part 5
   #   intro: Spinnaker
