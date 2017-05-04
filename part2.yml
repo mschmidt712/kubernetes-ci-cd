@@ -1,38 +1,38 @@
 parts:
 
   - name: Part 2
-    intro: In this part we will Setup Jenkins, and setup an automated job to build, push and deploy our custom appliction.
+    intro: In this part we will Setup Jenkins, and setup an automated pipeline to build, push and deploy our custom appliction.
     steps:
 
-      - cap: Install Jenkins
+      - cap: Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
         com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
 
-      - cap: Open the Jenkins service running in our cluster.  You will retrieve the admin password in the next step.
+      - cap: Open the Jenkins UI in a web browser.
         com: minikube service jenkins
 
-      - cap: Get Jenkins admin password with the following command.
+      - cap: Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT.
         com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
 
-      - cap: Enter the password above into the Jenkins page and choose to install the suggested plugins.
-        com: echo 'Enter the password above into the Jenkins page and choose to install the suggested plugins.' 
+      - cap: Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install suggested plugins and wait for the process to complete.
+        com: echo '' 
 
-      - cap: Create an admin user when prompted in Jenkins (or click the skip link in the lower right).
-        com: echo 'Create an admin user when prompted in Jenkins (or click the skip link in the lower right).'
+      - cap: Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins.
+        com: echo ''
 
-      - cap: Click "New Item" and create an item with a name like "Hello-Kenzan Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "Hello-Kenzan Pipeline", choosing the type "Pipeline". Click OK.'
+      - cap: We now want to create a new pipeline for use with our Hello-Kenzan app. On the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
+        com: echo ''
 
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
+      - cap: Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM". 
+        com: echo ''
 
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
+      - cap: Change the SCM to Git. 
+        com: echo ''
 
-      - cap: Fork the kenzanlabs repository in github and set the "Repository URL" to your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
-        com: echo 'Fork the kenzanlabs repository in github and set the "Repository URL" to your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.'
+      - cap: Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline. 
+        com: echo ''
 
-      - cap: View updated application
+      - cap: Now view the Hello-Kenzan application.
         com: minikube service hello-kenzan
 
-      - cap: Push a change to your fork. Run job again. View changes
+      - cap: Push a change to your fork. Run job again. View the changes.
         com: minikube service hello-kenzan

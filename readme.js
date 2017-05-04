@@ -3,13 +3,20 @@
 YAML = require('yamljs');
 var fs = require('fs');
 
-var markdown = "# Kubernetes ci/cd whitepaper for Linux.com\n\n This readme is dynamically generated when `node readme.js`";
-markdown = markdown + "\n\n## Interactive tutorial version"
-markdown = markdown + "\n* clone this repo\n"
-markdown = markdown + "\n* Ensure you are starting with a clean slate: `minikube delete; minikube rm -rf ~/.minikube; rm -rf ~/.kube`\n"
-markdown = markdown + "\n* run `npm install`\n"
-markdown = markdown + "\nBegin the desired section `npm run part1` `npm run part2` `npm run part3`"
-markdown = markdown + "\n\n## Manual tutorial version\n\n"
+var markdown = "# Linux.com Kubernetes CI/CD Blog Series by Kenzan\n\n To generate this readme: `node readme.js`";
+markdown = markdown + "\n\n## Interactive Tutorial Version"
+markdown = markdown + "\nTo complete the tutorial using the interactive script:\n"
+markdown = markdown + "\n* Clone this repository.\n"
+markdown = markdown + "\n* To ensure you are starting with a clean slate: `minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`\n"
+markdown = markdown + "\n* To run: `npm install`\n"
+markdown = markdown + "\nBegin the desired section:\n"
+markdown = markdown + "\n* `npm run part1`\n"
+markdown = markdown + "\n* `npm run part2`\n"
+markdown = markdown + "\n* `npm run part3`\n"
+markdown = markdown + "\n* `npm run part4`\n"
+markdown = markdown + "\n\n## Manual Tutorial Version\n\n"
+markdown = markdown + "\nTo complete the tutorial manually, follow the steps below.\n"
+
 
 YAML.load('steps.yml', function(docs)
 {
@@ -26,7 +33,7 @@ YAML.load('steps.yml', function(docs)
         // console.log(item.steps);
         stepList.forEach(function (step) {
             stepNum++;
-            markdown = markdown + "\n\n### Step" + stepNum
+            markdown = markdown + "\n\n#### Step" + stepNum
             markdown = markdown + "\n\n" + step.cap
             markdown = markdown + "\n\n`" + step.com + "`"
         })

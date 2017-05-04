@@ -1,15 +1,12 @@
 {
-  "name": "monitor",
+  "name": "monitor-scale",
   "version": "1.0.0",
   "description": "A service for updating the cache and emitting websocket events back to the frontend",
   "main": "index.js",
   "scripts": {
-    "debug": "node --inspect index.js"
+    "start": "node ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kenzanlabs/kubernetes-ci-cd.git"
-  },
+  "repository": "git+https://github.com/kenzanlabs/kubernetes-ci-cd.git",
   "keywords": [
     "monitor",
     "cache",

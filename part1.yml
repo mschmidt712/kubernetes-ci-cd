@@ -4,50 +4,50 @@ parts:
     intro: In this part we will setup a local cluster with minikube, deploy a public image from dockerhub, customize that image, and then finally deploy it inside our local cluster.
     steps:
 
-      - cap: Start up the cluster with minikibe
+      - cap: Start up the Kubernetes cluster with Minikube, giving it some extra resources.
         com: minikube start --memory 8000 --cpus 2 --kubernetes-version v1.6.0
 
-      - cap: Enable addons
+      - cap: Enable the Minikube add-ons Heapster and Ingress.
         com: minikube addons enable heapster; minikube addons enable ingress
 
-      - cap: Wait 20 seconds and view minikube dashboard
+      - cap: Wait 20 seconds, and then view the Minikube Dashboard, a web UI for managing deployments.
         com: sleep 20; minikube service kubernetes-dashboard --namespace kube-system
 
-      - cap: Deploy the public nginx image from DockerHub
+      - cap: Deploy the public nginx image from DockerHub into a pod. Nginx is an open source web server that will automatically download from Docker Hub if it’s not available locally.
         com: kubectl run nginx --image nginx --port 80
 
-      - cap: Create a service for deployment
+      - cap: Create a service for deployment. This will expose the nginx pod so you can access it with a web browser.
         com: kubectl expose deployment nginx --type NodePort --port 80
 
-      - cap: Launch browser to test service
+      - cap: Launch a web browser to test the service. The nginx welcome page displays, which means the service is up and running.
         com: minikube service nginx
 
-      - cap: Install registry
+      - cap: Set up the cluster registry by applying a .yml manifest file.
         com: kubectl apply -f manifests/registry.yml
 
-      - cap: Wait for registry to deploy
+      - cap: Wait for the registry to finish deploying. Note that this may take several minutes.
         com: kubectl rollout status deployments/registry
 
-      - cap: View registry UI
+      - cap: View the registry user interface in a web browser.
         com: minikube service registry-ui
 
-      - cap: Edit the contents of applications/hello-kenzan/index.html. This will open the file with the nano editor. When finished press ctrl + x to exit and confirm save.
+      - cap: Let’s make a change to an HTML file in the cloned project. Running the command below will open /applications/hello-kenzan/index.html in the nano text editor. Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. When you’re done, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
         com: nano applications/hello-kenzan/index.html
 
-      - cap: We will now build the image with a special name that is pointing at our cluster registry.
+      - cap: Now let’s build an image, giving it a special name that points to our local cluster registry.
         com: docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan
 
-      - cap: Before we can push our image we need to set up a temporary proxy. This is a container that listens on 127.0.0.1:30400 and forwads to our cluster. By default the docker client can only push to non https via localhost.
+      - cap: We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster.
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
-      - cap: We can now push our image.
+      - cap: With our proxy container up and running, we can now push our image to the local repository.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
 
-      - cap: Stop the registry proxy.
+      - cap: The proxy’s work is done, so you can go ahead and stop it.
         com: docker stop socat-registry;
 
-      - cap: Now that our image is on the cluster we can deploy the manifests
+      - cap: With the image in our cluster registry, the last thing to do is apply the manifest to create and deploy the hello-kenzan pod based on the image.
         com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml
 
-      - cap: View the app
+      - cap: Launch a web browser and view the service.
         com: minikube service hello-kenzan

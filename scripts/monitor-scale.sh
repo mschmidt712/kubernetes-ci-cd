@@ -4,7 +4,7 @@
 TAG=`git rev-parse --short HEAD` 
 
 #Build the docker image
-docker build -t 127.0.0.1:30400/monitor-scale:$TAG -f applications/monitor/Dockerfile applications/monitor
+docker build -t 127.0.0.1:30400/monitor-scale:$TAG -f applications/monitor-scale/Dockerfile applications/monitor-scale
 
 #Setup the proxy for the registry
 docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
@@ -19,4 +19,4 @@ docker push 127.0.0.1:30400/monitor-scale:$TAG
 docker stop socat-registry
 
 # Create the deployment and service for the monitor-scale node server
-sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'$TAG'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -
+sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'$TAG'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -

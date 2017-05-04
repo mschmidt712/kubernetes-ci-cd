@@ -1,71 +1,44 @@
 parts:
 
   - name: Part 4
-    intro: In this part we will return to our Jenkins instance and setup jobs for each component of the kr8sswordz application.
+    intro: In this part we will return to our Jenkins instance and setup a pipeline for the kr8sswordz application.
     steps:
 
-      - cap: Open the Jenkins service running in our cluster.
+      - cap: Enter the following command to open the Jenkins UI in a web browser. Log in to Jenkins using the username and password you previously set up.  
         com: minikube service jenkins
 
-      - cap: Login as admin, if necessary.
-        com: echo 'Login as admin, if necessary.' 
+      - cap: We’ll want to create a new pipeline for the puzzle service that we previously deployed. On the left in Jenkins, click New Item.
+        com: echo ''
+    
+      - cap: Enter the item name as "Puzzle-Service", click Pipeline, and click OK.
+        com: echo '' 
 
-      - cap: Click "New Item" and create an item with a name like "Monitor Scale Service Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "Monitor Scale Service Pipeline", choosing the type "Pipeline". Click OK.'
+      - cap: Under the Build Triggers section, select Poll SCM. For the Schedule, enter the the string H/5 * * * * which will poll the Git repo every 5 minutes for changes. 
+        com: echo ''
 
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
+      - cap: In the Pipeline section, change the Definition to "Pipeline script from SCM". Set the SCM property to GIT. Set the Repository URL to your forked repo (created in Part 2), such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd.git. Set the Script Path to applications/puzzle/Jenkinsfile 
+        com: echo ''
 
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
+      - cap: When you are finished, click Save. On the left, click Build Now to run the new pipeline. You should see it successfully run through the build, push, and deploy steps in a few minutes.
+        com: echo ''
 
-      - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
-        com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
-
-      - cap: Set the "Script Path" to applications/monitor/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/monitor/Jenkinsfile'
-
-      - cap: Save and run the job using the "Build Now" button.
-        com: echo 'Save and run the job using the "Build Now" button.'
-
-      - cap: Click "New Item" and create an item with a name like "Puzzle Service Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "Puzzle Service Pipeline", choosing the type "Pipeline". Click OK.'
-
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
-
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
-
-      - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
-        com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
-
-      - cap: Set the "Script Path" to applications/crossword/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/crossword/Jenkinsfile'
-
-      - cap: Save and run the job using the "Build Now" button.
-        com: echo 'Save and run the job using the "Build Now" button.'
-
-      - cap: Click "New Item" and create an item with a name like "kr8sswordz FrontEnd Pipeline", choosing the type "Pipeline". Click OK.
-        com: echo 'Click "New Item" and create an item with a name like "kr8sswordz FrontEnd Pipeline", choosing the type "Pipeline". Click OK.'
-
-      - cap: From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM". 
-        com: echo 'From pipeline configuration, scroll down to Pipeline and change the Definition selection from "Pipeline script" to "Pipeline script from SCM".'
-
-      - cap: Set the SCM property to GIT. 
-        com: echo 'Set the SCM property to GIT.'
-
-      - cap: Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.
-        com: echo 'Set the "Repository URL" to your fork (created in Part 2), such as https://github.com/kenzanlabs/kubernetes-ci-cd.git.'
-
-      - cap: Set the "Script Path" to applications/kr8sswordz-pages/Jenkinsfile
-        com: echo 'Set the "Script Path" to applications/kr8sswordz-pages/Jenkinsfile'
-
-      - cap: Save and run the job using the "Build Now" button.
-        com: echo 'Save and run the job using the "Build Now" button.'
-
-      - cap: View updated application
+      - cap: View the Kr8sswordz application.
         com: minikube service kr8sswordz
+        
+      - cap: Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the green hit does not register on the puzzle services.
+        com: echo ''
 
-      - cap: Push a change to your fork TODO. Run job again. View changes
-        com: minikube service kr8sswordz
+      - cap: Edit applications/puzzle/common/models/crossword.js in the nano editor. You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes. Press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
+        com: nano applications/puzzle/common/models/crossword.js
+
+      - cap: Commit and push the change to your forked Git repo. 
+        com: echo ''
+      
+      - cap: In Jenkins, open up the Puzzle-Service pipeline and wait until it triggers a build. It should trigger every 5 minutes.
+        com: echo ''
+ 
+      - cap: After it triggers, observe how the puzzle services disappear in the Kr8sswordz Puzzle app, and how new ones take their place.
+        com: echo ''   
+        
+      - cap: Try clicking Submit to test that hits now register as light green.
+        com: echo ''  

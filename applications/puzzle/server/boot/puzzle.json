@@ -70,5 +70,14 @@
     "wordOrientation": "across",
     "hint": "Shorthand for Kubernetes",
     "enteredValue": "***"
+  },
+  {
+    "word": "cncf",
+    "wordNbr": 8,
+    "startx" : 8,
+    "starty" : 9,
+    "wordOrientation": "down",
+    "hint": "Organization that manages Kubernetes certifications",
+    "enteredValue": "****"
   }
 ]

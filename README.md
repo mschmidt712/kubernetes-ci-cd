@@ -1,18 +1,31 @@
-# Kubernetes ci/cd whitepaper for Linux.com
+# Linux.com Kubernetes CI/CD Blog Series by Kenzan
 
- This readme is dynamically generated when `node readme.js`
+ To generate this readme: `node readme.js`
 
-## Interactive tutorial version
-* clone this repo
+## Interactive Tutorial Version
+To complete the tutorial using the interactive script:
 
-* Ensure you are starting with a clean slate: `minikube delete; minikube rm -rf ~/.minikube; rm -rf ~/.kube`
+* Clone this repository.
 
-* run `npm install`
+* To ensure you are starting with a clean slate: `minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
 
-Begin the desired section `npm run part1` `npm run part2` `npm run part3`
+* To run: `npm install`
 
-## Manual tutorial version
+Begin the desired section:
 
+* `npm run part1`
+
+* `npm run part2`
+
+* `npm run part3`
+
+* `npm run part4`
+
+
+## Manual Tutorial Version
+
+
+To complete the tutorial manually, follow the steps below.
 ## Part 1
 
 
@@ -20,99 +33,99 @@ Begin the desired section `npm run part1` `npm run part2` `npm run part3`
 
 
 
-### Step1
+#### Step1
 
-Start up the cluster with minikibe
+Start up the Kubernetes cluster with Minikube, giving it some extra resources.
 
 `minikube start --memory 8000 --cpus 2 --kubernetes-version v1.6.0`
 
-### Step2
+#### Step2
 
-Enable addons
+Enable the Minikube add-ons Heapster and Ingress.
 
 `minikube addons enable heapster; minikube addons enable ingress`
 
-### Step3
+#### Step3
 
-Wait 20 seconds and view minikube dashboard
+Wait 20 seconds, and then view the Minikube Dashboard, a web UI for managing deployments.
 
 `sleep 20; minikube service kubernetes-dashboard --namespace kube-system`
 
-### Step4
+#### Step4
 
-Deploy the public nginx image from DockerHub
+Deploy the public nginx image from DockerHub into a pod. Nginx is an open source web server that will automatically download from Docker Hub if it’s not available locally.
 
 `kubectl run nginx --image nginx --port 80`
 
-### Step5
+#### Step5
 
-Create a service for deployment
+Create a service for deployment. This will expose the nginx pod so you can access it with a web browser.
 
 `kubectl expose deployment nginx --type NodePort --port 80`
 
-### Step6
+#### Step6
 
-Launch browser to test service
+Launch a web browser to test the service. The nginx welcome page displays, which means the service is up and running.
 
 `minikube service nginx`
 
-### Step7
+#### Step7
 
-Install registry
+Set up the cluster registry by applying a .yml manifest file.
 
 `kubectl apply -f manifests/registry.yml`
 
-### Step8
+#### Step8
 
-Wait for registry to deploy
+Wait for the registry to finish deploying. Note that this may take several minutes.
 
 `kubectl rollout status deployments/registry`
 
-### Step9
+#### Step9
 
-View registry UI
+View the registry user interface in a web browser.
 
 `minikube service registry-ui`
 
-### Step10
+#### Step10
 
-Edit the contents of applications/hello-kenzan/index.html. This will open the file with the nano editor. When finished press ctrl + x to exit and confirm save.
+Let’s make a change to an HTML file in the cloned project. Running the command below will open /applications/hello-kenzan/index.html in the nano text editor. Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. When you’re done, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
 
 `nano applications/hello-kenzan/index.html`
 
-### Step11
+#### Step11
 
-We will now build the image with a special name that is pointing at our cluster registry.
+Now let’s build an image, giving it a special name that points to our local cluster registry.
 
 `docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan`
 
-### Step12
+#### Step12
 
-Before we can push our image we need to set up a temporary proxy. This is a container that listens on 127.0.0.1:30400 and forwads to our cluster. By default the docker client can only push to non https via localhost.
+We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster.
 
 `docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"`
 
-### Step13
+#### Step13
 
-We can now push our image.
+With our proxy container up and running, we can now push our image to the local repository.
 
 `docker push 127.0.0.1:30400/hello-kenzan:latest`
 
-### Step14
+#### Step14
 
-Stop the registry proxy.
+The proxy’s work is done, so you can go ahead and stop it.
 
 `docker stop socat-registry;`
 
-### Step15
+#### Step15
 
-Now that our image is on the cluster we can deploy the manifests
+With the image in our cluster registry, the last thing to do is apply the manifest to create and deploy the hello-kenzan pod based on the image.
 
 `kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml`
 
-### Step16
+#### Step16
 
-View the app
+Launch a web browser and view the service.
 
 `minikube service hello-kenzan`## Part 2
 
@@ -121,33 +134,69 @@ View the app
 
 
 
-### Step1
+#### Step1
 
-Install Jenkins
+Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
 
 `kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins`
 
-### Step2
+#### Step2
 
-Open the Jenkins service running in our cluster.  You will retrieve the admin password in the next step.
+Open the Jenkins UI in a web browser.
 
 `minikube service jenkins`
 
-### Step3
+#### Step3
 
-Get Jenkins admin password. Enter the admin password from above and choose "suggested plugins". Create a new job with type pipeline. Scroll down and under "pipeline script" choose "Pipeline script from SCM". Under SCM choose GIT. Fork repo and put "repository url" as your fork, such as https://github.com/kenzanlabs/kubernetes-ci-cd.git. Save and run the job.
+Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT.
 
 `kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword`
 
-### Step4
+#### Step4
 
-View updated application
+Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install suggested plugins and wait for the process to complete.
+
+`echo ''`
+
+#### Step5
+
+Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins.
+
+`echo ''`
+
+#### Step6
+
+We now want to create a new pipeline for use with our Hello-Kenzan app. On the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
+
+`echo ''`
+
+#### Step7
+
+Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM".
+
+`echo ''`
+
+#### Step8
+
+Change the SCM to Git.
+
+`echo ''`
+
+#### Step9
+
+Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline.
+
+`echo ''`
+
+#### Step10
+
+Now view the Hello-Kenzan application.
 
 `minikube service hello-kenzan`
 
-### Step5
+#### Step11
 
-Push a change to your fork. Run job again. View changes
+Push a change to your fork. Run job again. View the changes.
 
 `minikube service hello-kenzan`## Part 3
 
@@ -156,128 +205,211 @@ Push a change to your fork. Run job again. View changes
 
 
 
-### Step1
+#### Step1
 
-Bootstrap etcd operator on the cluster
+Start the etcd operator and service on the cluster. You may notice errors showing up as it is waiting to start up the cluster. This is normal until it starts.
 
 `scripts/etcd.sh`
 
-### Step2
+#### Step2
 
-Run job to create etcd directory
+Now that we have an etcd service, we need an etcd client. The following command will set up a directory within etcd for storing key-value pairs, and then run the etcd client.
 
 `kubectl create -f manifests/etcd-job.yml`
 
-### Step3
+#### Step3
 
-Check job status
+Check the status of the job in step 2 to make sure it deployed.
 
 `kubectl describe jobs/etcd-job`
 
-### Step4
+#### Step4
 
-The crossword application is a multi-tier application and its services depend on each other.  For our first step we will create the 3 services ahead of time so that the deployments are already aware of them later.
+The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
 
 `kubectl apply -f manifests/all-services.yml`
 
-### Step5
+#### Step5
 
-Now we're going to walk through an initial build of the monitoring and scaling service for our crosswords application.
+Now we're going to walk through an initial build of the monitor-scale service.
 
-`docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor/Dockerfile applications/monitor`
+`docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale`
 
-### Step6
+#### Step6
 
-Setup the proxy in order to push the monitoring docker image to our cluster's registry
+Set up a proxy so we can push the monitor-scale Docker image we just built to our cluster's registry.
 
 `docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"`
 
-### Step7
+#### Step7
 
-Push the image
+Push the monitor-scale image to the registry.
 
 `docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD``
 
-### Step8
+#### Step8
 
-Stop the registry proxy
+The proxy’s work is done, so go ahead and stop it.
 
 `docker stop socat-registry`
 
-### Step9
+#### Step9
 
-Verify that the image is in our local registry using the registry-ui
+Open the registry UI and verify that the monitor-scale image is in our local registry.
 
 `minikube service registry-ui`
 
-### Step10
+#### Step10
 
-Create the deployment and service for the monitoring and scaling server and wait for it to be deployed
+Create the monitor-scale deployment and service.
 
-`sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -`
+`sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -`
 
-### Step11
+#### Step11
 
-Wait for the deployment to run
+Wait for the monitor-scale deployment to finish.
 
 `kubectl rollout status deployment/monitor-scale`
 
-### Step12
+#### Step12
 
-See the montior-scale-* pod running using kubectl.
+View pods to see the monitor-scale pod running.
 
 `kubectl get pods`
 
-### Step13
+#### Step13
 
-See the montior-scale-* service is setup using kubectl.
+View services to see the monitor-scale service.
 
 `kubectl get services`
 
-### Step14
+#### Step14
 
-See the montior-scale-* ingress is configured using kubectl.
+View ingress rules to see the monitor-scale ingress rule.
 
 `kubectl get ingress`
 
-### Step15
+#### Step15
 
-See the monitor-scale deployment is setup using kubectl
+View deployments to see the monitor-scale deployment.
 
 `kubectl get deployments`
 
-### Step16
+#### Step16
 
-Now we will bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry. This script runs the same steps as before for a different service application.
+We will run a script to bootstrap the puzzle and mongo services, creating Docker images and storing them in the local registry. The puzzle.sh script runs through the same build, proxy, push, and deploy steps we just ran through manually for both services.
 
-`scripts/server.sh`
+`scripts/puzzle.sh`
 
-### Step17
+#### Step17
 
-Check to see if services has been deployed
+Check to see if the puzzle and mongo services have been deployed.
 
-`kubectl rollout status deployment/services`
+`kubectl rollout status deployment/puzzle`
 
-### Step18
+#### Step18
 
-Bootstrap the frontend web application.  This script follows the same steps as before but
+Bootstrap the kr8sswordz frontend web application. This script follows the same build proxy, push, and deploy steps that the other services followed.
 
-`scripts/pages.sh`
+`scripts/kr8sswordz-pages.sh`
 
-### Step19
+#### Step19
 
-Check to see if the front end has been deployed
+Check to see if the frontend has been deployed.
 
 `kubectl rollout status deployment/kr8sswordz`
 
-### Step20
+#### Step20
 
-See all the pods running using kubectl.
+Check out all the pods that are running.
 
 `kubectl get pods`
 
-### Step21
+#### Step21
 
-Start the web application in your default browser
+Start the web application in your default browser. You may have to refresh your browser so that the puzzle appears properly.
+
+`minikube service kr8sswordz`## Part 4
+
+
+### Part 4
+
+
+
+#### Step1
+
+Enter the following command to open the Jenkins UI in a web browser. Log in to Jenkins using the username and password you previously set up.
+
+`minikube service jenkins`
+
+#### Step2
+
+We’ll want to create a new pipeline for the puzzle service that we previously deployed. On the left in Jenkins, click New Item.
+
+`echo ''`
+
+#### Step3
+
+Enter the item name as "Puzzle-Service", click Pipeline, and click OK.
+
+`echo ''`
+
+#### Step4
+
+Under the Build Triggers section, select Poll SCM. For the Schedule, enter the the string H/5 * * * * which will poll the Git repo every 5 minutes for changes.
+
+`echo ''`
+
+#### Step5
+
+In the Pipeline section, change the Definition to "Pipeline script from SCM". Set the SCM property to GIT. Set the Repository URL to your forked repo (created in Part 2), such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd.git. Set the Script Path to applications/puzzle/Jenkinsfile
+
+`echo ''`
+
+#### Step6
+
+When you are finished, click Save. On the left, click Build Now to run the new pipeline. You should see it successfully run through the build, push, and deploy steps in a few minutes.
+
+`echo ''`
+
+#### Step7
+
+View the Kr8sswordz application.
 
 `minikube service kr8sswordz`
+
+#### Step8
+
+Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the green hit does not register on the puzzle services.
+
+`echo ''`
+
+#### Step9
+
+Edit applications/puzzle/common/models/crossword.js in the nano editor. You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes. Press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
+
+`nano applications/puzzle/common/models/crossword.js`
+
+#### Step10
+
+Commit and push the change to your forked Git repo.
+
+`echo ''`
+
+#### Step11
+
+In Jenkins, open up the Puzzle-Service pipeline and wait until it triggers a build. It should trigger every 5 minutes.
+
+`echo ''`
+
+#### Step12
+
+After it triggers, observe how the puzzle services disappear in the Kr8sswordz Puzzle app, and how new ones take their place.
+
+`echo ''`
+
+#### Step13
+
+Try clicking Submit to test that hits now register as light green.
+
+`echo ''`

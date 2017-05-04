@@ -13,9 +13,6 @@ app.use(express.static('public'))
 
 var bodyParser = require("body-parser");
 
-//var servicesHost = process.env.SERVICES_SERVICE_HOST;
-//var servicesPort = process.env.SERVICES_SERVICE_PORT;
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -33,12 +30,12 @@ watcher.on("change", function(val) {
 app.post('/scale', function (req, res) {
   var scale = req.body.count;
   console.log('Count requested is: %s', scale);
-  var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/services/scale";
+  var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
   var putBody = {
     kind:"Scale",
     apiVersion:"extensions/v1beta1",
     metadata: { 
-      name:"services",
+      name:"puzzle",
       namespace:"default"
     },
     spec: {
@@ -61,7 +58,7 @@ app.post('/loadtest/concurrent', function (req, res) {
 
   var count = req.body.count;
   console.log('Count requested is: %s', count);
-  var url = "http://services:3000/puzzle/v1/crossword";
+  var url = "http://puzzle:3000/puzzle/v1/crossword";
   var myUrls = [];
   for (var i = 0; i < req.body.count; i++) {
     myUrls.push(url);
@@ -83,16 +80,23 @@ app.post('/loadtest/concurrent', function (req, res) {
 app.post('/loadtest/consecutive', function (req, res) {
   
   var count = req.body.count;
-  var url = "http://services:3000/puzzle/v1/crossword";
+  var url = "http://puzzle:3000/puzzle/v1/crossword";
+  var callArray = [];
+
   for (var i = 0; i < req.body.count; i++) {
-    request(url, function(error, response, html) {
-      if (response && response.hasOwnProperty("statusCode")) {
-        console.log(response.statusCode);
-      } else {
-        console.log("Error:" + error);
-      }
+    
+    callArray.push(function (cb) {
+      setTimeout(function () {
+        request(url, function(error, response, html) {
+          cb(null, response && response.statusCode);
+        });
+      }, 100);
     });
   }
+  async.series(callArray, function (err, results) {
+    var finalCount = results && results.length;
+    console.log(`${finalCount} requests sent.`)
+  });
   res.send('consecutive done');
 });
 

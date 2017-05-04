@@ -43,7 +43,7 @@ YAML.load(ymlpath, function(docs) {
             prompts.onNext({
                 type: 'confirm',
                 name: step.com,
-                message: "\n\n\n" + item.name + " Step: " + stepIndex++ + "\n" + step.cap + "\n\n" + step.com + "\n\nPress enter to the run the above command for the step.",
+                message: "\n\n\n" + item.name + " Step: " + stepIndex++ + "\n" + step.cap + "\n\n" + step.com + "\n\nPress enter to run the above command for the step.",
                 default: true
             });
         })
