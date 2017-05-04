@@ -4,65 +4,65 @@ parts:
     intro: This part will have us setup the various applications that will present the crossword puzzle.  We will run a sample etcd cluster as a cache, a pages application containing the front-end, a crossword server using mongodb, and a monitoring and scaling server application. 
     steps:
 
-      - cap: Bootstrap etcd operator on the cluster
+      - cap: Start the etcd operator and service on the cluster. You may notice errors showing up as it is waiting to start up the cluster. This is normal until it starts.
         com: scripts/etcd.sh
 
-      - cap: Run job to create etcd directory
+      - cap: Now that we have an etcd service, we need an etcd client. The following command will set up a directory within etcd for storing key-value pairs, and then run the etcd client.
         com: kubectl create -f manifests/etcd-job.yml
 
-      - cap: Check job status
+      - cap: Check the status of the job in step 2 to make sure it deployed.
         com: kubectl describe jobs/etcd-job
       
-      - cap: The crossword application is a multi-tier application and its services depend on each other.  For our first step we will create the 3 services ahead of time so that the deployments are already aware of them later.
+      - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
         com: kubectl apply -f manifests/all-services.yml
       
-      - cap: Now we're going to walk through an initial build of the monitoring and scaling service for our crosswords application.
-        com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor/Dockerfile applications/monitor
+      - cap: Now we're going to walk through an initial build of the monitor-scale service.
+        com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale
 
-      - cap: Setup the proxy in order to push the monitoring docker image to our cluster's registry
+      - cap: Set up a proxy so we can push the monitor-scale Docker image we just built to our cluster's registry.
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"
 
-      - cap: Push the image
+      - cap: Push the monitor-scale image to the registry.
         com: docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD`
 
-      - cap: Stop the registry proxy
+      - cap: The proxy’s work is done, so go ahead and stop it.
         com: docker stop socat-registry
       
-      - cap: Verify that the image is in our local registry using the registry-ui
+      - cap: Open the registry UI and verify that the monitor-scale image is in our local registry.
         com: minikube service registry-ui
 
-      - cap: Create the deployment and service for the monitoring and scaling server and wait for it to be deployed
-        com: sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor/k8s/monitor-scale.yaml | kubectl apply -f -
+      - cap: Create the monitor-scale deployment and service. 
+        com: sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -
       
-      - cap: Wait for the deployment to run
+      - cap: Wait for the monitor-scale deployment to finish.
         com: kubectl rollout status deployment/monitor-scale
 
-      - cap: See the montior-scale-* pod running using kubectl.
+      - cap: View pods to see the monitor-scale pod running.
         com: kubectl get pods
 
-      - cap: See the montior-scale-* service is setup using kubectl.
+      - cap: View services to see the monitor-scale service. 
         com: kubectl get services
 
-      - cap: See the montior-scale-* ingress is configured using kubectl.
+      - cap: View ingress rules to see the monitor-scale ingress rule.
         com: kubectl get ingress
 
-      - cap: See the monitor-scale deployment is setup using kubectl
+      - cap: View deployments to see the monitor-scale deployment.
         com: kubectl get deployments
 
-      - cap: Now we will bootstrap the crossword/mongodb services, creating a docker image and storing it in the local registry. This script runs the same steps as before for a different service application.
-        com: scripts/server.sh
+      - cap: We will run a script to bootstrap the puzzle and mongo services, creating Docker images and storing them in the local registry. The puzzle.sh script runs through the same build, proxy, push, and deploy steps we just ran through manually for both services.
+        com: scripts/puzzle.sh
 
-      - cap: Check to see if services has been deployed
-        com: kubectl rollout status deployment/services
+      - cap: Check to see if the puzzle and mongo services have been deployed.
+        com: kubectl rollout status deployment/puzzle
 
-      - cap: Bootstrap the frontend web application.  This script follows the same steps as before but 
-        com: scripts/pages.sh
+      - cap: Bootstrap the kr8sswordz frontend web application. This script follows the same build proxy, push, and deploy steps that the other services followed.
+        com: scripts/kr8sswordz-pages.sh
 
-      - cap: Check to see if the front end has been deployed
+      - cap: Check to see if the frontend has been deployed.
         com: kubectl rollout status deployment/kr8sswordz
 
-      - cap: See all the pods running using kubectl.
+      - cap: Check out all the pods that are running.
         com: kubectl get pods
 
-      - cap: Start the web application in your default browser
+      - cap: Start the web application in your default browser. You may have to refresh your browser so that the puzzle appears properly.
         com: minikube service kr8sswordz
