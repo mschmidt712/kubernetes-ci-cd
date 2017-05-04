@@ -59,7 +59,7 @@
     "startx" : 0,
     "starty" : 10,
     "wordOrientation": "across",
-    "hint": "Configuration format other then json",
+    "hint": "Configuration format other than json",
     "enteredValue": "****"
   },
   {
