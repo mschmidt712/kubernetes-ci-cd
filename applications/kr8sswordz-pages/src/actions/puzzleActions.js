@@ -1,3 +1,4 @@
+import fetchRetry from 'fetch-retry';
 import * as actions from './actionTypes';
 import constants from '../constants';
 const baseUrl = `http://puzzle.${constants.minikubeIp}.xip.io/puzzle/v1`;
@@ -13,7 +14,11 @@ export function getPuzzleDataFailure () {
 
 export function getPuzzleData () {
   return dispatch => {
-    return fetch(`${baseUrl}/crossword`)
+    dispatch({type: actions.puzzle.PUZZLE_LOADING});
+    return fetchRetry(`${baseUrl}/crossword`, {
+      retries: 36,
+      retryDelay: 5000
+    })
       .then((resp) => {
         return resp.json();
       })
