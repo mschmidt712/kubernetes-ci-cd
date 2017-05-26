@@ -6,6 +6,7 @@
   "dependencies": {
     "cmdify": "^0.0.4",
     "colors": "^1.1.2",
+    "fetch-retry": "^1.1.0",
     "inquirer": "^3.0.6",
     "rx": "^4.1.0",
     "yamljs": "^0.2.8"
@@ -17,7 +18,7 @@
     "part1": "node start.js part1.yml",
     "part2": "node start.js part2.yml",
     "part3": "node start.js part3.yml",
-    "part4": "node start.js part4.yml"    
+    "part4": "node start.js part4.yml"
   },
   "repository": {
     "type": "git",

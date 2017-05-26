@@ -25,6 +25,7 @@ export function getPods () {
 
 export function connectToSocket () {
   return dispatch => {
+    dispatch({type: types.websocket.CONNECTION_LOADING});
     socket.open(() => {
       dispatch({type: 'CONNECT_TO_SOCKET'});
     });

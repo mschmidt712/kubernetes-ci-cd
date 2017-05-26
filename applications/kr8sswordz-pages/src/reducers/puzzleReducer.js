@@ -5,14 +5,21 @@ const initialState = {
   fromMongo: false,
   sendingData: false,
   puzzleId: '',
-  puzzleData: []
+  puzzleData: [],
+  loading: false
 };
 
 export default function puzzleReducer (state = initialState, action) {
   switch (action.type) {
+    case types.puzzle.PUZZLE_LOADING: {
+      return Object.assign({}, state, {
+        loading: true
+      });
+    }
     case types.puzzle.GET_PUZZLE_DATA_SUCCESS: {
       return Object.assign({}, state, {
-        puzzleData: action.data.words
+        puzzleData: action.data.words,
+        loading: false
       });
     }
     case types.puzzle.GET_PUZZLE_DATA_FAILURE: {

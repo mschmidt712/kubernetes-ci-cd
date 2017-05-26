@@ -3,14 +3,21 @@ import * as types from '../actions/actionTypes';
 const initialState = {
   connected: false,
   pods: [],
-  activePod: undefined
+  activePod: undefined,
+  loading: false
 };
 
 export default function websocketReducer (state = initialState, action) {
   switch (action.type) {
+    case types.websocket.CONNECTION_LOADING: {
+      return Object.assign({}, state, {
+        loading: true
+      });
+    }
     case types.websocket.CONNECT_TO_SOCKET: {
       return Object.assign({}, state, {
-        connected: true
+        connected: true,
+        loading: false
       });
     }
     case types.websocket.DISCONNECT_FROM_SOCKET: {
@@ -19,14 +26,20 @@ export default function websocketReducer (state = initialState, action) {
       });
     }
     case types.websocket.GET_PODS: {
-      return Object.assign({}, state, { pods: action.pods });
+      return Object.assign({}, state, {
+        pods: action.pods,
+        loading: false
+      });
     }
     case types.websocket.POD_UP: {
       if (state.pods.includes(action.pod)) {
         return state;
       } else {
         const pods = [...state.pods, action.pod];
-        return Object.assign({}, state, { pods });
+        return Object.assign({}, state, {
+          pods,
+          loading: false
+        });
       }
     }
     case types.websocket.POD_DOWN: {
