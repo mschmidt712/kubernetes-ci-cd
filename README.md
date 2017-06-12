@@ -1,9 +1,5 @@
 # Linux.com Kubernetes CI/CD Blog Series by Kenzan
 
-[Linux.com Part 1](https://www.linux.com/blog/learn/chapter/Intro-to-Kubernetes/2017/5/set-cicd-pipeline-kubernetes-part-1-overview)
-
-[Linux.com Part 2](https://www.linux.com/blog/learn/chapter/Intro-to-Kubernetes/2017/6/set-cicd-pipeline-jenkins-pod-kubernetes-part-2)
-
  To generate this readme: `node readme.js`
 
 ## Interactive Tutorial Version
@@ -30,18 +26,15 @@ Begin the desired section:
 
 
 To complete the tutorial manually, follow the steps below.
+
+
 ## Part 1
-
-
-### Part 1
-
-
 
 #### Step1
 
 Start up the Kubernetes cluster with Minikube, giving it some extra resources.
 
-`minikube start --memory 8000 --cpus 2 --kubernetes-version v1.6.0`
+`minikube start --memory 8000 --cpus 2`
 
 #### Step2
 
@@ -131,12 +124,9 @@ With the image in our cluster registry, the last thing to do is apply the manife
 
 Launch a web browser and view the service.
 
-`minikube service hello-kenzan`## Part 2
+`minikube service hello-kenzan`
 
-
-### Part 2
-
-
+## Part 2
 
 #### Step1
 
@@ -202,12 +192,9 @@ Now view the Hello-Kenzan application.
 
 Push a change to your fork. Run job again. View the changes.
 
-`minikube service hello-kenzan`## Part 3
+`minikube service hello-kenzan`
 
-
-### Part 3
-
-
+## Part 3
 
 #### Step1
 
@@ -333,12 +320,9 @@ Check out all the pods that are running.
 
 Start the web application in your default browser. You may have to refresh your browser so that the puzzle appears properly.
 
-`minikube service kr8sswordz`## Part 4
+`minikube service kr8sswordz`
 
-
-### Part 4
-
-
+## Part 4
 
 #### Step1
 

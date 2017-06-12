@@ -24,13 +24,12 @@ YAML.load('steps.yml', function(docs)
     var parts = docs.parts;
 
     parts.forEach(function (item) {
-        markdown = markdown + "## " + item.name + "\n"
         var part = item.name;
-        markdown = markdown + "\n\n### " + item.name + "\n\n"
         var stepNum = 0;
         var stepList = item.steps;
+        
+        markdown = markdown + "\n\n## " + part;
 
-        // console.log(item.steps);
         stepList.forEach(function (step) {
             stepNum++;
             markdown = markdown + "\n\n#### Step" + stepNum
