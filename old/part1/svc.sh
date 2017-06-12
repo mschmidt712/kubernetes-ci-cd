@@ -1,1 +1,0 @@
-xdg-open "http://$1.`minikube ip`.xip.io"
