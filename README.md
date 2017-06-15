@@ -1,10 +1,16 @@
 # Linux.com Kubernetes CI/CD Blog Series by Kenzan
 
+The kubernetes-ci-cd project is [Kenzan's](http://techblog.kenzan.com/) crossword puzzle application that runs as several containers in Kubernetes (we call it the Kr8sswordz Puzzle). It showcases Kubernetes features like spinning up multiple pods and running a load test at scale. It also features Jenkins running on its own a container and a JenkinsFile script to demonstrate how Kubernetes can be integrated into a full CI/CD pipeline. 
+
+To get it up and running, see the following week-by-week Linux.com blog posts, or simply follow the directions below. 
+
 [Linux.com Part 1](https://www.linux.com/blog/learn/chapter/Intro-to-Kubernetes/2017/5/set-cicd-pipeline-kubernetes-part-1-overview)
 
 [Linux.com Part 2](https://www.linux.com/blog/learn/chapter/Intro-to-Kubernetes/2017/6/set-cicd-pipeline-jenkins-pod-kubernetes-part-2)
 
- To generate this readme: `node readme.js`
+[Linux.com Part 3](https://www.linux.com/blog/learn/chapter/intro-to-kubernetes/2017/6/run-and-scale-distributed-crossword-puzzle-app-cicd-kubernetes-part-3)
+
+To generate this readme: `node readme.js`
 
 ## Interactive Tutorial Version
 To complete the tutorial using the interactive script:
@@ -28,10 +34,7 @@ Begin the desired section:
 
 ## Manual Tutorial Version
 
-
 To complete the tutorial manually, follow the steps below.
-## Part 1
-
 
 ### Part 1
 
