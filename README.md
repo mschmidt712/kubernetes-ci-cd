@@ -43,7 +43,7 @@ To complete the tutorial manually, follow the steps below.
 
 Start up the Kubernetes cluster with Minikube, giving it some extra resources.
 
-`minikube start --memory 8000 --cpus 2`
+`minikube start --memory 8000 --cpus 2 --kubernetes-version v1.6.0`
 
 #### Step2
 
