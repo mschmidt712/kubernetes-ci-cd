@@ -95,7 +95,7 @@ View the registry user interface in a web browser.
 
 #### Step10
 
-Let’s make a change to an HTML file in the cloned project. Running the command below will open /applications/hello-kenzan/index.html in the nano text editor. Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. When you’re done, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
+Let’s make a change to an HTML file in the cloned project. Open the /applications/hello-kenzan/index.html file in your favorite text editor, or run the command below to open it in the nano text editor. Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. When you’re done in nano, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
 
 `nano applications/hello-kenzan/index.html`
 
@@ -383,7 +383,7 @@ Spin up several instances of the puzzle service by moving the slider to the righ
 
 #### Step9
 
-Edit applications/puzzle/common/models/crossword.js in the nano editor. You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes. Press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
+Edit applications/puzzle/common/models/crossword.js in your favorite text editor, or edit it in nano using the command below. You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes. To save in nano, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
 
 `nano applications/puzzle/common/models/crossword.js`
 

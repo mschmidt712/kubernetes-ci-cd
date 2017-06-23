@@ -28,7 +28,7 @@ parts:
       - cap: Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the green hit does not register on the puzzle services.
         com: echo ''
 
-      - cap: Edit applications/puzzle/common/models/crossword.js in the nano editor. You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes. Press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
+      - cap: Edit applications/puzzle/common/models/crossword.js in your favorite text editor, or edit it in nano using the command below. You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes. To save in nano, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
         com: nano applications/puzzle/common/models/crossword.js
 
       - cap: Commit and push the change to your forked Git repo. 
