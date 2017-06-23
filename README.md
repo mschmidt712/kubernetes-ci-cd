@@ -36,9 +36,8 @@ Begin the desired section:
 
 To complete the tutorial manually, follow the steps below.
 
-### Part 1
 
-
+## Part 1
 
 #### Step1
 
@@ -134,12 +133,9 @@ With the image in our cluster registry, the last thing to do is apply the manife
 
 Launch a web browser and view the service.
 
-`minikube service hello-kenzan`## Part 2
+`minikube service hello-kenzan`
 
-
-### Part 2
-
-
+## Part 2
 
 #### Step1
 
@@ -205,12 +201,9 @@ Now view the Hello-Kenzan application.
 
 Push a change to your fork. Run job again. View the changes.
 
-`minikube service hello-kenzan`## Part 3
+`minikube service hello-kenzan`
 
-
-### Part 3
-
-
+## Part 3
 
 #### Step1
 
@@ -336,12 +329,9 @@ Check out all the pods that are running.
 
 Start the web application in your default browser. You may have to refresh your browser so that the puzzle appears properly.
 
-`minikube service kr8sswordz`## Part 4
+`minikube service kr8sswordz`
 
-
-### Part 4
-
-
+## Part 4
 
 #### Step1
 
