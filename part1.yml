@@ -31,8 +31,8 @@ parts:
       - cap: View the registry user interface in a web browser.
         com: minikube service registry-ui
 
-      - cap: Let’s make a change to an HTML file in the cloned project. Open the /applications/hello-kenzan/index.html file in your favorite text editor, or run the command below to open it in the nano text editor. Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. When you’re done in nano, press Ctrl+X to close the file, type Y to confirm the filename, and press Enter to write the changes to the file.
-        com: nano applications/hello-kenzan/index.html
+      - cap: Let’s make a change to an HTML file in the cloned project. Open the /applications/hello-kenzan/index.html file in your favorite text editor (for example, you can use nano by running the command 'nano applications/hello-kenzan/index.html' in a separate terminal). Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. Save the file. 
+        com: echo ''
 
       - cap: Now let’s build an image, giving it a special name that points to our local cluster registry.
         com: docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan
