@@ -10,6 +10,8 @@ To get it up and running, see the following week-by-week Linux.com blog posts, o
 
 [Linux.com Part 3](https://www.linux.com/blog/learn/chapter/intro-to-kubernetes/2017/6/run-and-scale-distributed-crossword-puzzle-app-cicd-kubernetes-part-3)
 
+[Linux.com Part 4](https://www.linux.com/blog/learn/chapter/intro-to-kubernetes/2017/6/set-cicd-distributed-crossword-puzzle-app-kubernetes-part-4)
+
 To generate this readme: `node readme.js`
 
 ## Interactive Tutorial Version
