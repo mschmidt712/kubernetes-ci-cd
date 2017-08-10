@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 echo "installing etcd operator"
-kubectl  create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
-kubectl  rollout status -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/deployment.yaml
+kubectl  create -f manifests/deployment.yaml
+kubectl  rollout status -f manifests/deployment.yaml
 
 until kubectl  get thirdpartyresource cluster.etcd.coreos.com
 do
@@ -13,10 +13,10 @@ done
 echo "pausing for 10 seconds for operator to settle"
 sleep 10
 
-kubectl  create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster.yaml
+kubectl  create -f manifests/example-etcd-cluster.yaml
 
 echo "installing etcd cluster service"
-kubectl  create -f https://raw.githubusercontent.com/coreos/etcd-operator/master/example/example-etcd-cluster-nodeport-service.json
+kubectl  create -f manifests/service.json
 
 echo "waiting for etcd cluster to turnup"
 
