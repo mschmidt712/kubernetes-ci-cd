@@ -7,9 +7,9 @@ module.exports = function(Crossword) {
   var etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
   fireHit();
   Crossword.get = function(cb) {
-    
+
     var etcdPuzzleResp = etcd.getSync("puzzle");
-    
+
     if (etcdPuzzleResp && !etcdPuzzleResp.err) {
 
       console.log(`Responding with cache`);
@@ -38,9 +38,9 @@ module.exports = function(Crossword) {
     if(words) {
       etcd.delSync("puzzle");
       Crossword.findOne(function (err, crossword) {
-        
+
         // Part 4: Uncomment the next line to enable puzzle pod highlighting when clicking the Submit button
-        //fireHit();
+        fireHit();
         if (err) handleError(err.message, cb);
         for (var j = 0; j < words.length; j++) {
           var word = words[j];
@@ -64,10 +64,10 @@ module.exports = function(Crossword) {
   }
 
   Crossword.clear = function(cb) {
-    
+
     Crossword.findOne(function(err, crossword) {
       console.log("Calling hit from clear.");
-      fireHit();      
+      fireHit();
       if(err) handleError(err.message, cb);
       var updatedWords = [];
       for (var i = 0; i < crossword.words.length; i++) {
