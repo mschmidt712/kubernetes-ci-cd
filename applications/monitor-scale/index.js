@@ -1,15 +1,14 @@
-var express = require('express')
-var app = express()
-
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var request = require('request');
 var async = require('async');
 var io = require('socket.io')(http);
-var path    = require("path");
-var Etcd = require('node-etcd')
+var path = require("path");
+var Etcd = require('node-etcd');
 var cors = require('cors');
 
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 var bodyParser = require("body-parser");
 
@@ -17,9 +16,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-etcd = new Etcd("http://example-etcd-cluster-client-service:2379")
+etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
 
-var watcher = etcd.watcher("pod-list", null, {recursive: true})
+var watcher = etcd.watcher("pod-list", null, {recursive: true});
 watcher.on("change", function(val) {
 
   var podChange = { pods: val.node.key, action: val.action };
@@ -27,7 +26,7 @@ watcher.on("change", function(val) {
   io.emit('pods', podChange);
 });
 
-app.post('/scale', function (req, res) {
+app.post('/scale', function (req, res, next) {
   var scale = req.body.count;
   console.log('Count requested is: %s', scale);
   var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
@@ -47,10 +46,11 @@ app.post('/scale', function (req, res) {
 
   request({ url: url, method: 'PUT', json: putBody}, function (err, httpResponse, body) {
     if (err) {
-      return console.error('Failed to scale:', err);
+      console.error('Failed to scale:', err);
+      next(err);
     }
-    console.log('Scale success!');
-    res.send('success');
+    console.log('Response: ' + JSON.stringify(httpResponse));
+    res.status(httpResponse.statusCode).json(body);
   });
 });
 
@@ -104,13 +104,13 @@ app.get('/up/:podId', function (req, res) {
   console.log('Server UP: %s', req.params.podId);
   etcd.setSync("pod-list/" + req.params.podId, req.params.podId);
   res.send('up done');
-})
+});
 
 app.get('/down/:podId', function (req, res) {
   console.log('Server DOWN: %s', req.params.podId);
   etcd.delSync("pod-list/" + req.params.podId, req.params.podId);
   res.send('down done');
-})
+});
 
 app.get('/hit/:podId', function (req, res) {
 
@@ -120,19 +120,19 @@ app.get('/hit/:podId', function (req, res) {
   console.log("Emitting hit from %s", req.params.podId);
   io.emit('hit', { podId: req.params.podId, time: n });
   res.send('hit done')
-})
+});
 
 app.get('/pods', function (req, res) {
   var pods = etcd.getSync("pod-list",{ recursive: true });
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({pods: pods.body.node.nodes}));
-})
+});
 
 app.delete('/pods', function (req, res) {
 
   var pods = etcd.delSync("pod-list/",{ recursive: true });
   res.send('pods deleted')
-})
+});
 
 io.on('connection', function(socket){
   
