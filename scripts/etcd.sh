@@ -7,7 +7,7 @@ kubectl  rollout status -f manifests/deployment.yaml
 echo "pausing for 10 seconds for operator to settle"
 sleep 10
 
-kubectl  create -f manifests/example-etcd-cluster.yaml
+kubectl  create -f manifests/etcd-cluster.yaml
 
 echo "installing etcd cluster service"
 kubectl  create -f manifests/service.json
