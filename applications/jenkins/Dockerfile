@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:latest
+FROM jenkins/jenkins:2.136
 USER root
 #Installing Docker
 RUN apt-get update && apt-get install software-properties-common apt-transport-https ca-certificates -y; \
