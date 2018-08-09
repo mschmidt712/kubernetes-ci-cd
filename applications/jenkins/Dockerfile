@@ -12,4 +12,5 @@ touch /etc/apt/sources.list.d/kubernetes.list;\
 echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list;\
 apt-get update && apt-get install -y kubectl
 
+
 USER jenkins
