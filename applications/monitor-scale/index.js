@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 etcd = new Etcd("http://example-etcd-cluster-client-service:2379");
+etcd.mkdirSync('pod-list');
 
 var watcher = etcd.watcher("pod-list", null, {recursive: true});
 watcher.on("change", function(val) {
@@ -26,7 +27,7 @@ watcher.on("change", function(val) {
   io.emit('pods', podChange);
 });
 
-app.post('/scale', function (req, res, next) {
+app.post('/scale', function (req, res) {
   var scale = req.body.count;
   console.log('Count requested is: %s', scale);
   var url = "http://127.0.0.1:2345/apis/extensions/v1beta1/namespaces/default/deployments/puzzle/scale";
