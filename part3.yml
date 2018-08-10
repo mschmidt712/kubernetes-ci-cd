@@ -6,12 +6,6 @@ parts:
 
       - cap: Start the etcd operator and service on the cluster. You may notice errors showing up as it is waiting to start up the cluster. This is normal until it starts.
         com: scripts/etcd.sh
-
-      - cap: Now that we have an etcd service, we need an etcd client. The following command will set up a directory within etcd for storing key-value pairs, and then run the etcd client.
-        com: kubectl create -f manifests/etcd-job.yml
-
-      - cap: Check the status of the job in step 2 to make sure it deployed.
-        com: kubectl describe jobs/etcd-job
       
       - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
         com: kubectl apply -f manifests/all-services.yml

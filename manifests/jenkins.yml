@@ -13,6 +13,7 @@ spec:
     path: "/data/jenkins/"
 
 ---
+
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -24,6 +25,7 @@ spec:
     requests:
       storage: 2Gi
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -38,7 +40,9 @@ spec:
     app: jenkins
     tier: jenkins
   type: NodePort
+
 ---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -55,18 +59,18 @@ spec:
         tier: jenkins
     spec:
       containers:
-      - image: chadmoon/jenkins-docker-kubectl:latest
+      - image: 127.0.0.1:30400/jenkins:latest
         name: jenkins
         securityContext:
           privileged: true
+        volumeMounts:
+        - name: docker
+          mountPath: /var/run/docker.sock
+        - name: jenkins-persistent-storage
+          mountPath: /root/.jenkins
         ports:
         - containerPort: 8080
           name: jenkins
-        volumeMounts:
-        - name: jenkins-persistent-storage
-          mountPath: /root/.jenkins
-        - name: docker
-          mountPath: /var/run/docker.sock
       volumes:
       - name: docker
         hostPath:
