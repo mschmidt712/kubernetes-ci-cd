@@ -63,7 +63,7 @@ data:
     kubectl config set-cluster minikube --server="https://192.168.99.100:8443" --certificate-authority="/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
     kubectl config set-context jenkins-minikube --cluster=minikube --user=jenkins --namespace=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)
     kubectl config use-context jenkins-minikube
-    cat ~/.kube/config
+    chmod 755 ~/.kube/config
 
 ---
 
@@ -104,11 +104,12 @@ spec:
       - image: lachlanevenson/k8s-kubectl:v1.11.2
         name: kubectl-config
         command:
-        - "sh"
+        - "/bin/sh"
+        args:
         - "/kubectl-config-context.sh"
         volumeMounts:
-        - name: kube-config
-          mountPath: "~/.kube"
+        - name: kubeconfig
+          mountPath: "/root/.kube"
         - name: kubectl-jenkins-context
           mountPath: "/kubectl-config-context.sh"
           subPath: "kubectl-config-context.sh"
@@ -118,11 +119,8 @@ spec:
         securityContext:
           privileged: true
         volumeMounts:
-        - name: kubectl-jenkins-context
-          mountPath: "/kubectl-config-context.sh"
-          subPath: "kubectl-config-context.sh"
-        - name: kube-config
-          mountPath: "/var/jenkins_home/.kube"
+        - name: kubeconfig
+          mountPath: /var/jenkins_home/.kube
         - name: docker
           mountPath: /var/run/docker.sock
         - name: jenkins-persistent-storage
@@ -137,7 +135,7 @@ spec:
           items:
           - key: kubectl-config-context.sh
             path: kubectl-config-context.sh
-      - name: kube-config
+      - name: kubeconfig
         emptyDir: {}
       - name: docker
         hostPath:
