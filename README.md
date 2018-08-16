@@ -181,37 +181,37 @@ The following values must be entered precisely as indicated: For the Kind field 
 
 `echo ''`
 
-#### Step6
+#### Step8
 
 We now want to create a new pipeline for use with our Hello-Kenzan app. Back from Jenkins home, on the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
 
 `echo ''`
 
-#### Step7
+#### Step9
 
 Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM".
 
 `echo ''`
 
-#### Step8
+#### Step10
 
 Change the SCM to Git.
 
 `echo ''`
 
-#### Step9
+#### Step11
 
 Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline.
 
 `echo ''`
 
-#### Step10
+#### Step12
 
 Now view the Hello-Kenzan application.
 
 `minikube service hello-kenzan`
 
-#### Step11
+#### Step13
 
 Push a change to your fork. Run job again. View the changes.
 
