@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-echo "installing etcd operator"
-kubectl  create -f manifests/deployment.yaml
-kubectl  rollout status -f manifests/deployment.yaml
+echo "initializing Helm"
+helm init --wait --debug
 
-echo "pausing for 10 seconds for operator to settle"
-sleep 10
+echo "installing etcd operator (Helm Chart)"
+helm install stable/etcd-operator --version 0.8.0 --name etcd-operator --debug
+kubectl rollout status deploy/tiller-deploy -n kube-system
 
 kubectl  create -f manifests/etcd-cluster.yaml
 
