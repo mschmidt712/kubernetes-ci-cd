@@ -159,7 +159,7 @@ Display the Jenkins admin password with the following command, and right-click t
 
 #### Step4
 
-Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install suggested plugins and wait for the process to complete.
+Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click "Install Suggested Plugins" button and wait for the process to complete (Plugins have been pre-downloaded during jenkins docker image built, so this step should finish almost immediately).
 
 `echo ''`
 
@@ -171,35 +171,47 @@ Create an admin user and credentials, and click Save and Finish. (Make sure to r
 
 #### Step6
 
-We now want to create a new pipeline for use with our Hello-Kenzan app. On the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
+Before we create a pipeline, we first need to provision Kubernetes Continuous Deployment Plugin in Jenkins with a kubeconfig file that will allow access to our kubernetes cluster. Click on Credentials, then Jenkins store, then select the Global credentials Domain and add a new credential.
 
 `echo ''`
 
 #### Step7
 
-Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM".
+The following values must be entered precisely as indicated: For the Kind field select the option "Kubernetes configuration (kubeconfig)", set the ID as `kenzan_kubeconfig`, select Kubeconfig From a file on the Jenkins master, and specify the the file path `/var/jenkins_home/.kube/config`. finally click the OK button.
 
 `echo ''`
 
 #### Step8
 
-Change the SCM to Git.
+We now want to create a new pipeline for use with our Hello-Kenzan app. Back from Jenkins home, on the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
 
 `echo ''`
 
 #### Step9
 
-Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline.
+Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM".
 
 `echo ''`
 
 #### Step10
 
+Change the SCM to Git.
+
+`echo ''`
+
+#### Step11
+
+Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline.
+
+`echo ''`
+
+#### Step12
+
 Now view the Hello-Kenzan application.
 
 `minikube service hello-kenzan`
 
-#### Step11
+#### Step13
 
 Push a change to your fork. Run job again. View the changes.
 
