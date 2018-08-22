@@ -11,6 +11,7 @@ node {
     registryHost = "127.0.0.1:30400/"
     imageName = "${registryHost}${appName}:${tag}"
     env.BUILDIMG=imageName
+    env.BUILD_TAG=tag
 
     stage "Build"
     
@@ -22,5 +23,5 @@ node {
 
     stage "Deploy"
 
-        sh "sed 's#127.0.0.1:30400/kr8sswordz:latest#'$BUILDIMG'#' applications/kr8sswordz-pages/k8s/deployment.yaml | kubectl apply -f -"
+        kubernetesDeploy configs: "applications/kr8sswordz-pages/k8s/*.yaml", kubeconfigId: 'kenzan_kubeconfig'
 }

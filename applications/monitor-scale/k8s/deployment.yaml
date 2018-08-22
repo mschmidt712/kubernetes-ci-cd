@@ -15,49 +15,6 @@ spec:
 
 ---
 
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: monitor-scale
-  namespace: default
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: default
-  name: puzzle-scaler
-rules:
-- apiGroups:
-  - "extensions"
-  resources:
-  - deployments
-  - deployments/scale
-  resourceNames:
-  - "puzzle"
-  verbs:
-  - update
-  - get
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: monitor-scale-puzzle-scaler
-  namespace: default
-roleRef:
-  kind: Role
-  name: puzzle-scaler
-  apiGroup: rbac.authorization.k8s.io
-subjects:
-- kind: ServiceAccount
-  name: monitor-scale
-  namespace: default
-
----
-
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -75,7 +32,7 @@ spec:
     spec:
       serviceAccountName: monitor-scale
       containers:
-      - image: 127.0.0.1:30400/monitor-scale:latest
+      - image: 127.0.0.1:30400/monitor-scale:$BUILD_TAG
         name: monitor-scale
         imagePullPolicy: Always
         ports:
