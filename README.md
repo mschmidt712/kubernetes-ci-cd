@@ -79,9 +79,9 @@ Launch a web browser to test the service. The nginx welcome page displays, which
 
 #### Step7
 
-Set up the cluster registry by applying a .yml manifest file.
+Set up the cluster registry by applying a .yaml manifest file.
 
-`kubectl apply -f manifests/registry.yml`
+`kubectl apply -f manifests/registry.yaml`
 
 #### Step8
 
@@ -109,29 +109,33 @@ Now let’s build an image, giving it a special name that points to our local cl
 
 #### Step12
 
-We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster.
-
-`docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"`
+We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster. so let's first build the image for such container:
+`docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
 #### Step13
+
+And run the proxy container from the newly created image:
+``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
+
+#### Step14
 
 With our proxy container up and running, we can now push our image to the local repository.
 
 `docker push 127.0.0.1:30400/hello-kenzan:latest`
 
-#### Step14
+#### Step15
 
 The proxy’s work is done, so you can go ahead and stop it.
 
 `docker stop socat-registry;`
 
-#### Step15
+#### Step16
 
 With the image in our cluster registry, the last thing to do is apply the manifest to create and deploy the hello-kenzan pod based on the image.
 
 `kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml`
 
-#### Step16
+#### Step17
 
 Launch a web browser and view the service.
 
