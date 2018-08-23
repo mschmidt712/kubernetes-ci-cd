@@ -79,9 +79,9 @@ Launch a web browser to test the service. The nginx welcome page displays, which
 
 #### Step7
 
-Set up the cluster registry by applying a .yml manifest file.
+Set up the cluster registry by applying a .yaml manifest file.
 
-`kubectl apply -f manifests/registry.yml`
+`kubectl apply -f manifests/registry.yaml`
 
 #### Step8
 
