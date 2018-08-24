@@ -99,8 +99,6 @@ View the registry user interface in a web browser.
 
 Let’s make a change to an HTML file in the cloned project. Open the /applications/hello-kenzan/index.html file in your favorite text editor (for example, you can use nano by running the command 'nano applications/hello-kenzan/index.html' in a separate terminal). Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. Save the file.
 
-`echo ''`
-
 #### Step11
 
 Now let’s build an image, giving it a special name that points to our local cluster registry.
@@ -110,11 +108,13 @@ Now let’s build an image, giving it a special name that points to our local cl
 #### Step12
 
 We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster. so let's first build the image for such container:
+
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
 #### Step13
 
 And run the proxy container from the newly created image:
+
 ``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
 #### Step14
@@ -143,79 +143,94 @@ Launch a web browser and view the service.
 
 ## Part 2
 
+
 #### Step1
+
+First, Let's build the Jenkins docker image we'll use in our kubernetes cluster
+
+`docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins`
+
+#### Step2
+
+Once again we're going to need to set up the proxy container "Socat Registry" we used in part 1, so let's first build it in case it's not present in your local machine from part 1 anymore
+
+`docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
+
+#### Step3
+
+And run the proxy container from the newly created image
+
+``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
+
+#### Step4
+
+With our proxy container up and running, we can now push our Jenkins image to the local repository.
+
+`docker push 127.0.0.1:30400/hello-kenzan:latest`
+
+#### Step5
+
+The proxy’s work is done, so you can go ahead and stop it.
+
+`docker stop socat-registry;`
+
+#### Step6
 
 Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
 
-`kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins`
+`kubectl apply -f manifests/jenkins.yaml; kubectl rollout status deployment/jenkins`
 
-#### Step2
+#### Step7
 
 Open the Jenkins UI in a web browser.
 
 `minikube service jenkins`
 
-#### Step3
+#### Step8
 
 Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT.
 
-`kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword`
-
-#### Step4
-
-Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click "Install Suggested Plugins" button and wait for the process to complete (Plugins have been pre-downloaded during jenkins docker image built, so this step should finish almost immediately).
-
-`echo ''`
-
-#### Step5
-
-Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins.
-
-`echo ''`
-
-#### Step6
-
-Before we create a pipeline, we first need to provision Kubernetes Continuous Deployment Plugin in Jenkins with a kubeconfig file that will allow access to our kubernetes cluster. Click on Credentials, then Jenkins store, then select the Global credentials Domain and add a new credential.
-
-`echo ''`
-
-#### Step7
-
-The following values must be entered precisely as indicated: For the Kind field select the option "Kubernetes configuration (kubeconfig)", set the ID as `kenzan_kubeconfig`, select Kubeconfig From a file on the Jenkins master, and specify the the file path `/var/jenkins_home/.kube/config`. finally click the OK button.
-
-`echo ''`
-
-#### Step8
-
-We now want to create a new pipeline for use with our Hello-Kenzan app. Back from Jenkins home, on the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
-
-`echo ''`
+``kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /var/jenkins_home/secrets/initialAdminPassword``
 
 #### Step9
 
-Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM".
-
-`echo ''`
+Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click "Install Suggested Plugins" button and wait for the process to complete (Plugins have been pre-downloaded during jenkins docker image built, so this step should finish almost immediately).
 
 #### Step10
 
-Change the SCM to Git.
-
-`echo ''`
+Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins.
 
 #### Step11
 
-Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline.
-
-`echo ''`
+Before we create a pipeline, we first need to provision Kubernetes Continuous Deployment Plugin in Jenkins with a kubeconfig file that will allow access to our kubernetes cluster. On the left, click on Credentials, select Jenkins Store, then Global credentials (unrestricted), and Add Credentials on the left menu.
 
 #### Step12
+
+The following values must be entered precisely as indicated: For the Kind field select the option "Kubernetes configuration (kubeconfig)", set the ID as `kenzan_kubeconfig`, select Kubeconfig From a file on the Jenkins master, and specify the the file path `/var/jenkins_home/.kube/config`. finally click the OK button.
+
+#### Step13
+
+We now want to create a new pipeline for use with our Hello-Kenzan app. Back from Jenkins home, on the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
+
+#### Step14
+
+Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM".
+
+#### Step15
+
+Change the SCM to Git.
+
+#### Step16
+
+Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline.
+
+#### Step17
 
 Now view the Hello-Kenzan application.
 
 `minikube service hello-kenzan`
 
-#### Step13
+#### Step18
 
 Push a change to your fork. Run job again. View the changes.
 
@@ -361,31 +376,21 @@ Enter the following command to open the Jenkins UI in a web browser. Log in to J
 
 We’ll want to create a new pipeline for the puzzle service that we previously deployed. On the left in Jenkins, click New Item.
 
-`echo ''`
-
 #### Step3
 
 Enter the item name as "Puzzle-Service", click Pipeline, and click OK.
-
-`echo ''`
 
 #### Step4
 
 Under the Build Triggers section, select Poll SCM. For the Schedule, enter the the string H/5 * * * * which will poll the Git repo every 5 minutes for changes.
 
-`echo ''`
-
 #### Step5
 
 In the Pipeline section, change the Definition to "Pipeline script from SCM". Set the SCM property to GIT. Set the Repository URL to your forked repo (created in Part 2), such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd.git. Set the Script Path to applications/puzzle/Jenkinsfile
 
-`echo ''`
-
 #### Step6
 
 When you are finished, click Save. On the left, click Build Now to run the new pipeline. You should see it successfully run through the build, push, and deploy steps in a few minutes.
-
-`echo ''`
 
 #### Step7
 
@@ -397,37 +402,26 @@ View the Kr8sswordz application.
 
 Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the green hit does not register on the puzzle services.
 
-`echo ''`
-
 #### Step9
 
 Edit applications/puzzle/common/models/crossword.js in your favorite text editor (for example, you can use nano by running the command 'nano applications/puzzle/common/models/crossword.js' in a separate terminal). You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes and save the file. 
-
-`echo ''`
 
 #### Step10
 
 Commit and push the change to your forked Git repo.
 
-`echo ''`
-
 #### Step11
 
 In Jenkins, open up the Puzzle-Service pipeline and wait until it triggers a build. It should trigger every 5 minutes.
-
-`echo ''`
 
 #### Step12
 
 After it triggers, observe how the puzzle services disappear in the Kr8sswordz Puzzle app, and how new ones take their place.
 
-`echo ''`
-
 #### Step13
 
 Try clicking Submit to test that hits now register as light green.
 
-`echo ''`
 
  ## LICENSE
 Copyright 2017 Kenzan, LLC <http://kenzan.com>
