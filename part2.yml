@@ -4,8 +4,11 @@ parts:
     intro: In this part we will Setup Jenkins, and setup an automated pipeline to build, push and deploy our custom appliction.
     steps:
 
-      - cap: Start up the Kubernetes cluster with Minikube, giving it some extra resources
-        com: minikube start --memory 8000 --cpus 2 --kubernetes-version v1.11.0
+      - cap: Start up the Kubernetes cluster with Minikube
+        com: minikube stop; minikube start --memory 8000 --cpus 2 --kubernetes-version v1.11.0
+
+      - cap: Before we do anything, let's make sure the private registry deployment we've setup in the previous part is available
+        com: kubectl rollout status deployment/registry; sleep 10
 
       - cap: Let's build the Jenkins docker image we'll use in our kubernetes cluster
         com: docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins
@@ -14,7 +17,7 @@ parts:
         com: docker build -t socat-registry -f applications/socat/Dockerfile applications/socat
 
       - cap: And run the proxy container from the newly created image
-        com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry
+        com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry; sleep 10
 
       - cap: With our proxy container up and running, we can now push our Jenkins image to the local repository.
         com: docker push 127.0.0.1:30400/jenkins:latest
