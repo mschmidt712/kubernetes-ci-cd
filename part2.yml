@@ -4,35 +4,62 @@ parts:
     intro: In this part we will Setup Jenkins, and setup an automated pipeline to build, push and deploy our custom appliction.
     steps:
 
-      - cap: Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
-        com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
+      - cap: Start up the Kubernetes cluster with Minikube
+        com: minikube stop; minikube start --memory 8000 --cpus 2 --kubernetes-version v1.11.0
 
-      - cap: Open the Jenkins UI in a web browser.
+      - cap: Before we do anything, let's make sure the private registry deployment we've setup in the previous part is available
+        com: kubectl rollout status deployment/registry; sleep 10
+
+      - cap: Let's build the Jenkins docker image we'll use in our kubernetes cluster
+        com: docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins
+
+      - cap: Once again we're going to need to set up the proxy container "Socat Registry" we used in part 1, so let's first build it in case it's not present in your local machine from part 1 anymore
+        com: docker build -t socat-registry -f applications/socat/Dockerfile applications/socat
+
+      - cap: And run the proxy container from the newly created image
+        com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry; sleep 10
+
+      - cap: With our proxy container up and running, we can now push our Jenkins image to the local repository.
+        com: docker push 127.0.0.1:30400/jenkins:latest
+
+      - cap: The proxy’s work is done, so you can go ahead and stop it.
+        com: docker stop socat-registry;
+
+      - cap: Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out
+        com: kubectl apply -f manifests/jenkins.yaml; kubectl rollout status deployment/jenkins
+
+      - cap: Open the Jenkins UI in a web browser
         com: minikube service jenkins
 
-      - cap: Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT.
-        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /root/.jenkins/secrets/initialAdminPassword
+      - cap: Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT
+        com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /var/jenkins_home/secrets/initialAdminPassword
 
-      - cap: Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install suggested plugins and wait for the process to complete.
+      - cap: Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install suggested plugins and wait for the process to complete (Plugins have been pre-downloaded during jenkins docker image built, so this step should finish almost immediately).
         com: echo '' 
 
-      - cap: Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins.
+      - cap: Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins
         com: echo ''
 
-      - cap: We now want to create a new pipeline for use with our Hello-Kenzan app. On the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
+      - cap: Before we create a pipeline, let's make the kubernetes cluster accessible from jenkins: On the left, click on Credentials, select Jenkins Store, then Global credentials (unrestricted), and Add Credentials on the left menu.
         com: echo ''
 
-      - cap: Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM". 
+      - cap: The following values must be entered precisely as indicated: For the Kind field select the option "Kubernetes configuration (kubeconfig)", set the ID as `kenzan_kubeconfig`, select Kubeconfig From a file on the Jenkins master, and specify the the file path `/var/jenkins_home/.kube/config`. finally click the OK button.
         com: echo ''
 
-      - cap: Change the SCM to Git. 
+      - cap: We now want to create a new pipeline for use with our Hello-Kenzan app. Back from Jenkins home, On the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK
         com: echo ''
 
-      - cap: Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline. 
+      - cap: Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM"
         com: echo ''
 
-      - cap: Now view the Hello-Kenzan application.
+      - cap: Change the SCM to Git
+        com: echo ''
+
+      - cap: Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline
+        com: echo ''
+
+      - cap: Now view the Hello-Kenzan application
         com: minikube service hello-kenzan
 
-      - cap: Push a change to your fork. Run job again. View the changes.
+      - cap: Push a change to your fork. Run job again. View the changes
         com: minikube service hello-kenzan

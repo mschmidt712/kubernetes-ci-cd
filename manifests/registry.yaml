@@ -87,7 +87,7 @@ spec:
         - containerPort: 5000
           name: registry
       - name: registryui
-        image: hyper/docker-registry-web
+        image: hyper/docker-registry-web:latest
         ports:
         - containerPort: 8080
         env:
