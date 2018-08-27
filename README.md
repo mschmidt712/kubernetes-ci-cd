@@ -14,30 +14,14 @@ To get it up and running, see the following week-by-week Linux.com blog posts, o
 
 To generate this readme: `node readme.js`
 
-## Interactive Tutorial Version
-To complete the tutorial using the interactive script:
+## Prerequisites 
 
-* Clone this repository.
-
+* Install VirtualBox
+* Install the latest versions of Docker, Kubectl, and Minikube
+* Clone this repository
 * To ensure you are starting with a clean slate: `minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
 
-* To run: `npm install`
-
-Begin the desired section:
-
-* `npm run part1`
-
-* `npm run part2`
-
-* `npm run part3`
-
-* `npm run part4`
-
-
-## Manual Tutorial Version
-
-To complete the tutorial manually, follow the steps below.
-
+## Tutorial Steps
 
 ## Part 1
 
@@ -97,7 +81,7 @@ View the registry user interface in a web browser.
 
 #### Step10
 
-Let’s make a change to an HTML file in the cloned project. Open the /applications/hello-kenzan/index.html file in your favorite text editor (for example, you can use nano by running the command 'nano applications/hello-kenzan/index.html' in a separate terminal). Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. Save the file.
+Let’s make a change to an HTML file in the cloned project. Open the /applications/hello-kenzan/index.html file in your favorite text editor. (For example, you could use nano by running the command 'nano applications/hello-kenzan/index.html' in a separate terminal). Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. Save the file.
 
 `echo ''`
 
@@ -109,12 +93,14 @@ Now let’s build an image, giving it a special name that points to our local cl
 
 #### Step12
 
-We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster. so let's first build the image for such container:
+We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster. First, build the image for our proxy container. 
+
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
 #### Step13
 
-And run the proxy container from the newly created image:
+Now run the proxy container from the newly created image. (Note that you may see some errors; this is normal as the commands are first making sure there are no previous instances running.)
+
 ``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
 #### Step14
@@ -428,6 +414,23 @@ After it triggers, observe how the puzzle services disappear in the Kr8sswordz P
 Try clicking Submit to test that hits now register as light green.
 
 `echo ''`
+
+
+## Automated Scripts to Run Tutorial
+If you need to walk through the steps in the tutorial again (or more quickly), we’ve provided npm scripts that automate running the same commands in the separate parts of the Tutorial.
+
+- Install NodeJS. 
+- Install the scripts.  
+    - `cd ~/kubernetes-ci-cd`
+    - `npm install`
+
+Begin the desired section:
+
+- `npm run part1`
+- `npm run part2`
+- `npm run part3`
+- `npm run part4`
+
 
  ## LICENSE
 Copyright 2017 Kenzan, LLC <http://kenzan.com>
