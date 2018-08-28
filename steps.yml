@@ -57,7 +57,7 @@ parts:
     steps:
 
       - cap: Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
-        com: kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins
+        com: kubectl apply -f manifests/jenkins.yaml; kubectl rollout status deployment/jenkins
 
       - cap: Open the Jenkins UI in a web browser.
         com: minikube service jenkins
