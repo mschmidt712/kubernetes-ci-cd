@@ -238,47 +238,53 @@ Push a change to your fork. Run job again. View the changes.
 
 ## Part 3
 
+### Initializing Helm will install Tiller (Helm's server) in our kubernetes cluster
+
+`helm init --wait --debug`
+`kubectl rollout status deploy/tiller-deploy -n kube-system`
+
 #### Step1
 
-Start the etcd operator and service on the cluster. You may notice errors showing up as it is waiting to start up the cluster. This is normal until it starts.
+setup the etcd operator on the cluster using a Helm Chart
 
-`scripts/etcd.sh`
+`helm install stable/etcd-operator --version 0.8.0 --name etcd-operator --debug --wait`
 
 #### Step2
 
-Now that we have an etcd service, we need an etcd client. The following command will set up a directory within etcd for storing key-value pairs, and then run the etcd client.
+Create the etcd cluster
 
-`kubectl create -f manifests/etcd-job.yml`
+* `kubectl  create -f manifests/etcd-cluster.yaml`
+* `kubectl  create -f manifests/etcd-service.yaml`
 
 #### Step3
 
-Check the status of the job in step 2 to make sure it deployed.
+The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
 
-`kubectl describe jobs/etcd-job`
+`kubectl apply -f manifests/all-services.yaml`
 
 #### Step4
 
-The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
+Now we're going to walk through an initial build of the monitor-scale service.
 
-`kubectl apply -f manifests/all-services.yml`
+``docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale``
 
 #### Step5
 
-Now we're going to walk through an initial build of the monitor-scale service.
+Set up a proxy so we can push the monitor-scale Docker image we just built to our cluster's registry. so let's first build socat in case it's not present in your local machine from part 1 or 2 anymore
 
-`docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale`
+`docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
 #### Step6
 
-Set up a proxy so we can push the monitor-scale Docker image we just built to our cluster's registry.
+And run the proxy container from the newly created image
 
-`docker stop socat-registry; docker rm socat-registry; docker run -d -e "REGIP=`minikube ip`" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:`minikube ip`:30400"`
+``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
 #### Step7
 
 Push the monitor-scale image to the registry.
 
-`docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD``
+``docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` ``
 
 #### Step8
 
@@ -296,7 +302,7 @@ Open the registry UI and verify that the monitor-scale image is in our local reg
 
 Create the monitor-scale deployment and service.
 
-`sed 's#127.0.0.1:30400/monitor-scale:latest#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -`
+``sed 's#127.0.0.1:30400/monitor-scale:$BUILD_TAG#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -``
 
 #### Step11
 

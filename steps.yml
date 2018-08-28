@@ -103,7 +103,7 @@ parts:
         com: kubectl describe jobs/etcd-job
       
       - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
-        com: kubectl apply -f manifests/all-services.yml
+        com: kubectl apply -f manifests/all-services.yaml
       
       - cap: Now we're going to walk through an initial build of the monitor-scale service.
         com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale
