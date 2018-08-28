@@ -61,77 +61,88 @@ Launch a web browser to test the service. The nginx welcome page displays, which
 
 `minikube service nginx`
 
-#### Step7
+#### Step7 
+Delete the nginx deployment and service you created. 
+`kubectl delete service nginx`
+`kubectl delete deployment nginx`
+
+#### Step8
 
 Set up the cluster registry by applying a .yaml manifest file.
 
 `kubectl apply -f manifests/registry.yaml`
 
-#### Step8
+#### Step9
 
 Wait for the registry to finish deploying. Note that this may take several minutes.
 
 `kubectl rollout status deployments/registry`
 
-#### Step9
+#### Step10
 
 View the registry user interface in a web browser.
 
 `minikube service registry-ui`
 
-#### Step10
+#### Step11
 
 Let’s make a change to an HTML file in the cloned project. Open the /applications/hello-kenzan/index.html file in your favorite text editor. (For example, you could use nano by running the command 'nano applications/hello-kenzan/index.html' in a separate terminal). Change some text inside one of the <p> tags. For example, change “Hello from Kenzan!” to “Hello from Me!”. Save the file.
 
 `echo ''`
 
-#### Step11
+#### Step12
 
 Now let’s build an image, giving it a special name that points to our local cluster registry.
 
 `docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan`
 
-#### Step12
+#### Step13
 
 We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster. First, build the image for our proxy container. 
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
-#### Step13
+#### Step14
 
 Now run the proxy container from the newly created image. (Note that you may see some errors; this is normal as the commands are first making sure there are no previous instances running.)
 
 ``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
-#### Step14
+#### Step15
 
 With our proxy container up and running, we can now push our image to the local repository.
 
 `docker push 127.0.0.1:30400/hello-kenzan:latest`
 
-#### Step15
+#### Step16
 
 The proxy’s work is done, so you can go ahead and stop it.
 
 `docker stop socat-registry;`
 
-#### Step16
+#### Step17
 
 With the image in our cluster registry, the last thing to do is apply the manifest to create and deploy the hello-kenzan pod based on the image.
 
 `kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml`
 
-#### Step17
+#### Step18
 
 Launch a web browser and view the service.
 
 `minikube service hello-kenzan`
 
+#### Step19
+
+Delete the hello-kenzan deployment and service you created. 
+`kubectl delete service hello-kenzan`
+`kubectl delete deployment hello-kenzan`
+
 ## Part 2
 
 #### Step1
 
-Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
+Deploy Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
 
 `kubectl apply -f manifests/jenkins.yml; kubectl rollout status deployment/jenkins`
 
@@ -150,8 +161,6 @@ Display the Jenkins admin password with the following command, and right-click t
 #### Step4
 
 Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click "Install Suggested Plugins" button and wait for the process to complete (Plugins have been pre-downloaded during jenkins docker image built, so this step should finish almost immediately).
-
-`echo ''`
 
 #### Step5
 
