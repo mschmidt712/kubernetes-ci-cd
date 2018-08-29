@@ -39,9 +39,9 @@ Enable the Minikube add-ons Heapster and Ingress.
 
 #### Step3
 
-Wait 20 seconds, and then view the Minikube Dashboard, a web UI for managing deployments.
+View the Minikube Dashboard, a web UI for managing deployments.
 
-`sleep 20; minikube service kubernetes-dashboard --namespace kube-system`
+`minikube service kubernetes-dashboard --namespace kube-system`
 
 #### Step4
 
@@ -141,19 +141,19 @@ Delete the hello-kenzan deployment and service you created.
 
 #### Step1
 
-First, Let's build the Jenkins docker image we'll use in our kubernetes cluster
+First, let's build the Jenkins image we'll use in our Kubernetes cluster.
 
 `docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins`
 
 #### Step2
 
-Once again we're going to need to set up the proxy container "Socat Registry" we used in part 1, so let's first build it in case it's not present in your local machine from part 1 anymore
+Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it (feel free to skip this step in case it already exists from Part 1). 
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
 #### Step3
 
-And run the proxy container from the newly created image
+Run the proxy container from the image. 
 
 ``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
@@ -161,17 +161,17 @@ And run the proxy container from the newly created image
 
 With our proxy container up and running, we can now push our Jenkins image to the local repository.
 
-`docker push 127.0.0.1:30400/hello-kenzan:latest`
+`docker push 127.0.0.1:30400/jenkins:latest`
 
 #### Step5
 
 The proxy’s work is done, so you can go ahead and stop it.
 
-`docker stop socat-registry;`
+`docker stop socat-registry`
 
 #### Step6
 
-Install Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
+Deploy Jenkins, which we’ll use to create our automated CI/CD pipeline. It will take the pod a minute or two to roll out.
 
 `kubectl apply -f manifests/jenkins.yaml; kubectl rollout status deployment/jenkins`
 
@@ -183,41 +183,47 @@ Open the Jenkins UI in a web browser.
 
 #### Step8
 
-Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT.
+Display the Jenkins admin password with the following command, and right-click to copy it. 
 
 ``kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /var/jenkins_home/secrets/initialAdminPassword``
 
 #### Step9
 
-Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click "Install Suggested Plugins" button and wait for the process to complete (Plugins have been pre-downloaded during jenkins docker image built, so this step should finish almost immediately).
+Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click **Install Suggested Plugins** and wait for the process to complete. Plugins have been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly. 
 
 #### Step10
 
-Create an admin user and credentials, and click Save and Finish. (Make sure to remember these credentials as you will need them for repeated logins.) Click Start using Jenkins.
+Create an admin user and credentials, and click **Save and Continue**. (Make sure to remember these credentials as you will need them for repeated logins.) On the Instance Configuration page, click **Save and Finish**. On the next page, click **Restart** (if it appears to hang for some time on restarting, you may have to refresh the browser window). Login to Jenkins. 
 
 #### Step11
 
-Before we create a pipeline, we first need to provision Kubernetes Continuous Deployment Plugin in Jenkins with a kubeconfig file that will allow access to our kubernetes cluster. On the left, click on Credentials, select Jenkins Store, then Global credentials (unrestricted), and Add Credentials on the left menu.
+Before we create a pipeline, we first need to provision the Kubernetes Continuous Deploy plugin with a kubeconfig file that will allow access to our Kubernetes cluster. In Jenkins on the left, click on **Credentials**, select the **Jenkins** store, then **Global credentials (unrestricted)**, and **Add Credentials** on the left menu.
 
 #### Step12
 
-The following values must be entered precisely as indicated: For the Kind field select the option "Kubernetes configuration (kubeconfig)", set the ID as `kenzan_kubeconfig`, select Kubeconfig From a file on the Jenkins master, and specify the the file path `/var/jenkins_home/.kube/config`. finally click the OK button.
+The following values must be entered precisely as indicated: 
+- Kind: `Kubernetes configuration (kubeconfig)`
+- ID: `kenzan_kubeconfig`
+- Kubeconfig: `From a file on the Jenkins master`
+- specify the file path: `/var/jenkins_home/.kube/config`
+
+Finally click *Ok*.
 
 #### Step13
 
-We now want to create a new pipeline for use with our Hello-Kenzan app. Back from Jenkins home, on the left, click New Item. Enter the item name as "Hello-Kenzan Pipeline", select Pipeline, and click OK.
+We now want to create a new pipeline for use with our Hello-Kenzan app. Back on Jenkins home, on the left, click **New Item**. Enter the item name as "Hello-Kenzan Pipeline", select **Pipeline**, and click **OK**.
 
 #### Step14
 
-Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM".
+Under the Pipeline section at the bottom, change the **Definition** to be **Pipeline script from SCM**.
 
 #### Step15
 
-Change the SCM to Git.
+Change the **SCM** to **Git**.
 
 #### Step16
 
-Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline.
+Change the **Repository URL** to be the URL of your forked Git repository, such as `https://github.com/[GIT USERNAME]/kubernetes-ci-cd`. Click **Save**. On the left, click **Build Now** to run the new pipeline.
 
 #### Step17
 
