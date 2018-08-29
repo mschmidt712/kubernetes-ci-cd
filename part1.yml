@@ -21,6 +21,9 @@ parts:
 
       - cap: Launch a web browser to test the service. The nginx welcome page displays, which means the service is up and running.
         com: minikube service nginx
+        
+      - cap: Delete the nginx deployment and service you created. 
+        com: kubectl delete service nginx; kubectl delete deployment nginx
 
       - cap: Set up the cluster registry by applying a .yml manifest file.
         com: kubectl apply -f manifests/registry.yml
@@ -54,3 +57,6 @@ parts:
 
       - cap: Launch a web browser and view the service.
         com: minikube service hello-kenzan
+
+      - cap: Delete the hello-kenzan deployment and service you created. 
+        com: kubectl delete service hello-kenzan; kubectl delete deployment hello-kenzan
