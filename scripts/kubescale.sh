@@ -30,7 +30,7 @@ kubectl exec -it example-etcd-cluster-0000 cat /mkd.sh
 # export MINIKUBEIP=`minikube ip`
 
 # #temp container for forwarding to registry
-# docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-registry -p 30400:5000 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:5000,fork,reuseaddr TCP4:$MINIKUBEIP:30400"
+# docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry
 
 # sleep 5
 
@@ -65,7 +65,7 @@ kubectl exec -it example-etcd-cluster-0000 cat /mkd.sh
 
 # proxy container for ingress
 
-# docker run -d -e "MINIKUBEIP=$MINIKUBEIP" --name socat-minikube -p 80:80 chadmoon/socat:latest bash -c "socat TCP4-LISTEN:80,fork,reuseaddr TCP4:$MINIKUBEIP:80"
+# docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry
 
 # # kubectl apply -f k8s/ing.yml
 
