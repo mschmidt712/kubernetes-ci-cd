@@ -63,7 +63,9 @@ Launch a web browser to test the service. The nginx welcome page displays, which
 
 #### Step7 
 Delete the nginx deployment and service you created. 
+
 `kubectl delete service nginx`
+
 `kubectl delete deployment nginx`
 
 #### Step8
@@ -133,7 +135,9 @@ Launch a web browser and view the service.
 #### Step19
 
 Delete the hello-kenzan deployment and service you created. 
+
 `kubectl delete service hello-kenzan`
+
 `kubectl delete deployment hello-kenzan`
 
 ## Part 2
@@ -239,133 +243,140 @@ Push a change to your fork. Run job again. View the changes.
 
 ## Part 3
 
-### Initializing Helm will install Tiller (Helm's server) in our kubernetes cluster
+### Step1 
 
-`helm init --wait --debug`
-`kubectl rollout status deploy/tiller-deploy -n kube-system`
+Initialize Helm. This will install Tiller (Helm's server) into our Kubernetes cluster. 
 
-#### Step1
-
-setup the etcd operator on the cluster using a Helm Chart
-
-`helm install stable/etcd-operator --version 0.8.0 --name etcd-operator --debug --wait`
+`helm init --wait --debug; kubectl rollout status deploy/tiller-deploy -n kube-system`
 
 #### Step2
 
-Create the etcd cluster
+We will deploy the etcd operator onto the cluster using a Helm Chart. 
+
+`helm install stable/etcd-operator --version 0.8.0 --name etcd-operator --debug --wait`
+
+#### Step3
+
+Deploy the etcd cluster and K8s Services for accessing the cluster. 
 
 * `kubectl  create -f manifests/etcd-cluster.yaml`
 * `kubectl  create -f manifests/etcd-service.yaml`
 
-#### Step3
+#### Step4
 
-The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
+The crossword application is a multi-tier application whose services depend on each other. We will create three K8s Services ahead of time, so that the deployments are aware of them.
 
 `kubectl apply -f manifests/all-services.yaml`
 
-#### Step4
+#### Step5
 
-Now we're going to walk through an initial build of the monitor-scale service.
+Now we're going to walk through an initial build of the monitor-scale application.
 
 ``docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale``
 
-#### Step5
+#### Step6
 
-Set up a proxy so we can push the monitor-scale Docker image we just built to our cluster's registry. so let's first build socat in case it's not present in your local machine from part 1 or 2 anymore
+Once again we'll need to set up the Socat Registry proxy container to push the monitor-scale image to our registry, so let's build it (feel free to skip this step in case it already exists from Parts 1 or 2).
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
-#### Step6
+#### Step7
 
-And run the proxy container from the newly created image
+Run the proxy container from the newly created image. 
 
 ``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
-#### Step7
+#### Step8
 
 Push the monitor-scale image to the registry.
 
 ``docker push 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` ``
 
-#### Step8
+#### Step9
 
 The proxy’s work is done, so go ahead and stop it.
 
 `docker stop socat-registry`
 
-#### Step9
+#### Step10
 
 Open the registry UI and verify that the monitor-scale image is in our local registry.
 
 `minikube service registry-ui`
 
-#### Step10
+#### Step11
+The monitor-scale application is a used to scale instances of our puzzle application up and down, sending commands to our Kubernetes cluster. Because of this, we need to create a Service Account and Role (RBAC) so that monitor-scale has access to interact with the cluster. 
+
+
+`kubectl apply -f manifests/monitor-scale-serviceaccount.yaml`
+
+#### Step12
 
 Create the monitor-scale deployment and service.
 
 ``sed 's#127.0.0.1:30400/monitor-scale:$BUILD_TAG#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -``
 
-#### Step11
+#### Step13
 
 Wait for the monitor-scale deployment to finish.
 
 `kubectl rollout status deployment/monitor-scale`
 
-#### Step12
+#### Step14
 
 View pods to see the monitor-scale pod running.
 
 `kubectl get pods`
 
-#### Step13
+#### Step15
 
 View services to see the monitor-scale service.
 
 `kubectl get services`
 
-#### Step14
+#### Step16
 
 View ingress rules to see the monitor-scale ingress rule.
 
 `kubectl get ingress`
 
-#### Step15
+#### Step17
 
 View deployments to see the monitor-scale deployment.
 
 `kubectl get deployments`
 
-#### Step16
+#### Step18
 
 We will run a script to bootstrap the puzzle and mongo services, creating Docker images and storing them in the local registry. The puzzle.sh script runs through the same build, proxy, push, and deploy steps we just ran through manually for both services.
 
 `scripts/puzzle.sh`
 
-#### Step17
+#### Step19
 
 Check to see if the puzzle and mongo services have been deployed.
 
 `kubectl rollout status deployment/puzzle`
 
-#### Step18
+#### Step20
 
 Bootstrap the kr8sswordz frontend web application. This script follows the same build proxy, push, and deploy steps that the other services followed.
 
 `scripts/kr8sswordz-pages.sh`
 
-#### Step19
+#### Step21
 
 Check to see if the frontend has been deployed.
 
 `kubectl rollout status deployment/kr8sswordz`
 
-#### Step20
+#### Step22
 
-Check out all the pods that are running.
+Check to see that all the pods are running.
 
 `kubectl get pods`
 
-#### Step21
+#### Step23
 
 Start the web application in your default browser. You may have to refresh your browser so that the puzzle appears properly.
 
