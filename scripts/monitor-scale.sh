@@ -18,5 +18,8 @@ docker push 127.0.0.1:30400/monitor-scale:$BUILD_TAG
 #Stop the registry proxy
 docker stop socat-registry
 
+# Setup RBAC auth for monitor-scale
+kubectl apply -f manifests/monitor-scale-serviceaccount.yaml
+
 # Create the deployment and service for the monitor-scale node server
 sed 's#127.0.0.1:30400/monitor-scale:$BUILD_TAG#127.0.0.1:30400/monitor-scale:'$BUILD_TAG'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -
