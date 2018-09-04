@@ -51,7 +51,7 @@ Deploy the public nginx image from DockerHub into a pod. Nginx is an open source
 
 #### Step5
 
-Create a service for deployment. This will expose the nginx pod so you can access it with a web browser.
+Create a K8s Service for the deployment. This will expose the nginx pod so you can access it with a web browser.
 
 `kubectl expose deployment nginx --type NodePort --port 80`
 
@@ -76,7 +76,7 @@ Set up the cluster registry by applying a .yaml manifest file.
 
 #### Step9
 
-Wait for the registry to finish deploying. Note that this may take several minutes.
+Wait for the registry to finish deploying using the following command. Note that this may take several minutes.
 
 `kubectl rollout status deployments/registry`
 
@@ -98,7 +98,7 @@ Now let’s build an image, giving it a special name that points to our local cl
 
 #### Step13
 
-We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster. First, build the image for our proxy container. 
+We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a Docker container that listens on 127.0.0.1:30400 and forwards to our cluster. First, build the image for our proxy container. 
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
@@ -110,7 +110,7 @@ Now run the proxy container from the newly created image. (Note that you may see
 
 #### Step15
 
-With our proxy container up and running, we can now push our image to the local repository.
+With our proxy container up and running, we can now push our hello-kenzan image to the local repository.
 
 `docker push 127.0.0.1:30400/hello-kenzan:latest`
 
@@ -118,7 +118,7 @@ With our proxy container up and running, we can now push our image to the local 
 
 The proxy’s work is done, so you can go ahead and stop it.
 
-`docker stop socat-registry;`
+`docker stop socat-registry`
 
 #### Step17
 
@@ -134,7 +134,7 @@ Launch a web browser and view the service.
 
 #### Step19
 
-Delete the hello-kenzan deployment and service you created. 
+Delete the hello-kenzan deployment and service you created. We are going to keep the registry deployment in our cluster as we will need it for the next few parts in our series.
 
 `kubectl delete service hello-kenzan`
 
