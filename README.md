@@ -16,10 +16,25 @@ To generate this readme: `node readme.js`
 
 ## Prerequisites 
 
-* Install VirtualBox
-* Install the latest versions of Docker, Kubectl, and Minikube
-* Clone this repository
-* To ensure you are starting with a clean slate: `minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
+- Install VirtualBox 
+
+ https://www.virtualbox.org/wiki/Downloads
+
+- Install the latest versions of Docker, Minikube, and Kubectl
+
+ https://docs.docker.com/docker-for-mac/install/
+ https://github.com/kubernetes/minikube/releases
+ https://kubernetes.io/docs/tasks/tools/install-kubectl/
+ 
+- Install Helm 
+
+ `curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh; chmod 700 get_helm.sh; ./get_helm.sh`
+
+
+- Clone this repository
+- To ensure you are starting with a clean slate, delete any previous minikube contexts. 
+
+ `minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
 
 ## Tutorial Steps
 
@@ -356,7 +371,8 @@ We will run a script to bootstrap the puzzle and mongo services, creating Docker
 
 Check to see if the puzzle and mongo services have been deployed.
 
-`kubectl rollout status deployment/puzzle`
+- `kubectl rollout status deployment/puzzle`
+- `kubectl rollout status deployment/mongo`
 
 #### Step20
 
@@ -368,7 +384,7 @@ Bootstrap the kr8sswordz frontend web application. This script follows the same 
 
 Check to see if the frontend has been deployed.
 
-`kubectl rollout status deployment/kr8sswordz`
+- `kubectl rollout status deployment/kr8sswordz`
 
 #### Step22
 
@@ -418,7 +434,7 @@ View the Kr8sswordz application.
 
 #### Step8
 
-Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the green hit does not register on the puzzle services.
+Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the white hit does not register on the puzzle services.
 
 #### Step9
 
@@ -438,7 +454,7 @@ After it triggers, observe how the puzzle services disappear in the Kr8sswordz P
 
 #### Step13
 
-Try clicking Submit to test that hits now register as light green.
+Try clicking Submit to test that hits now register as white.
 
 
 
