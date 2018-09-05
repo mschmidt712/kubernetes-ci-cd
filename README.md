@@ -320,8 +320,7 @@ Open the registry UI and verify that the monitor-scale image is in our local reg
 `minikube service registry-ui`
 
 #### Step11
-The monitor-scale application is a used to scale instances of our puzzle application up and down, sending commands to our Kubernetes cluster. Because of this, we need to create a Service Account and Role (RBAC) so that monitor-scale has access to interact with the cluster. 
-
+Monitor-scale has the functionality to let us scale our puzzle app up and down through the Kr8sswordz UI, therefore we'll need to do some RBAC work in order to provide monitor-scale with the proper rights. 
 
 `kubectl apply -f manifests/monitor-scale-serviceaccount.yaml`
 
