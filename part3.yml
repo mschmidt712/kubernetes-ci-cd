@@ -3,20 +3,26 @@ parts:
   - name: Part 3
     intro: This part will have us setup the various applications that will present the crossword puzzle.  We will run a sample etcd cluster as a cache, a pages application containing the front-end, a crossword server using mongodb, and a monitoring and scaling server application. 
     steps:
+    
+      - cap: Initialize Helm. This will install Tiller (Helm's server) into our Kubernetes cluster. 
+        com: helm init --wait --debug; kubectl rollout status deploy/tiller-deploy -n kube-system
 
-      - cap: Start the etcd operator and service on the cluster. You may notice errors showing up as it is waiting to start up the cluster. This is normal until it starts.
-        com: scripts/etcd.sh
+      - cap: We will deploy the etcd operator onto the cluster using a Helm Chart. 
+        com: helm install stable/etcd-operator --version 0.8.0 --name etcd-operator --debug --wait
+
+      - cap: Deploy the etcd cluster and K8s Services for accessing the cluster. 
+        com: kubectl create -f manifests/etcd-cluster.yaml; kubectl create -f manifests/etcd-service.yaml
       
-      - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three services in Kubernetes ahead of time, so that the deployments are aware of them.
+      - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three K8s Services ahead of time, so that the deployments are aware of them.
         com: kubectl apply -f manifests/all-services.yaml
       
       - cap: Now we're going to walk through an initial build of the monitor-scale service.
         com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale
 
-      - cap: Set up the Socat proxy once again, so we can push the monitor-scale Docker image we just built to our cluster's registry. So let's first build it in case it's not present in your local machine from part 1 anymore
+      - cap: Once again we'll need to set up the Socat Registry proxy container to push the monitor-scale image to our registry, so let's build it in case it's not there from Part 1. 
         com: docker build -t socat-registry -f applications/socat/Dockerfile applications/socat
 
-      - cap: Run the proxy container from the newly created image
+      - cap: Run the proxy container from the newly created image.
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry; sleep 10
 
       - cap: Push the monitor-scale image to the registry.
@@ -50,7 +56,7 @@ parts:
         com: scripts/puzzle.sh
 
       - cap: Check to see if the puzzle and mongo services have been deployed.
-        com: kubectl rollout status deployment/puzzle
+        com: kubectl rollout status deployment/puzzle; kubectl rollout status deployment/mongo
 
       - cap: Bootstrap the kr8sswordz frontend web application. This script follows the same build proxy, push, and deploy steps that the other services followed.
         com: scripts/kr8sswordz-pages.sh

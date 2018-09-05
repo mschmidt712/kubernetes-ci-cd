@@ -160,7 +160,7 @@ Delete the hello-kenzan deployment and service you created. We are going to keep
 
 #### Step1
 
-First, let's build the Jenkins image we'll use in our Kubernetes cluster.
+First, let's build the Jenkins Docker image we'll use in our Kubernetes cluster.
 
 `docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins`
 
@@ -252,7 +252,7 @@ Now view the Hello-Kenzan application.
 
 #### Step18
 
-Push a change to your fork. Run job again. View the changes.
+Push a change to your fork. Run the job again. View the changes.
 
 `minikube service hello-kenzan`
 

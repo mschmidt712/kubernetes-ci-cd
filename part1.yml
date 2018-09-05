@@ -16,7 +16,7 @@ parts:
       - cap: Deploy the public nginx image from DockerHub into a pod. Nginx is an open source web server that will automatically download from Docker Hub if it’s not available locally.
         com: kubectl run nginx --image nginx --port 80
 
-      - cap: Create a service for deployment. This will expose the nginx pod so you can access it with a web browser.
+      - cap: Create a K8s Service for the deployment. This will expose the nginx pod so you can access it with a web browser.
         com: kubectl expose deployment nginx --type NodePort --port 80
 
       - cap: Launch a web browser to test the service. The nginx welcome page displays, which means the service is up and running.
@@ -25,8 +25,8 @@ parts:
       - cap: Delete the nginx deployment and service you created. 
         com: kubectl delete service nginx; kubectl delete deployment nginx
 
-      - cap: Set up the cluster registry by applying a .yml manifest file.
-        com: kubectl apply -f manifests/registry.yml
+      - cap: Set up the cluster registry by applying a .yaml manifest file.
+        com: kubectl apply -f manifests/registry.yaml
 
       - cap: Wait for the registry to finish deploying. Note that this may take several minutes.
         com: kubectl rollout status deployments/registry
@@ -40,13 +40,13 @@ parts:
       - cap: Now let’s build an image, giving it a special name that points to our local cluster registry.
         com: docker build -t 127.0.0.1:30400/hello-kenzan:latest -f applications/hello-kenzan/Dockerfile applications/hello-kenzan
 
-      - cap: We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a container that listens on 127.0.0.1:30400 and forwards to our cluster. so let's first build the image for such container:
+      - cap: We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a Docker container that listens on 127.0.0.1:30400 and forwards to our cluster. First, build the image for our proxy container.
         com: docker build -t socat-registry -f applications/socat/Dockerfile applications/socat
 
-      - cap: And run the proxy container from the newly created image:
+      - cap: Now run the proxy container from the newly created image. (Note that you may see some errors; this is normal as the commands are first making sure there are no previous instances running.)
         com: docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry
 
-      - cap: With our proxy container up and running, we can now push our image to the local repository.
+      - cap: With our proxy container up and running, we can now push our hello-kenzan image to the local repository.
         com: docker push 127.0.0.1:30400/hello-kenzan:latest
 
       - cap: The proxy’s work is done, so you can go ahead and stop it.

@@ -25,7 +25,7 @@ parts:
       - cap: View the Kr8sswordz application.
         com: minikube service kr8sswordz
         
-      - cap: Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the green hit does not register on the puzzle services.
+      - cap: Spin up several instances of the puzzle service by moving the slider to the right and clicking Scale. For reference, click on the Submit button, noting that the white hit does not register on the puzzle services.
         com: echo ''
 
       - cap: Edit applications/puzzle/common/models/crossword.js in your favorite text editor (for example, you can use nano by running the command 'nano applications/puzzle/common/models/crossword.js' in a separate terminal). You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes and save the file. 
@@ -40,5 +40,5 @@ parts:
       - cap: After it triggers, observe how the puzzle services disappear in the Kr8sswordz Puzzle app, and how new ones take their place.
         com: echo ''   
         
-      - cap: Try clicking Submit to test that hits now register as light green.
+      - cap: Try clicking Submit to test that hits now register as white.
         com: echo ''  
