@@ -34,13 +34,13 @@ parts:
       - cap: Display the Jenkins admin password with the following command, and right-click to copy it. IMPORTANT: BE CAREFUL NOT TO PRESS CTRL-C TO COPY THE PASSWORD AS THIS WILL STOP THE SCRIPT
         com: kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /var/jenkins_home/secrets/initialAdminPassword
 
-      - cap: Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install Suggested Plugins and wait for the process to complete. Plugins have been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly.
+      - cap: Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click Install suggested plugins. Plugins have actually been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly. 
         com: echo '' 
 
       - cap: Create an admin user and credentials, and click Save and Continue. (Make sure to remember these credentials as you will need them for repeated logins.) On the Instance Configuration page, click Save and Finish. On the next page, click Restart (if it appears to hang for some time on restarting, you may have to refresh the browser window). Login to Jenkins.
         com: echo ''
 
-      - cap: Before we create a pipeline, we first need to provision the Kubernetes Continuous Deploy plugin with a kubeconfig file that will allow access to our Kubernetes cluster. In Jenkins on the left, click on **Credentials**, select the **Jenkins** store, then **Global credentials (unrestricted)**, and **Add Credentials** on the left menu.
+      - cap: Before we create a pipeline, we first need to provision the Kubernetes Continuous Deploy plugin with a kubeconfig file that will allow access to our Kubernetes cluster. In Jenkins on the left, click on Credentials, select the Jenkins store, then Global credentials (unrestricted), and Add Credentials on the left menu.
         com: echo ''
 
       - cap: The following values must be entered precisely as indicated: for the Kind field select the option `Kubernetes configuration (kubeconfig)`, set the ID as `kenzan_kubeconfig`, set Kubeconfig to `From a file on the Jenkins master`, and specify the the file path as `/var/jenkins_home/.kube/config`. Click the OK button.

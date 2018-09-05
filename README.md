@@ -166,7 +166,7 @@ First, let's build the Jenkins Docker image we'll use in our Kubernetes cluster.
 
 #### Step2
 
-Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it (feel free to skip this step in case it already exists from Part 1). 
+Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it. Feel free to skip this step in case the socat-registry image already exists from Part 1 (to check, run `docker images`). 
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
@@ -208,7 +208,7 @@ Display the Jenkins admin password with the following command, and right-click t
 
 #### Step9
 
-Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click **Install Suggested Plugins** and wait for the process to complete. Plugins have been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly. 
+Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click **Install suggested plugins**. Plugins have actually been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly. 
 
 #### Step10
 
