@@ -274,8 +274,8 @@ We will deploy the etcd operator onto the cluster using a Helm Chart.
 
 Deploy the etcd cluster and K8s Services for accessing the cluster. 
 
-* `kubectl  create -f manifests/etcd-cluster.yaml`
-* `kubectl  create -f manifests/etcd-service.yaml`
+* `kubectl create -f manifests/etcd-cluster.yaml`
+* `kubectl create -f manifests/etcd-service.yaml`
 
 #### Step4
 
