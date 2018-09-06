@@ -34,7 +34,7 @@ To generate this readme: `node readme.js`
 - Clone this repository
 - To ensure you are starting with a clean slate, delete any previous minikube contexts. 
 
- `minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
+ `minikube stop; minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
 
 ## Tutorial Steps
 
@@ -160,13 +160,13 @@ Delete the hello-kenzan deployment and service you created. We are going to keep
 
 #### Step1
 
-First, let's build the Jenkins image we'll use in our Kubernetes cluster.
+First, let's build the Jenkins Docker image we'll use in our Kubernetes cluster.
 
 `docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins`
 
 #### Step2
 
-Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it (feel free to skip this step in case it already exists from Part 1). 
+Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it. Feel free to skip this step in case the socat-registry image already exists from Part 1 (to check, run `docker images`). 
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
@@ -208,7 +208,7 @@ Display the Jenkins admin password with the following command, and right-click t
 
 #### Step9
 
-Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click **Install Suggested Plugins** and wait for the process to complete. Plugins have been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly. 
+Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click **Install suggested plugins**. Plugins have actually been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly. 
 
 #### Step10
 
@@ -252,7 +252,7 @@ Now view the Hello-Kenzan application.
 
 #### Step18
 
-Push a change to your fork. Run job again. View the changes.
+Push a change to your fork. Run the job again. View the changes.
 
 `minikube service hello-kenzan`
 
@@ -274,8 +274,8 @@ We will deploy the etcd operator onto the cluster using a Helm Chart.
 
 Deploy the etcd cluster and K8s Services for accessing the cluster. 
 
-* `kubectl  create -f manifests/etcd-cluster.yaml`
-* `kubectl  create -f manifests/etcd-service.yaml`
+* `kubectl create -f manifests/etcd-cluster.yaml`
+* `kubectl create -f manifests/etcd-service.yaml`
 
 #### Step4
 
