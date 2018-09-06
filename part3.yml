@@ -33,6 +33,9 @@ parts:
       
       - cap: Open the registry UI and verify that the monitor-scale image is in our local registry.
         com: minikube service registry-ui
+      
+      - cap: Monitor-scale has the functionality to let us scale our puzzle app up and down through the Kr8sswordz UI, therefore we'll need to do some RBAC work in order to provide monitor-scale with the proper rights.
+        com: kubectl apply -f manifests/monitor-scale-serviceaccount.yaml
 
       - cap: Create the monitor-scale deployment and service. 
         com: sed 's#127.0.0.1:30400/monitor-scale:$BUILD_TAG#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -

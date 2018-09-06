@@ -34,7 +34,7 @@ To generate this readme: `node readme.js`
 - Clone this repository
 - To ensure you are starting with a clean slate, delete any previous minikube contexts. 
 
- `minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
+ `minikube stop; minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
 
 ## Tutorial Steps
 
