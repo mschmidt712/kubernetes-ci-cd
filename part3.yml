@@ -13,13 +13,13 @@ parts:
       - cap: Deploy the etcd cluster and K8s Services for accessing the cluster. 
         com: kubectl create -f manifests/etcd-cluster.yaml; kubectl create -f manifests/etcd-service.yaml
       
-      - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three K8s Services ahead of time, so that the deployments are aware of them.
+      - cap: The crossword application is a multi-tier application whose services depend on each other. We will create three K8s Services so that the applications can communicate with one another.
         com: kubectl apply -f manifests/all-services.yaml
       
       - cap: Now we're going to walk through an initial build of the monitor-scale service.
         com: docker build -t 127.0.0.1:30400/monitor-scale:`git rev-parse --short HEAD` -f applications/monitor-scale/Dockerfile applications/monitor-scale
 
-      - cap: Once again we'll need to set up the Socat Registry proxy container to push the monitor-scale image to our registry, so let's build it in case it's not there from Part 1. 
+      - cap: Once again we'll need to set up the Socat Registry proxy container to push the monitor-scale image to our registry, so let's build it. Feel free to skip this step in case the socat-registry image already exists from Part 2 (to check, run `docker images` in a separate terminal). 
         com: docker build -t socat-registry -f applications/socat/Dockerfile applications/socat
 
       - cap: Run the proxy container from the newly created image.
@@ -37,7 +37,7 @@ parts:
       - cap: Monitor-scale has the functionality to let us scale our puzzle app up and down through the Kr8sswordz UI, therefore we'll need to do some RBAC work in order to provide monitor-scale with the proper rights.
         com: kubectl apply -f manifests/monitor-scale-serviceaccount.yaml
 
-      - cap: Create the monitor-scale deployment and service. 
+      - cap: Create the monitor-scale deployment and the Ingress defining the hostname by which this service will be accessible to the other services. 
         com: sed 's#127.0.0.1:30400/monitor-scale:$BUILD_TAG#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -
       
       - cap: Wait for the monitor-scale deployment to finish.

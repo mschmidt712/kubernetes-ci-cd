@@ -279,7 +279,7 @@ Deploy the etcd cluster and K8s Services for accessing the cluster.
 
 #### Step4
 
-The crossword application is a multi-tier application whose services depend on each other. We will create three K8s Services ahead of time, so that the deployments are aware of them.
+The crossword application is a multi-tier application whose services depend on each other. We will create three K8s Services so that the applications can communicate with one another.
 
 `kubectl apply -f manifests/all-services.yaml`
 
@@ -291,7 +291,7 @@ Now we're going to walk through an initial build of the monitor-scale applicatio
 
 #### Step6
 
-Once again we'll need to set up the Socat Registry proxy container to push the monitor-scale image to our registry, so let's build it (feel free to skip this step in case it already exists from Parts 1 or 2).
+Once again we'll need to set up the Socat Registry proxy container to push the monitor-scale image to our registry, so let's build it. Feel free to skip this step in case the socat-registry image already exists from Part 2 (to check, run `docker images`).
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
@@ -326,7 +326,7 @@ Monitor-scale has the functionality to let us scale our puzzle app up and down t
 
 #### Step12
 
-Create the monitor-scale deployment and service.
+Create the monitor-scale deployment and the Ingress defining the hostname by which this service will be accessible to the other services.
 
 ``sed 's#127.0.0.1:30400/monitor-scale:$BUILD_TAG#127.0.0.1:30400/monitor-scale:'`git rev-parse --short HEAD`'#' applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -``
 
