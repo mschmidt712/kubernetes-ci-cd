@@ -13,7 +13,7 @@ parts:
       - cap: Let's build the Jenkins Docker image we'll use in our Kubernetes cluster. 
         com: docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins
 
-      - cap: Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it in case it's not there from Part 1. 
+      - cap: Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it. Feel free to skip this step in case the socat-registry image already exists from Part 1 (to check, run `docker images` in a separate terminal). 
         com: docker build -t socat-registry -f applications/socat/Dockerfile applications/socat
 
       - cap: Run the proxy container from the image.
