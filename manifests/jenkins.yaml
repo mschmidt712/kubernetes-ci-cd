@@ -124,7 +124,7 @@ spec:
         - name: docker
           mountPath: /var/run/docker.sock
         - name: jenkins-persistent-storage
-          mountPath: /root/.jenkins
+          mountPath: /var/jenkins_home
         ports:
         - containerPort: 8080
           name: jenkins
