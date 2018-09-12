@@ -19,7 +19,7 @@ parts:
       - cap: In the Pipeline section, change the Definition to "Pipeline script from SCM". Set the SCM property to GIT. Set the Repository URL to your forked repo (created in Part 2), such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd.git. Set the Script Path to applications/puzzle/Jenkinsfile 
         com: echo ''
 
-      - cap: When you are finished, click Save. On the left, click Build Now to run the new pipeline. You should see it successfully run through the build, push, and deploy steps in a few minutes.
+      - cap: When you are finished, click Save. On the left, click Build Now to run the new pipeline. This will rebuild the image from the registry, and redeploy the puzzle pod. You should see it successfully run through the build, push, and deploy steps in a few minutes.
         com: echo ''
 
       - cap: View the Kr8sswordz application.

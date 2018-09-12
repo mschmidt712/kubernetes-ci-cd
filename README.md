@@ -238,19 +238,15 @@ Under the Pipeline section at the bottom, change the **Definition** to be **Pipe
 
 #### Step15
 
-Change the **SCM** to **Git**.
+Change the **SCM** to **Git**. Change the **Repository URL** to be the URL of your forked Git repository, such as `https://github.com/[GIT USERNAME]/kubernetes-ci-cd`. Click **Save**. On the left, click **Build Now** to run the new pipeline.
 
 #### Step16
 
-Change the **Repository URL** to be the URL of your forked Git repository, such as `https://github.com/[GIT USERNAME]/kubernetes-ci-cd`. Click **Save**. On the left, click **Build Now** to run the new pipeline.
-
-#### Step17
-
-Now view the Hello-Kenzan application.
+After all pipeline stages are colored green as complete, view the Hello-Kenzan application.
 
 `minikube service hello-kenzan`
 
-#### Step18
+#### Step17
 
 Push a change to your fork. Run the job again. View the changes.
 
@@ -423,7 +419,7 @@ In the Pipeline section, change the Definition to "Pipeline script from SCM". Se
 
 #### Step6
 
-When you are finished, click Save. On the left, click Build Now to run the new pipeline. You should see it successfully run through the build, push, and deploy steps in a few minutes.
+When you are finished, click Save. On the left, click Build Now to run the new pipeline. This will rebuild the image from the registry, and redeploy the puzzle pod. You should see it successfully run through the build, push, and deploy steps in a few minutes.
 
 #### Step7
 

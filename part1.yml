@@ -10,8 +10,8 @@ parts:
       - cap: Enable the Minikube add-ons Heapster and Ingress.
         com: minikube addons enable heapster; minikube addons enable ingress
 
-      - cap: Wait 20 seconds, and then view the Minikube Dashboard, a web UI for managing deployments.
-        com: sleep 20; minikube service kubernetes-dashboard --namespace kube-system
+      - cap: View the Minikube Dashboard, a web UI for managing deployments.
+        com: minikube service kubernetes-dashboard --namespace kube-system
 
       - cap: Deploy the public nginx image from DockerHub into a pod. Nginx is an open source web server that will automatically download from Docker Hub if it’s not available locally.
         com: kubectl run nginx --image nginx --port 80
