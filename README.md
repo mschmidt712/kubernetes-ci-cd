@@ -1,8 +1,8 @@
 # Linux.com Kubernetes CI/CD Blog Series by Kenzan
 
-The kubernetes-ci-cd project is [Kenzan's](https://kenzan.com/) crossword puzzle application that runs as several containers in Kubernetes (we call it the Kr8sswordz Puzzle). It showcases Kubernetes features like spinning up multiple pods and running a load test at scale. It also features Jenkins running on its own a container and a JenkinsFile script to demonstrate how Kubernetes can be integrated into a full CI/CD pipeline. 
+The kubernetes-ci-cd project is [Kenzan's](https://kenzan.com/) crossword puzzle application that runs as several containers in Kubernetes (we call it the Kr8sswordz Puzzle). It showcases Kubernetes features like spinning up multiple pods and running a load test at scale. It also features Jenkins running on its own a container and a JenkinsFile script to demonstrate how Kubernetes can be integrated into a full CI/CD pipeline.
 
-To get it up and running, see the following week-by-week Linux.com blog posts, or simply follow the directions below. 
+To get it up and running, see the following week-by-week Linux.com blog posts, or simply follow the directions below.
 
 [Linux.com Part 1](https://www.linux.com/blog/learn/chapter/Intro-to-Kubernetes/2017/5/set-cicd-pipeline-kubernetes-part-1-overview)
 
@@ -14,9 +14,9 @@ To get it up and running, see the following week-by-week Linux.com blog posts, o
 
 To generate this readme: `node readme.js`
 
-## Prerequisites 
+## Prerequisites
 
-- Install VirtualBox 
+- Install VirtualBox
 
  https://www.virtualbox.org/wiki/Downloads
 
@@ -26,13 +26,12 @@ To generate this readme: `node readme.js`
  https://github.com/kubernetes/minikube/releases
  https://kubernetes.io/docs/tasks/tools/install-kubectl/
  
-- Install Helm 
+- Install Helm
 
  `curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get > get_helm.sh; chmod 700 get_helm.sh; ./get_helm.sh`
 
-
 - Clone this repository
-- To ensure you are starting with a clean slate, delete any previous minikube contexts. 
+- To ensure you are starting with a clean slate, delete any previous minikube contexts.
 
  `minikube stop; minikube delete; sudo rm -rf ~/.minikube; sudo rm -rf ~/.kube`
 
@@ -76,8 +75,9 @@ Launch a web browser to test the service. The nginx welcome page displays, which
 
 `minikube service nginx`
 
-#### Step7 
-Delete the nginx deployment and service you created. 
+#### Step7
+
+Delete the nginx deployment and service you created.
 
 `kubectl delete service nginx`
 
@@ -113,7 +113,7 @@ Now let’s build an image, giving it a special name that points to our local cl
 
 #### Step13
 
-We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a Docker container that listens on 127.0.0.1:30400 and forwards to our cluster. First, build the image for our proxy container. 
+We’ve built the image, but before we can push it to the registry, we need to set up a temporary proxy. By default the Docker client can only push to HTTP (not HTTPS) via localhost. To work around this, we’ll set up a Docker container that listens on 127.0.0.1:30400 and forwards to our cluster. First, build the image for our proxy container.
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
@@ -157,7 +157,6 @@ Delete the hello-kenzan deployment and service you created. We are going to keep
 
 ## Part 2
 
-
 #### Step1
 
 First, let's build the Jenkins Docker image we'll use in our Kubernetes cluster.
@@ -166,13 +165,13 @@ First, let's build the Jenkins Docker image we'll use in our Kubernetes cluster.
 
 #### Step2
 
-Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it. Feel free to skip this step in case the socat-registry image already exists from Part 1 (to check, run `docker images`). 
+Once again we'll need to set up the Socat Registry proxy container to push images, so let's build it. Feel free to skip this step in case the socat-registry image already exists from Part 1 (to check, run `docker images`).
 
 `docker build -t socat-registry -f applications/socat/Dockerfile applications/socat`
 
 #### Step3
 
-Run the proxy container from the image. 
+Run the proxy container from the image.
 
 ``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
@@ -202,17 +201,17 @@ Open the Jenkins UI in a web browser.
 
 #### Step8
 
-Display the Jenkins admin password with the following command, and right-click to copy it. 
+Display the Jenkins admin password with the following command, and right-click to copy it.
 
 ``kubectl exec -it `kubectl get pods --selector=app=jenkins --output=jsonpath={.items..metadata.name}` cat /var/jenkins_home/secrets/initialAdminPassword``
 
 #### Step9
 
-Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click **Install suggested plugins**. Plugins have actually been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly. 
+Switch back to the Jenkins UI. Paste the Jenkins admin password in the box and click Continue. Click **Install suggested plugins**. Plugins have actually been pre-downloaded during the Jenkins image build, so this step should finish fairly quickly.
 
 #### Step10
 
-Create an admin user and credentials, and click **Save and Continue**. (Make sure to remember these credentials as you will need them for repeated logins.) On the Instance Configuration page, click **Save and Finish**. On the next page, click **Restart** (if it appears to hang for some time on restarting, you may have to refresh the browser window). Login to Jenkins. 
+Create an admin user and credentials, and click **Save and Continue**. (Make sure to remember these credentials as you will need them for repeated logins.) On the Instance Configuration page, click **Save and Finish**. On the next page, click **Restart** (if it appears to hang for some time on restarting, you may have to refresh the browser window). Login to Jenkins.
 
 #### Step11
 
@@ -220,7 +219,7 @@ Before we create a pipeline, we first need to provision the Kubernetes Continuou
 
 #### Step12
 
-The following values must be entered precisely as indicated: 
+The following values must be entered precisely as indicated:
 - Kind: `Kubernetes configuration (kubeconfig)`
 - ID: `kenzan_kubeconfig`
 - Kubeconfig: `From a file on the Jenkins master`
@@ -254,24 +253,24 @@ Push a change to your fork. Run the job again. View the changes.
 
 ## Part 3
 
-### Step1 
+### Step1
 
-Initialize Helm. This will install Tiller (Helm's server) into our Kubernetes cluster. 
+Initialize Helm. This will install Tiller (Helm's server) into our Kubernetes cluster.
 
 `helm init --wait --debug; kubectl rollout status deploy/tiller-deploy -n kube-system`
 
 #### Step2
 
-We will deploy the etcd operator onto the cluster using a Helm Chart. 
+We will deploy the etcd operator onto the cluster using a Helm Chart.
 
 `helm install stable/etcd-operator --version 0.8.0 --name etcd-operator --debug --wait`
 
 #### Step3
 
-Deploy the etcd cluster and K8s Services for accessing the cluster. 
+Deploy the etcd cluster and K8s Services for accessing the cluster.
 
-* `kubectl create -f manifests/etcd-cluster.yaml`
-* `kubectl create -f manifests/etcd-service.yaml`
+- `kubectl create -f manifests/etcd-cluster.yaml`
+- `kubectl create -f manifests/etcd-service.yaml`
 
 #### Step4
 
@@ -293,7 +292,7 @@ Once again we'll need to set up the Socat Registry proxy container to push the m
 
 #### Step7
 
-Run the proxy container from the newly created image. 
+Run the proxy container from the newly created image.
 
 ``docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry``
 
@@ -316,7 +315,8 @@ Open the registry UI and verify that the monitor-scale image is in our local reg
 `minikube service registry-ui`
 
 #### Step11
-Monitor-scale has the functionality to let us scale our puzzle app up and down through the Kr8sswordz UI, therefore we'll need to do some RBAC work in order to provide monitor-scale with the proper rights. 
+
+Monitor-scale has the functionality to let us scale our puzzle app up and down through the Kr8sswordz UI, therefore we'll need to do some RBAC work in order to provide monitor-scale with the proper rights.
 
 `kubectl apply -f manifests/monitor-scale-serviceaccount.yaml`
 
@@ -379,7 +379,7 @@ Bootstrap the kr8sswordz frontend web application. This script follows the same 
 
 Check to see if the frontend has been deployed.
 
-- `kubectl rollout status deployment/kr8sswordz`
+`kubectl rollout status deployment/kr8sswordz`
 
 #### Step22
 
@@ -433,7 +433,7 @@ Spin up several instances of the puzzle service by moving the slider to the righ
 
 #### Step9
 
-Edit applications/puzzle/common/models/crossword.js in your favorite text editor (for example, you can use nano by running the command 'nano applications/puzzle/common/models/crossword.js' in a separate terminal). You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes and save the file. 
+Edit applications/puzzle/common/models/crossword.js in your favorite text editor (for example, you can use nano by running the command 'nano applications/puzzle/common/models/crossword.js' in a separate terminal). You'll see a commented section on lines 42-43 that indicates to uncomment a specific line. Uncomment line 43 by deleting the forward slashes and save the file.
 
 #### Step10
 
@@ -452,12 +452,12 @@ After it triggers, observe how the puzzle services disappear in the Kr8sswordz P
 Try clicking Submit to test that hits now register as white.
 
 
-
 ## Automated Scripts to Run Tutorial
+
 If you need to walk through the steps in the tutorial again (or more quickly), we’ve provided npm scripts that automate running the same commands in the separate parts of the Tutorial.
 
-- Install NodeJS. 
-- Install the scripts.  
+- Install NodeJS.
+- Install the scripts.
     - `cd ~/kubernetes-ci-cd`
     - `npm install`
 
@@ -468,16 +468,16 @@ Begin the desired section:
 - `npm run part3`
 - `npm run part4`
 
+## LICENSE
 
- ## LICENSE
 Copyright 2017 Kenzan, LLC <http://kenzan.com>
  
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
- 
+
     http://www.apache.org/licenses/LICENSE-2.0
- 
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
