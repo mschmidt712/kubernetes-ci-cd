@@ -8,7 +8,7 @@ parts:
         com: minikube stop; minikube start --memory 8000 --cpus 2 --kubernetes-version v1.11.0
 
       - cap: Before we do anything, let's make sure the private registry deployment we've setup in the previous part is available.
-        com: kubectl rollout status deployment/registry; sleep 10
+        com: kubectl rollout status deployment/registry
 
       - cap: Let's build the Jenkins Docker image we'll use in our Kubernetes cluster. 
         com: docker build -t 127.0.0.1:30400/jenkins:latest -f applications/jenkins/Dockerfile applications/jenkins
@@ -52,13 +52,10 @@ parts:
       - cap: Under the Pipeline section at the bottom, change the Definition to be "Pipeline script from SCM". 
         com: echo ''
 
-      - cap: Change the SCM to Git. 
+      - cap: Change the SCM to Git. Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline. 
         com: echo ''
 
-      - cap: Change the Repository URL to be the URL of your forked Git repository, such as https://github.com/[GIT USERNAME]/kubernetes-ci-cd. Click Save. On the left, click Build Now to run the new pipeline. 
-        com: echo ''
-
-      - cap: Now view the Hello-Kenzan application.
+      - cap: After all pipeline stages are colored green as complete, view the Hello-Kenzan application.
         com: minikube service hello-kenzan
 
       - cap: Push a change to your fork. Run the job again. View the changes.
