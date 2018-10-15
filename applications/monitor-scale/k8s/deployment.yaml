@@ -14,6 +14,7 @@ spec:
   type: NodePort
 
 ---
+
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -29,8 +30,9 @@ spec:
         app: monitor-scale
         tier: monitor-scale
     spec:
+      serviceAccountName: monitor-scale
       containers:
-      - image: 127.0.0.1:30400/monitor-scale:latest
+      - image: 127.0.0.1:30400/monitor-scale:$BUILD_TAG
         name: monitor-scale
         imagePullPolicy: Always
         ports:
@@ -44,6 +46,7 @@ spec:
           name: kubectl-api          
 
 ---
+
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
