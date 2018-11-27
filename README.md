@@ -139,7 +139,7 @@ The proxy’s work is done, so you can go ahead and stop it.
 
 With the image in our cluster registry, the last thing to do is apply the manifest to create and deploy the hello-kenzan pod based on the image.
 
-`kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml`
+`kubectl apply -f applications/hello-kenzan/k8s/manual-deployment.yaml`
 
 #### Step18
 

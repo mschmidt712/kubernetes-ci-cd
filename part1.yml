@@ -53,7 +53,7 @@ parts:
         com: docker stop socat-registry;
 
       - cap: With the image in our cluster registry, the last thing to do is apply the manifest to create and deploy the hello-kenzan pod based on the image.
-        com: kubectl apply -f applications/hello-kenzan/k8s/deployment.yaml
+        com: kubectl apply -f applications/hello-kenzan/k8s/manual-deployment.yaml
 
       - cap: Launch a web browser and view the service.
         com: minikube service hello-kenzan
