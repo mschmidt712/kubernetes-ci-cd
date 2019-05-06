@@ -98,7 +98,6 @@
     "json-loader": "^0.5.4",
     "lodash": "^4.17.4",
     "ncp": "^2.0.0",
-    "npm": "3.10.7",
     "react-addons-test-utils": "15.3.2",
     "react-docgen": "2.10.0",
     "run-sequence": "1.2.2",
