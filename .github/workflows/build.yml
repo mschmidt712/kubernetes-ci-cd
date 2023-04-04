@@ -22,5 +22,5 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
-          -Dsonar.organization=Steve Vayl
+          -Dsonar.organization=isospin43
           -Dsonar.projectKey=kubernetes-ci-cd
