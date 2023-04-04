@@ -6,7 +6,7 @@ on:
       - "*"
   pull_request:
       types: [opened, synchronize, reopened]
-name: Main Workflow
+name: Main Workflow 1
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
